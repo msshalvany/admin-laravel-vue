@@ -1,12 +1,6 @@
 <!-- layouts/admin.vue -->
 <template>
-  <div
-      class="loader bg-white w-screen h-screen fixed content-center footer-center"
-      style="z-index: 13; display: none"
-  >
-    <div class="loading loading-ring loading-lg w-20"></div>
-  </div>
-  <div class="drawer lg:drawer-open">
+  <div class="drawer lg:drawer-open" dir="rtl">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle"/>
 
     <!-- Sidebar (Drawer) -->
@@ -119,22 +113,9 @@
       </div>
 
       <!-- Main Content -->
-      <main class="h-full">
+      <main class="h-full" style="z-index: -12">
         <slot/> <!-- محتویات صفحات -->
       </main>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-
-import ThemeToggle from '~/components/ThemeToggle.vue';
-import NotificationsDropdown from '~/components/NotificationsDropdown.vue';
-import UserMenu from '~/components/UserMenu.vue';
-</script>
-
-<style>
-html {
-  direction: rtl;
-}
-</style>

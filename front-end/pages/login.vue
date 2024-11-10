@@ -21,23 +21,9 @@
           <button type="submit" class="btn-neutral btn btn-block">ورود</button>
         </div>
       </form>
-      <!-- نمایش پیام خطا -->
-      <div role="alert" class="alert alert-error mt-4" v-if="checkLogin">
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 shrink-0 stroke-current"
-            fill="none"
-            viewBox="0 0 24 24">
-          <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <span>{{ errorMessage }}</span>
-      </div>
     </div>
   </div>
+  <alert-error v-if="checkLogin" text="نام کاربری یا رمز عبور اشتباه است"></alert-error>
 </template>
 
 <script setup>
@@ -48,7 +34,6 @@ import { useCookie } from 'nuxt/app'; // استفاده از useCookie
 const username = ref('');
 const password = ref('');
 const checkLogin = ref(false);
-const errorMessage = ref(''); // اضافه کردن پیغام خطا
 const router = useRouter();
 
 // ایجاد کوکی برای توکن
@@ -90,14 +75,10 @@ const login = async () => {
     router.push('/');
   } catch (error) {
     // نمایش پیام خطا
-    errorMessage.value = error.message || 'خطا در ورود به سیستم';
     checkLogin.value = true;
 
     // مخفی کردن پیام خطا پس از چند ثانیه
-    setTimeout(() => {
-      checkLogin.value = false;
-      errorMessage.value = ''; // پاک کردن پیام خطا
-    }, 3000);
+
   }
 };
 </script>
