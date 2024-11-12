@@ -4,14 +4,14 @@
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle"/>
 
     <!-- Sidebar (Drawer) -->
-    <div class="drawer-side" style="z-index: 12">
+    <div class="drawer-side shadow-2xl" style="z-index: 12">
       <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
       <ul class="menu bg-base-100 text-base-content min-h-full w-80 p-4">
         <li>
-          <a>
-            <Icon name="uil:dashboard" size="24"></Icon>
-            resume.pdf
-          </a>
+          <NuxtLink to="/user">
+            <Icon name="ph:users-three-light"  size="24" />
+            کاربران
+          </NuxtLink>
         </li>
         <li>
           <details>
@@ -113,9 +113,11 @@
       </div>
 
       <!-- Main Content -->
-      <main class="h-full" style="z-index: -12">
+      <main class="h-full">
         <slot/> <!-- محتویات صفحات -->
       </main>
     </div>
   </div>
 </template>
+<script setup lang="ts">
+</script>

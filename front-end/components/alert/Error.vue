@@ -4,7 +4,7 @@ let active =  ref(true)
 onMounted(()=>{
   setTimeout(()=>{
       active.value=false
-  },5000)
+  },3000)
 })
 
 function fadOute() {
@@ -14,7 +14,7 @@ function fadOute() {
 
 <template>
   <transition name="fade">
-    <div class="toast toast-top toast-start" @click="fadOute" style="z-index: 14;" v-if="active">
+    <div class="toast toast-top toast-end" @click="fadOute" style="z-index: 14;" v-if="active">
       <div class="alert alert-error">
         <Icon name="uil:exclamation-circle" size="24"></Icon>
         <span>{{text}}</span>
