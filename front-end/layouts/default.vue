@@ -8,67 +8,26 @@
       <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
       <ul class="menu bg-base-100 text-base-content min-h-full w-80 p-4">
         <li>
-          <NuxtLink to="/user">
-            <Icon name="ph:users-three-light"  size="24" />
-            کاربران
-          </NuxtLink>
+
         </li>
         <li>
           <details>
             <summary>
-              <Icon name="uil:dashboard" size="24"></Icon>
-              My Files
+              <Icon name="ph:users-three-light"  size="24" />
+              کاربران
             </summary>
             <ul>
               <li>
-                <a>
-                  <Icon name="uil:dashboard" size="24"></Icon>
-                  Project-final.psd
-                </a>
+                <NuxtLink to="/user">
+                  <Icon name="hugeicons:user-list" size="24" />
+                  لیست کاربران
+                </NuxtLink>
               </li>
               <li>
                 <a>
-                  <Icon name="uil:dashboard" size="24"></Icon>
-                  Project-final-2.psd
+                  <Icon name="hugeicons:lock-key" size="24" />
+                  سطوح دسترسی
                 </a>
-              </li>
-              <li>
-                <details>
-                  <summary>
-                    <Icon name="uil:dashboard" size="24"></Icon>
-                    Images
-                  </summary>
-                  <ul>
-                    <li>
-                      <a>
-                        <Icon name="uil:dashboard" size="24"></Icon>
-                        Screenshot1.png
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <Icon name="uil:dashboard" size="24"></Icon>
-                        Screenshot2.png
-                      </a>
-                    </li>
-                    <li>
-                      <details>
-                        <summary>
-                          <Icon name="uil:dashboard" size="24"></Icon>
-                          Others
-                        </summary>
-                        <ul>
-                          <li>
-                            <a>
-                              <Icon name="uil:dashboard" size="24"></Icon>
-                              Screenshot3.png
-                            </a>
-                          </li>
-                        </ul>
-                      </details>
-                    </li>
-                  </ul>
-                </details>
               </li>
             </ul>
           </details>

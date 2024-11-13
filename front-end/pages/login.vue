@@ -27,10 +27,6 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useCookie } from 'nuxt/app'; // استفاده از useCookie
-
 const username = ref('');
 const password = ref('');
 const checkLogin = ref(false);

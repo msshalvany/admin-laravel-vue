@@ -52,13 +52,38 @@
       }
     };
 
-
+    definePageMeta({
+      middleware: ['auth'],
+    });
 </script>
 
 
 <template>
   <alert-error v-if="errorStatus" :text="errorStatus"></alert-error>
   <alert-success v-if="succStatus" :text="succStatus"></alert-success>
+
+  <div class="breadcrumbs text-sm p-4">
+    <ul>
+      <li>
+        <nuxt-link to="/">
+          <Icon name="ic:baseline-home" size="18" class="ml-2"/>
+          خانه
+        </nuxt-link>
+      </li>
+      <li>
+        <a>
+          <Icon name="ph:users-three-light" size="18" class="ml-2"/>
+          کاربران
+        </a>
+      </li>
+      <li>
+        <a>
+          <Icon name="hugeicons:lock-key" size="18"  class="ml-2"/>
+          سطوح دسترسی
+        </a>
+      </li>
+    </ul>
+  </div>
   <div class="p-8 m-auto w-10/12">
     <form @submit.prevent="submitForm">
       <label class="input input-bordered flex items-center gap-4 mt-4">

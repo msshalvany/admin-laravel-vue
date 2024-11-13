@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
-
 // ایجاد یک متغیر برای ذخیره لیست کاربران
 const users = ref([]);
 
@@ -43,15 +41,14 @@ definePageMeta({
     <div class="breadcrumbs text-sm">
       <ul>
         <li>
-          <a>
+          <nuxt-link to="/">
             <Icon name="ic:baseline-home" size="18" class="ml-2"/>
             خانه
-          </a>
+          </nuxt-link>
         </li>
         <li>
           <a>
             <Icon name="ph:users-three-light" size="18" class="ml-2"/>
-            خانه
             کاربران
           </a>
         </li>
