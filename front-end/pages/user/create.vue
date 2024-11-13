@@ -51,10 +51,6 @@
         setTimeout(function () {  errorStatus.value = null},4000)
       }
     };
-
-    definePageMeta({
-      middleware: ['auth'],
-    });
 </script>
 
 

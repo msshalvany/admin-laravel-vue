@@ -29,11 +29,6 @@ const fetchUsers = async () => {
 onMounted(() => {
   fetchUsers();
 });
-
-// تنظیم متا دیتا برای استفاده از میانه‌راه (middleware)
-definePageMeta({
-  middleware: ['auth'],
-});
 </script>
 
 <template>
