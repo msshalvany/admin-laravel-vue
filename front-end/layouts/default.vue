@@ -24,10 +24,10 @@
                 </NuxtLink>
               </li>
               <li>
-                <a>
+                <NuxtLink to="/user/permisition">
                   <Icon name="hugeicons:lock-key" size="24" />
                   سطوح دسترسی
-                </a>
+                </NuxtLink>
               </li>
             </ul>
           </details>

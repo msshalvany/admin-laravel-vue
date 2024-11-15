@@ -67,15 +67,15 @@
         </nuxt-link>
       </li>
       <li>
-        <a>
+        <nuxt-link to="/user">
           <Icon name="ph:users-three-light" size="18" class="ml-2"/>
-          کاربران
-        </a>
+          لیست کاربران
+        </nuxt-link>
       </li>
       <li>
         <a>
-          <Icon name="hugeicons:lock-key" size="18"  class="ml-2"/>
-          سطوح دسترسی
+          <Icon name="hugeicons:user" size="18"  class="ml-2"/>
+          کاربر جدید
         </a>
       </li>
     </ul>

@@ -11,25 +11,26 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
+import { useColorMode } from '@vueuse/core'; // یا هر کتابخانه‌ای که استفاده می‌کنید
 
 const isDarkTheme = ref(false);
+const colorMode = useColorMode(); // دریافت رنگ پوسته
 
-function toggleTheme() {
-  document.documentElement.setAttribute('data-theme', isDarkTheme.value ? 'dark' : 'light');
+function updateTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme); // تغییر data-theme
+  colorMode.value = theme; // تغییر مقدار colorMode
+  localStorage.setItem('theme', theme); // ذخیره تم در localStorage
 }
 
-// هنگام بارگذاری اولیه، بررسی و تنظیم تم
-onMounted(() => {
-  if (localStorage.getItem('theme') === 'dark') {
-    isDarkTheme.value = true;
-    document.documentElement.setAttribute('data-theme', 'dark');
-  } else {
-    document.documentElement.setAttribute('data-theme', 'light');
-  }
-});
+function toggleTheme() {
+  const theme = isDarkTheme.value ? 'dark' : 'light';
+  updateTheme(theme);
+}
 
-// ذخیره‌سازی تم در localStorage هنگام تغییر
-watch(isDarkTheme, (newValue) => {
-  localStorage.setItem('theme', newValue ? 'dark' : 'light');
+// هنگام بارگذاری اولیه، بررسی تم ذخیره‌شده
+onMounted(() => {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  isDarkTheme.value = savedTheme === 'dark';
+  updateTheme(savedTheme);
 });
 </script>
