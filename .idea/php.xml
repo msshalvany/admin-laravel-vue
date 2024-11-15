@@ -129,6 +129,7 @@
       <path value="$PROJECT_DIR$/back-end/vendor/lcobucci/clock" />
       <path value="$PROJECT_DIR$/back-end/vendor/tymon/jwt-auth" />
       <path value="$PROJECT_DIR$/back-end/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/back-end/vendor/spatie/laravel-permission" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />

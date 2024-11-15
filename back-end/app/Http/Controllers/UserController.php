@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Permission;
+
 class UserController extends Controller
 {
     public function index()
@@ -86,4 +88,27 @@ class UserController extends Controller
             'message' => 'Customer deleted successfully'
         ], 204);
     }
+
+    public function getUserPermissions(User $user)
+    {
+        return $user->permissions->map(function ($permission) {
+            return [
+                'id' => $permission->id,
+                'name' => $permission->name,
+                'hasPermission' => true,
+            ];
+        });
+    }
+
+    public function updateUserPermission(User $user, Permission $permission, Request $request)
+    {
+        if ($request->has('hasPermission') && $request->hasPermission) {
+            $user->givePermissionTo($permission->name);
+        } else {
+            $user->revokePermissionTo($permission->name);
+        }
+
+        return response()->json(['message' => 'Permission updated successfully']);
+    }
+
 }
