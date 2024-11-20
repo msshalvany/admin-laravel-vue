@@ -43,6 +43,15 @@
         <h2 class="text-lg font-bold mb-4">
           لیست کاربران - {{ selectedPermission.name }}
         </h2>
+        <div>
+          <input
+              v-model="searchUser"
+              type="text"
+              placeholder="جستوجو"
+              class="input input-bordered w-full mb-2"
+              @input="showUsers(selectedPermission)"
+          />
+        </div>
         <table class="table w-full">
           <thead>
           <tr>
@@ -84,6 +93,7 @@ const permissions = ref([]); // لیست دسترسی‌ها
 const newPermission = ref(''); // مقدار ورودی دسترسی جدید
 const selectedPermission = ref(null); // دسترسی انتخاب شده برای نمایش کاربران
 const users = ref([]); // لیست کاربران مرتبط با دسترسی
+const searchUser = ref('');
 
 // دریافت لیست دسترسی‌ها
 const fetchPermissions = async () => {
@@ -115,7 +125,7 @@ const createPermission = async () => {
 const showUsers = async (permission) => {
   selectedPermission.value = permission;
   const response = await fetch(
-      `http://localhost:8000/api/permissions/${permission.id}/users`
+      `http://localhost:8000/api/permissions/${permission.id}/users/${searchUser.value}`
   );
   users.value = await response.json();
 };

@@ -27,7 +27,7 @@ Route::middleware([JwtMiddleware::class])->group( function () {
 
 Route::get('/permissions', [PermissionController::class, 'index']); // نمایش لیست دسترسی‌ها
 Route::post('/permissions', [PermissionController::class, 'store']); // ایجاد دسترسی جدید
-Route::get('/permissions/{permission}/users', [PermissionController::class, 'getUsers']);
+Route::get('/permissions/{permission}/users/{search?}', [PermissionController::class, 'getUsers']);
 Route::patch('/permissions/{permission}/users/{user}', [PermissionController::class, 'updatePermission']);
 
 Route::get('/users/{user}/permissions', [UserController::class, 'getUserPermissions']);

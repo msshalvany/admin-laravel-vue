@@ -9,15 +9,35 @@ use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $customers = User::all();
+        // دریافت پارامترهای صفحه‌بندی و جستجو
+        $page = $request->input('page', 1); // صفحه فعلی (پیش‌فرض 1)
+        $pageSize = $request->input('pageSize', 10); // تعداد رکوردها در هر صفحه (پیش‌فرض 10)
+        $search = $request->input('search', ''); // جستجو بر اساس نام
+
+        // ساخت کوئری برای گرفتن لیست کاربران با فیلتر جستجو و صفحه‌بندی
+        $query = User::query();
+
+        // اگر جستجویی وجود داشته باشد، فیلتر را اعمال می‌کنیم
+        if ($search) {
+            $query->where('username', 'like', '%' . $search . '%');
+        }
+
+        // انجام صفحه‌بندی با تعداد رکوردهای مشخص
+        $customers = $query->paginate($pageSize, ['*'], 'page', $page);
+
+        // بازگرداندن پاسخ
         return response()->json([
             'status' => true,
             'message' => 'Customers retrieved successfully',
-            'data' => $customers
+            'data' => $customers->items(), // داده‌های صفحه فعلی
+            'total' => $customers->total(), // تعداد کل کاربران
+            'current_page' => $customers->currentPage(), // صفحه فعلی
+            'last_page' => $customers->lastPage(), // آخرین صفحه
         ], 200);
     }
+
 
     public function show($id)
     {

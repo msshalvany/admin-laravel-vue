@@ -27,15 +27,19 @@ class PermissionController extends Controller
             'permission' => $permission
         ]);
     }
-    public function getUsers(Permission $permission)
+    public function getUsers(Permission $permission , $search = '')
     {
-        $users = User::all()->map(function ($user) use ($permission) {
-            return [
-                'id' => $user->id,
-                'username' => $user->username,
-                'hasPermission' => $user->hasPermissionTo($permission->name),
-            ];
-        });
+        $users = User::query()
+            ->when($search, function ($query, $searchQuery) {
+                $query->where('username', 'like', "%{$searchQuery}%");
+            })
+            ->get()->map(function ($user) use ($permission) {
+                return [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                    'hasPermission' => $user->hasPermissionTo($permission->name),
+                ];
+            });
 
         return response()->json($users);
     }
