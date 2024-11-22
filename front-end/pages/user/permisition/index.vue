@@ -80,13 +80,14 @@
         </div>
       </div>
     </div>
+    <alert-error v-if="alert_error !== ''" :text="alert_error"></alert-error>
   </div>
 
-  <alert-error v-if="alert_error !== ''" :text="alert_error"></alert-error>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
+import {loaderfun} from "~/composables/statFunc.js";
 
 let alert_error = ref('');
 const permissions = ref([]); // لیست دسترسی‌ها
@@ -110,7 +111,7 @@ const createPermission = async () => {
     }, 5000);
     return;
   }
-
+  loaderfun()
   await fetch('http://localhost:8000/api/permissions', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -119,19 +120,23 @@ const createPermission = async () => {
 
   newPermission.value = '';
   fetchPermissions(); // به‌روز‌رسانی لیست دسترسی‌ها
+  loaderfun()
 };
 
 // نمایش کاربران مرتبط با دسترسی
 const showUsers = async (permission) => {
   selectedPermission.value = permission;
+  loaderfun()
   const response = await fetch(
       `http://localhost:8000/api/permissions/${permission.id}/users/${searchUser.value}`
   );
   users.value = await response.json();
+  loaderfun()
 };
 
 // تغییر وضعیت دسترسی کاربر
 const togglePermission = async (user) => {
+  loaderfun()
   await fetch(`http://localhost:8000/api/permissions/${selectedPermission.value.id}/users/${user.id}`, {
     method: 'PATCH',
     headers: {'Content-Type': 'application/json'},
@@ -140,6 +145,7 @@ const togglePermission = async (user) => {
 
   // به‌روز‌رسانی وضعیت کاربر
   user.hasPermission = !user.hasPermission;
+  loaderfun()
 };
 
 // بستن مودال
