@@ -100,11 +100,11 @@ const submitForm = async () => {
           <input v-model="username" type="text" class="grow" placeholder="نام کاربری"/>
         </label>
         <label class="input input-bordered flex items-center gap-2 mt-4">
-          <Icon name="ant-design:key-outlined" size="18" class="ml-2"/>
+          <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2"/>
           <input v-model="password" type="password" class="grow" placeholder="رمز عبور"/>
         </label>
         <label class="input input-bordered flex items-center gap-2 mt-4">
-          <Icon name="ant-design:key-outlined" size="18" class="ml-2"/>
+          <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2"/>
           <input v-model="passwordConfirmation" type="password" class="grow" placeholder="تکرار رمز عبور"/>
         </label>
         <label class="input input-bordered flex items-center gap-2 mt-4">

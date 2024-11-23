@@ -1,0 +1,20 @@
+.alert-primery-soft{
+    background: #b4e3ff;
+    color: #0088a7;
+    font-weight: bold;
+}
+.alert-error-soft{
+    background: #ffc8c8;
+    color: #FF0736;
+    font-weight: bold;
+}
+.alert-warning-soft{
+    background: #ffe227;
+    color: #ad7002;
+    font-weight: bold;
+}
+.alert-success-soft{
+    background: #b5ffb0;
+    color: #0f9038;
+    font-weight: bold;
+}

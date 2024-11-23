@@ -15,9 +15,9 @@ function fadOute() {
 <template>
   <transition name="fade">
     <div class="toast  toast-top toast-end" @click="fadOute" style="z-index: 14;" v-if="active">
-      <div class="alert alert-warning">
-        <Icon name="uil:check-circle" size="24"></Icon>
+      <div class="alert alert-warning alert-warning-soft">
         <span>{{text}}</span>
+        <Icon name="ic-round-warning" size="24"></Icon>
       </div>
     </div>
   </transition>

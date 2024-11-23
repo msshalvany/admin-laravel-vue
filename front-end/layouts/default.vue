@@ -15,7 +15,7 @@
           <li>
             <details>
               <summary>
-                <Icon name="ph:users-three-light" size="24"/>
+                <Icon name="ph:users-three" size="24"/>
                 کاربران
               </summary>
               <ul>

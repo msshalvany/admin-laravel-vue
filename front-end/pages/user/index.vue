@@ -114,7 +114,7 @@ onMounted(fetchUsers);
         <div class="text-left">
           <button class="btn btn-success">
             ایجاد کاربر جدید
-            <Icon name="mingcute:plus-fill"/>
+            <Icon name="material-symbols-add-circle" size="18"/>
           </button>
         </div>
       </NuxtLink>
