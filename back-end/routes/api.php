@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\JwtMiddleware;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\DriverController;
 
 Route::get('/', function () {
     return response()->json('hello world',200);
@@ -33,4 +34,10 @@ Route::patch('/permissions/{permission}/users/{user}', [PermissionController::cl
 Route::get('/users/{user}/permissions', [UserController::class, 'getUserPermissions']);
 Route::patch('/users/{user}/permissions/{permission}', [UserController::class, 'updateUserPermission']);
 
+Route::prefix('drivers')->group(function () {
+    Route::get('/', [DriverController::class, 'index']);
+    Route::post('/store', [DriverController::class, 'store']);
+    Route::delete('/{id}', [DriverController::class, 'destroy']);
+    Route::put('/{driver}', [DriverController::class, 'update']);
+});
 

@@ -1,23 +1,16 @@
 <script setup>
-defineProps(['text'])
-let active =  ref(true)
-onMounted(()=>{
-  setTimeout(()=>{
-      active.value=false
-  },3000)
-})
+import {useAlertStateError, useAlertText} from "~/composables/states.js";
 
-function fadOute() {
-  active.value=false
-}
+let State = useAlertStateError()
+let text = useAlertText()
 </script>
 
 <template>
   <transition name="fade">
-    <div class="toast toast-top toast-end" @click="fadOute" style="z-index: 14;" v-if="active">
+    <div class="toast toast-top toast-start" style="z-index: 14;" v-if="State">
       <div class="alert alert-error alert-error-soft">
-        <span>{{text}}</span>
         <Icon name="ooui-error" size="24"></Icon>
+        <span>{{text}}</span>
       </div>
     </div>
   </transition>

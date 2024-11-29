@@ -19,6 +19,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 function logout() {
+  const jwtCookie = useCookie('jwt');
+  jwtCookie.value=null
   router.push('/login');
 }
 </script>

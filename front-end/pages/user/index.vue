@@ -151,6 +151,8 @@ onMounted(fetchUsers);
       <!-- مودال مدیریت دسترسی‌ها -->
       <div v-if="showModal" class="modal modal-open">
         <div class="modal-box">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+          <br>
           <h2 class="text-lg font-bold mb-4">مدیریت دسترسی‌ها - {{ selectedUser?.username }}</h2>
           <table class="table w-full">
             <thead>
@@ -175,9 +177,6 @@ onMounted(fetchUsers);
             </tr>
             </tbody>
           </table>
-          <div class="modal-action">
-            <button class="btn btn-error" @click="closeModal">بستن</button>
-          </div>
         </div>
       </div>
     </div>

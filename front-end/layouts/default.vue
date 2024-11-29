@@ -2,6 +2,9 @@
 <template>
   <div>
     <loader></loader>
+    <AlertError></AlertError>
+    <AlertSuccess></AlertSuccess>
+    <AlertWarning></AlertWarning>
     <div class="drawer lg:drawer-open" dir="rtl">
       <input id="my-drawer-2" type="checkbox" class="drawer-toggle"/>
 
@@ -10,24 +13,21 @@
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu bg-base-100 text-base-content min-h-full w-80 p-4">
           <li>
-
-          </li>
-          <li>
             <details>
               <summary>
-                <Icon name="ph:users-three" size="24"/>
+                <Icon name="ph:users-three" size="26"/>
                 کاربران
               </summary>
               <ul>
                 <li>
                   <NuxtLink to="/user">
-                    <Icon name="hugeicons:user-list" size="24"/>
+                    <Icon name="hugeicons:user-list" size="26"/>
                     لیست کاربران
                   </NuxtLink>
                 </li>
                 <li>
                   <NuxtLink to="/user/permisition">
-                    <Icon name="hugeicons:lock-key" size="24"/>
+                    <Icon name="hugeicons:lock-key" size="26"/>
                     سطوح دسترسی
                   </NuxtLink>
                 </li>
@@ -35,9 +35,36 @@
             </details>
           </li>
           <li>
+            <details>
+              <summary>
+                <Icon name="ph:truck-trailer-light" size="26"/>
+                تردد
+              </summary>
+              <ul>
+                <li>
+                  <NuxtLink to="/LoadingRecord/drivers/">
+                    <Icon name="healthicons:truck-driver" size="26"/>
+                    رانندگان
+                  </NuxtLink>
+                </li>
+                <li>
+                  <NuxtLink to="/user/permisition">
+                    <Icon name="mdi:truck-fast-outline" size="26"/>
+                    ثبت تردد
+                  </NuxtLink>
+                </li>
+                <li>
+                  <NuxtLink to="/user/permisition">
+                    <Icon name="streamline:shipping-transfer-truck-time-truck-shipping-delivery-time-waiting-delay"
+                          size="26"/>
+                    تاریخچه
+                  </NuxtLink>
+                </li>
+              </ul>
+            </details>
             <a>
-              <Icon name="uil:dashboard" size="24"></Icon>
-              reports-final-2.pdf
+              <Icon name="octicon:organization-16" size="24"></Icon>
+              کمپانی ها
             </a>
           </li>
         </ul>
@@ -54,7 +81,7 @@
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-6 w-6"
                   fill="none"
-                  viewBox="0 0 24 24"
+                  viewBox="0 0 26 26"
                   stroke="currentColor"
               >
                 <path

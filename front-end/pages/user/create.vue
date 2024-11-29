@@ -1,22 +1,17 @@
 <script setup>
 // تعریف متغیرها با استفاده از ref
-import {loaderfun} from "~/composables/statFunc.js";
+import {AlertError, AlertSuccess, loaderfun} from "~/composables/statFunc.js";
 
 const username = ref('');
 const password = ref('');
 const passwordConfirmation = ref('');
 const mobile = ref('');
-let errorStatus = ref(null);
-let succStatus = ref(null);
 const jwtCookie = useCookie('jwt');
 
 // متد ارسال فرم
 const submitForm = async () => {
   if (password.value !== passwordConfirmation.value) {
-    errorStatus.value = "رمز عبور مطابقت ندارد";
-    setTimeout(function () {
-      errorStatus.value = null
-    }, 4000)
+    AlertError("رمز عبور مطابقت ندارد")
     return 0
   }
   loaderfun()
@@ -38,15 +33,9 @@ const submitForm = async () => {
     if (!response.ok) {
       const errorData = await response.json();
       console.error(errorData.errors);
-      errorStatus.value = "اطلاعات را صحیح وارد کنید";
-      setTimeout(function () {
-        errorStatus.value = null
-      }, 4000)
+      AlertError("اطلاعات را صحیح وارد کنید");
     } else {
-      succStatus.value = "اطلاعات با موفقیت ثبت شد";
-      setTimeout(function () {
-        succStatus.value = null
-      }, 4000)
+      AlertSuccess("اطلاعات با موفقیت ثبت شد");
 
       // پاک‌سازی فرم بعد از موفقیت
       username.value = '';
@@ -56,10 +45,7 @@ const submitForm = async () => {
     }
   } catch (error) {
     console.error('Error:', error);
-    errorStatus.value = "مشکلی رخ داده";
-    setTimeout(function () {
-      errorStatus.value = null
-    }, 4000)
+    AlertError("مشکلی رخ داده");
   }
   loaderfun()
 };
@@ -68,9 +54,6 @@ const submitForm = async () => {
 
 <template>
   <div>
-    <alert-error v-if="errorStatus" :text="errorStatus"></alert-error>
-    <alert-success v-if="succStatus" :text="succStatus"></alert-success>
-
     <div class="breadcrumbs text-sm p-4">
       <ul>
         <li>

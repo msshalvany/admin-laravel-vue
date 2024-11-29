@@ -40,6 +40,8 @@
     <!-- مودال کاربران -->
     <div v-if="selectedPermission" class="modal modal-open">
       <div class="modal-box">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+        <br>
         <h2 class="text-lg font-bold mb-4">
           لیست کاربران - {{ selectedPermission.name }}
         </h2>
@@ -75,21 +77,16 @@
           </tr>
           </tbody>
         </table>
-        <div class="modal-action">
-          <button class="btn btn-error" @click="closeModal">بستن</button>
-        </div>
       </div>
     </div>
-    <alert-error v-if="alert_error !== ''" :text="alert_error"></alert-error>
   </div>
 
 </template>
 
 <script setup>
 import {ref, onMounted} from 'vue';
-import {loaderfun} from "~/composables/statFunc.js";
+import {AlertError, AlertSuccess, loaderfun} from "~/composables/statFunc.js";
 
-let alert_error = ref('');
 const permissions = ref([]); // لیست دسترسی‌ها
 const newPermission = ref(''); // مقدار ورودی دسترسی جدید
 const selectedPermission = ref(null); // دسترسی انتخاب شده برای نمایش کاربران
@@ -105,10 +102,7 @@ const fetchPermissions = async () => {
 // ایجاد دسترسی جدید
 const createPermission = async () => {
   if (!newPermission.value) {
-    alert_error.value = 'نام دسترسی را وارد کنید';
-    setTimeout(() => {
-      alert_error.value = '';
-    }, 5000);
+    AlertError( 'نام دسترسی را وارد کنید');
     return;
   }
   loaderfun()
@@ -117,7 +111,7 @@ const createPermission = async () => {
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({name: newPermission.value}),
   });
-
+  AlertSuccess('سطح دسترسی با موفقیت ایجاد شد')
   newPermission.value = '';
   fetchPermissions(); // به‌روز‌رسانی لیست دسترسی‌ها
   loaderfun()
