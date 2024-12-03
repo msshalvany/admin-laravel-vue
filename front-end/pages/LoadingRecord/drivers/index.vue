@@ -54,7 +54,7 @@ const fetchDrivers = async () => {
   status.value = true;
   try {
     const response = await fetch(
-        `http://localhost:8000/api/drivers?page=${page.value}&sort=${sort.value.column}&order=${sort.value.direction}&q=${q.value}`,
+        `${basUrl().value}/drivers?page=${page.value}&sort=${sort.value.column}&order=${sort.value.direction}&q=${q.value}`,
         {
           method: "GET",
           headers: {
@@ -88,7 +88,7 @@ const updateDriver = async () => {
   loaderfun();
   try {
     const response = await fetch(
-        `http://localhost:8000/api/drivers/${selectedDriver.value.id}`,
+        `${basUrl().value}/drivers/${selectedDriver.value.id}`,
         {
           method: "PUT",
           headers: {
@@ -122,7 +122,7 @@ const confirmDelete = async () => {
   loaderfun();
   try {
     const response = await fetch(
-        `http://localhost:8000/api/drivers/${driverToDelete.value}`,
+        `${basUrl().value}/drivers/${driverToDelete.value}`,
         {
           method: "DELETE",
           headers: {

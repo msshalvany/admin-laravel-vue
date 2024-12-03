@@ -2,6 +2,7 @@
 import {ref, onMounted} from 'vue';
 import {useCookie} from 'nuxt/app';
 import {loaderfun} from "~/composables/statFunc.js";
+import {basUrl} from "~/composables/states.js";
 
 // لیست کاربران
 const users = ref([]);
@@ -15,7 +16,7 @@ const showModal = ref(false);
 // دریافت لیست کاربران
 const fetchUsers = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/users', {
+    const response = await fetch(`${basUrl().value}/users`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${useCookie('jwt').value}`,
@@ -40,7 +41,7 @@ const fetchUserPermissions = async (user) => {
   selectedUser.value = user;
   showModal.value = true;
   try {
-    const response = await fetch(`http://localhost:8000/api/users/${user.id}/permissions`, {
+    const response = await fetch(`${basUrl().value}/users/${user.id}/permissions`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${useCookie('jwt').value}`,
@@ -63,7 +64,7 @@ const fetchUserPermissions = async (user) => {
 const togglePermission = async (permission) => {
   loaderfun()
   try {
-    await fetch(`http://localhost:8000/api/users/${selectedUser.value.id}/permissions/${permission.id}`, {
+    await fetch(`${basUrl().value}/users/${selectedUser.value.id}/permissions/${permission.id}`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${useCookie('jwt').value}`,

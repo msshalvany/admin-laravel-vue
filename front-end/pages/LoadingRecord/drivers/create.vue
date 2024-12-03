@@ -12,7 +12,7 @@ const jwtCookie = useCookie('jwt');
 const submitForm = async () => {
   loaderfun()
   try {
-    const response = await fetch('http://localhost:8000/api/drivers/store', {
+    const response = await fetch(`${basUrl().value}/drivers/store`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

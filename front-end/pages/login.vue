@@ -27,6 +27,8 @@
 </template>
 
 <script setup>
+import {basUrl} from "~/composables/states.js";
+
 const username = ref('');
 const password = ref('');
 const checkLogin = ref(false);
@@ -46,7 +48,7 @@ definePageMeta({
 // توابع مربوط به ورود
 const login = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/login', {
+    const response = await fetch(`${basUrl().value}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

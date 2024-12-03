@@ -1,6 +1,7 @@
 <script setup>
 // تعریف متغیرها با استفاده از ref
 import {AlertError, AlertSuccess, loaderfun} from "~/composables/statFunc.js";
+import {basUrl} from "~/composables/states.js";
 
 const username = ref('');
 const password = ref('');
@@ -16,7 +17,7 @@ const submitForm = async () => {
   }
   loaderfun()
   try {
-    const response = await fetch('http://localhost:8000/api/users', {
+    const response = await fetch(`${basUrl().value}/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

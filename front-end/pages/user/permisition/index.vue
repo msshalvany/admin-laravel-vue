@@ -86,6 +86,7 @@
 <script setup>
 import {ref, onMounted} from 'vue';
 import {AlertError, AlertSuccess, loaderfun} from "~/composables/statFunc.js";
+import {basUrl} from "~/composables/states.js";
 
 const permissions = ref([]); // لیست دسترسی‌ها
 const newPermission = ref(''); // مقدار ورودی دسترسی جدید
@@ -95,7 +96,7 @@ const searchUser = ref('');
 
 // دریافت لیست دسترسی‌ها
 const fetchPermissions = async () => {
-  const response = await fetch('http://localhost:8000/api/permissions');
+  const response = await fetch(`${basUrl().value}/permissions`);
   permissions.value = await response.json();
 };
 
@@ -106,7 +107,7 @@ const createPermission = async () => {
     return;
   }
   loaderfun()
-  await fetch('http://localhost:8000/api/permissions', {
+  await fetch(`${basUrl().value}/permissions`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({name: newPermission.value}),
@@ -122,7 +123,7 @@ const showUsers = async (permission) => {
   selectedPermission.value = permission;
   loaderfun()
   const response = await fetch(
-      `http://localhost:8000/api/permissions/${permission.id}/users/${searchUser.value}`
+      `${basUrl().value}/permissions/${permission.id}/users/${searchUser.value}`
   );
   users.value = await response.json();
   loaderfun()
@@ -131,7 +132,7 @@ const showUsers = async (permission) => {
 // تغییر وضعیت دسترسی کاربر
 const togglePermission = async (user) => {
   loaderfun()
-  await fetch(`http://localhost:8000/api/permissions/${selectedPermission.value.id}/users/${user.id}`, {
+  await fetch(`${basUrl().value}/permissions/${selectedPermission.value.id}/users/${user.id}`, {
     method: 'PATCH',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({hasPermission: !user.hasPermission}),
