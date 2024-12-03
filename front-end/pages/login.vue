@@ -1,7 +1,13 @@
 <template>
+  <loader></loader>
+  <AlertError></AlertError>
+  <AlertSuccess></AlertSuccess>
   <div class="relative flex flex-col justify-center h-screen overflow-hidden" dir="rtl">
-    <div class="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
-      <h1 class="text-3xl font-semibold text-center text-gray-700">Login</h1>
+    <div class="w-10/12 p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
+      <h1 class="text-3xl font-semibold text-center text-gray-700">
+        <span class="m-3">ورود</span>
+        <Icon class="align-top" style="vertical-align:-6px" name="lets-icons:sign-in"></Icon>
+      </h1>
       <form @submit.prevent="login">
         <div>
           <label class="label">
@@ -27,8 +33,6 @@
 </template>
 
 <script setup>
-import {basUrl} from "~/composables/states.js";
-
 const username = ref('');
 const password = ref('');
 const checkLogin = ref(false);
@@ -47,6 +51,7 @@ definePageMeta({
 
 // توابع مربوط به ورود
 const login = async () => {
+  loaderfun()
   try {
     const response = await fetch(`${basUrl().value}/login`, {
       method: 'POST',
@@ -61,16 +66,18 @@ const login = async () => {
 
     // بررسی موفقیت‌آمیز بودن درخواست
     if (!response.ok) {
-      throw new Error('نام کاربری یا رمز عبور اشتباه است');
+      loaderfun()
+      AlertError('نام کاربری یا رمز عبور اشتباه است');
+    } else {
+      loaderfun()
+      AlertSuccess('ورود موفقیت آمیز بود')
+      const data = await response.json();
+      // ذخیره کردن توکن JWT در کوکی
+      jwtCookie.value = data.token;
+
+      // هدایت به صفحه اصلی پس از ورود موفق
+      router.push('/');
     }
-
-    const data = await response.json();
-
-    // ذخیره کردن توکن JWT در کوکی
-    jwtCookie.value = data.token;
-
-    // هدایت به صفحه اصلی پس از ورود موفق
-    router.push('/');
   } catch (error) {
     // نمایش پیام خطا
     checkLogin.value = true;

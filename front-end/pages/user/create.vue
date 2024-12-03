@@ -80,7 +80,7 @@ const submitForm = async () => {
     <div class="p-8 m-auto w-10/12">
       <form @submit.prevent="submitForm">
         <label class="input input-bordered flex items-center gap-4 mt-4">
-          <Icon name="mdi:user" size="18" class="ml-2"/>
+          <Icon name="material-symbols:account-circle-full" size="18" class="ml-2"/>
           <input v-model="username" type="text" class="grow" placeholder="نام کاربری"/>
         </label>
         <label class="input input-bordered flex items-center gap-2 mt-4">
@@ -93,7 +93,7 @@ const submitForm = async () => {
         </label>
         <label class="input input-bordered flex items-center gap-2 mt-4">
           <Icon name="uiw-mobile" size="18" class="ml-2"/>
-          <input v-model="mobile" type="number" class="grow" placeholder="شماره همراه"/>
+          <input v-model="mobile" name="mobile" type="number" class="grow" placeholder="شماره همراه"/>
         </label>
         <button type="submit" class="btn btn-primary mt-4">ثبت</button>
       </form>
