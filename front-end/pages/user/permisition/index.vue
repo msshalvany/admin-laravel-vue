@@ -3,16 +3,16 @@
     <h1 class="text-2xl font-bold mb-4">مدیریت دسترسی‌ها</h1>
 
     <!-- جدول دسترسی‌ها -->
-    <table class="table w-full">
+    <table class="table table-sm w-full">
       <thead>
-      <tr>
+      <tr  class="text-center">
         <th>#</th>
         <th>نام دسترسی</th>
         <th>عملیات</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(permission, index) in permissions" :key="permission.id">
+      <tr v-for="(permission, index) in permissions" :key="permission.id" class="hover text-center">
         <td>{{ index + 1 }}</td>
         <td>{{ permission.name }}</td>
         <td>

@@ -77,7 +77,6 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255',
-            'password' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -89,6 +88,9 @@ class UserController extends Controller
         }
 
         $customer = User::findOrFail($id);
+        if ($request->input('password')==null) {
+            $request->merge(['password' => $customer->password]);
+        }
         $customer->update($request->all());
 
         return response()->json([

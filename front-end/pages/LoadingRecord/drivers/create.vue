@@ -5,8 +5,6 @@ import {loaderfun} from "~/composables/statFunc.js";
 const name = ref('');
 const address = ref('');
 const license_number = ref('');
-let errorStatus = ref(null);
-let succStatus = ref(null);
 const jwtCookie = useCookie('jwt');
 // متد ارسال فرم
 const submitForm = async () => {
@@ -29,27 +27,16 @@ const submitForm = async () => {
     if (!response.ok) {
       const errorData = await response.json();
       console.error(errorData.errors);
-      errorStatus.value = "اطلاعات را صحیح وارد کنید";
-      setTimeout(function () {
-        errorStatus.value = null
-      }, 4000)
+      AlertError('اطلاعات را صحیح وارد کنید')
     } else {
-      succStatus.value = "اطلاعات با موفقیت ثبت شد";
-      setTimeout(function () {
-        succStatus.value = null
-      }, 4000)
-
       // پاک‌سازی فرم بعد از موفقیت
       name.value = '';
       address.value = '';
       license_number.value = '';
+      AlertSuccess('راننده با موفقیت اضافه شد')
     }
   } catch (error) {
     console.error('Error:', error);
-    errorStatus.value = "مشکلی رخ داده";
-    setTimeout(function () {
-      errorStatus.value = null
-    }, 4000)
   }
   loaderfun()
 };
@@ -58,9 +45,6 @@ const submitForm = async () => {
 
 <template>
   <div>
-    <alert-error v-if="errorStatus" :text="errorStatus"></alert-error>
-    <alert-success v-if="succStatus" :text="succStatus"></alert-success>
-
     <div class="breadcrumbs text-sm p-4">
       <ul>
         <li>
@@ -76,10 +60,12 @@ const submitForm = async () => {
           </a>
         </li>
         <li>
+          <nuxt-link to="/LoadingRecord/drivers">
           <a>
             <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
             رانندگان
           </a>
+          </nuxt-link>
         </li>
         <li>
           <a>

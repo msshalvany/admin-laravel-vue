@@ -28,6 +28,18 @@ class DriverController extends Controller
         return response()->json($drivers, 200);
     }
 
+    public function all(Request $request)
+    {
+        // دریافت پارامترها
+        $search = $request->query('q', '');
+        // واکشی داده‌ها با جستجو، مرتب‌سازی و صفحه‌بندی
+        $drivers = Driver::where('name', 'like', "%{$search}%")
+            ->orWhere('address', 'like', "%{$search}%")
+            ->orWhere('id', 'like', "%{$search}%")
+            ->orWhere('license_number', 'like', "%{$search}%")->get();
+        return response()->json($drivers, 200);
+    }
+
 
     public function store(Request $request)
     {
@@ -45,10 +57,7 @@ class DriverController extends Controller
             ], 422);
         }
 
-        for ($i=0;$i<300;$i++ ) {
         $customer = Driver::create($request->all());
-
-        }
         return response()->json([
             'status' => true,
             'message' => 'Customer created successfully',

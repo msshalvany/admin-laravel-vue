@@ -7,6 +7,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Middleware\JwtMiddleware;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\TruckController;
+use App\Http\Controllers\CompanyController;
+
 
 Route::get('/', function () {
     return response()->json('hello world',200);
@@ -36,8 +39,24 @@ Route::patch('/users/{user}/permissions/{permission}', [UserController::class, '
 
 Route::prefix('drivers')->group(function () {
     Route::get('/', [DriverController::class, 'index']);
+    Route::get('/all', [DriverController::class, 'all']);
     Route::post('/store', [DriverController::class, 'store']);
     Route::delete('/{id}', [DriverController::class, 'destroy']);
     Route::put('/{driver}', [DriverController::class, 'update']);
 });
 
+Route::prefix('trucks')->group(function () {
+    Route::get('/', [TruckController::class, 'index']); // لیست کامیون‌ها
+    Route::post('/store', [TruckController::class, 'store']); // ایجاد کامیون جدید
+    Route::get('{truck}', [TruckController::class, 'show']); // نمایش جزئیات کامیون
+    Route::put('{truck}', [TruckController::class, 'update']); // ویرایش کامیون
+    Route::delete('{truck}', [TruckController::class, 'destroy']); // حذف کامیون
+});
+
+Route::prefix('companies')->group(function () {
+    Route::get('/', [CompanyController::class, 'index']); // لیست کمپانی‌ها
+    Route::get('{id}', [CompanyController::class, 'show']); // نمایش کمپانی
+    Route::post('/', [CompanyController::class, 'store']); // ایجاد کمپانی
+    Route::put('{id}', [CompanyController::class, 'update']); // ویرایش کمپانی
+    Route::delete('{id}', [CompanyController::class, 'destroy']); // حذف کمپانی
+});

@@ -4,10 +4,10 @@ import { useCookie } from "nuxt/app";
 import { AlertSuccess, loaderfun } from "~/composables/statFunc.js";
 
 const columns = [
-  { key: "id", label: "#", sortable: true },
-  { key: "name", label: "نام و نام خانوادگی", sortable: true },
-  { key: "address", label: "آدرس", sortable: true },
-  { key: "license_number", label: "شماره گواهی‌نامه", sortable: true },
+  { key: "plate_number", label: "پلاک کامیون", sortable: true },
+  { key: "color", label: "رنگ", sortable: true },
+  { key: "type", label: "نوع کامیون", sortable: true },
+  { key: "weight", label: "وزن", sortable: true },
   { key: "actions", label: "عملیات" },
 ];
 
@@ -16,7 +16,7 @@ const items = (row) => [
     {
       label: "ویرایش",
       icon: "i-heroicons-pencil-square-20-solid",
-      click: () => editDriver(row),
+      click: () => editTruck(row),
     },
   ],
   [
@@ -28,34 +28,34 @@ const items = (row) => [
   ],
 ];
 
-const drivers = ref([]);
+const trucks = ref([]);
 const page = ref(1);
 const pageCount = ref(0);
 const total = ref(0);
-const sort = ref({ column: "name", direction: "asc" });
+const sort = ref({ column: "plate_number", direction: "asc" });
 const q = ref('');
 const status = ref(false);
 
-// برای نگه‌داری وضعیت راننده‌ای که قرار است ویرایش شود
-const selectedDriver = ref(null);
+// برای نگه‌داری وضعیت کامیونی که قرار است ویرایش شود
+const selectedTruck = ref(null);
 
-// برای نگه‌داری اطلاعات ویرایش شده راننده
-const newDriverData = ref({
-  name: "",
-  address: "",
-  license_number: "",
+// برای نگه‌داری اطلاعات ویرایش شده کامیون
+const newTruckData = ref({
+  plate_number: "",
+  color: "",
+  type: "",
+  weight: "",
 });
 
 // برای نگه‌داری وضعیت مودال تایید حذف
 const showDeleteConfirmation = ref(false);
-const driverToDelete = ref(null); // برای نگه‌داری راننده‌ای که باید حذف شود
+const truckToDelete = ref(null); // برای نگه‌داری کامیونی که باید حذف شود
 
-const fetchDrivers = async () => {
+const fetchTrucks = async () => {
   status.value = true;
   try {
-    console.log(q.value)
     const response = await fetch(
-        `${basUrl().value}/drivers?page=${page.value}&sort=${sort.value.column}&order=${sort.value.direction}&q=${q.value}`,
+        `${basUrl().value}/trucks?page=${page.value}&sort=${sort.value.column}&order=${sort.value.direction}&q=${q.value}`,
         {
           method: "GET",
           headers: {
@@ -67,11 +67,11 @@ const fetchDrivers = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      drivers.value = data.data;
+      trucks.value = data.data;
       pageCount.value = data.last_page;
       total.value = data.total;
     } else {
-      console.error("Error fetching drivers:", response.status);
+      console.error("Error fetching trucks:", response.status);
     }
   } catch (error) {
     console.error("Error:", error);
@@ -80,32 +80,32 @@ const fetchDrivers = async () => {
   }
 };
 
-const editDriver = (driver) => {
-  selectedDriver.value = driver;
-  newDriverData.value = { ...driver }; // بارگذاری داده‌های راننده برای ویرایش
+const editTruck = (truck) => {
+  selectedTruck.value = truck;
+  newTruckData.value = { ...truck }; // بارگذاری داده‌های کامیون برای ویرایش
 };
 
-const updateDriver = async () => {
+const updateTruck = async () => {
   loaderfun();
   try {
     const response = await fetch(
-        `${basUrl().value}/drivers/${selectedDriver.value.id}`,
+        `${basUrl().value}/trucks/${selectedTruck.value.id}`,
         {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${useCookie("jwt").value}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(newDriverData.value),
+          body: JSON.stringify(newTruckData.value),
         }
     );
 
     if (response.ok) {
-      AlertSuccess('اطلاعات راننده با موفقیت بروزرسانی شد')
-      fetchDrivers();
+      AlertSuccess('اطلاعات کامیون با موفقیت بروزرسانی شد')
+      fetchTrucks();
       closeModal();
     } else {
-      console.error("Error updating driver:", response.status);
+      console.error("Error updating truck:", response.status);
     }
   } catch (error) {
     console.error("Error:", error);
@@ -113,18 +113,18 @@ const updateDriver = async () => {
   loaderfun();
 };
 
-// تابع برای شروع فرآیند حذف راننده
+// تابع برای شروع فرآیند حذف کامیون
 const initiateDelete = (id) => {
-  driverToDelete.value = id;
+  truckToDelete.value = id;
   showDeleteConfirmation.value = true; // نمایش مودال تایید حذف
 };
 
-// تابع برای تایید حذف راننده
+// تابع برای تایید حذف کامیون
 const confirmDelete = async () => {
   loaderfun();
   try {
     const response = await fetch(
-        `${basUrl().value}/drivers/${driverToDelete.value}`,
+        `${basUrl().value}/trucks/${truckToDelete.value}`,
         {
           method: "DELETE",
           headers: {
@@ -135,11 +135,11 @@ const confirmDelete = async () => {
     );
 
     if (response.ok) {
-      AlertSuccess("راننده با موفقیت حذف شد");
-      fetchDrivers();
+      AlertSuccess("کامیون با موفقیت حذف شد");
+      fetchTrucks();
       closeDeleteModal(); // بستن مودال تایید حذف
     } else {
-      console.error("Error deleting driver:", response.status);
+      console.error("Error deleting truck:", response.status);
     }
   } catch (error) {
     console.error("Error:", error);
@@ -150,35 +150,35 @@ const confirmDelete = async () => {
 // تابع برای لغو عملیات حذف
 const cancelDelete = () => {
   showDeleteConfirmation.value = false; // بستن مودال تایید حذف
-  driverToDelete.value = null;
+  truckToDelete.value = null;
 };
 
 const closeModal = () => {
-  selectedDriver.value = null;
-  newDriverData.value = {
-    name: "",
-    address: "",
-    license_number: "",
+  selectedTruck.value = null;
+  newTruckData.value = {
+    plate_number: "",
+    color: "",
+    type: "",
+    weight: "",
   };
 };
 
 const closeDeleteModal = () => {
   showDeleteConfirmation.value = false;
-  driverToDelete.value = null;
+  truckToDelete.value = null;
 };
 
 // استفاده از واچر برای صفحه‌بندی
-watch(page, fetchDrivers);
+watch(page, fetchTrucks);
 
 // استفاده از واچر برای مرتب‌سازی
-watch(sort, fetchDrivers);
+watch(sort, fetchTrucks);
 
-watch(q, fetchDrivers);
+watch(q, fetchTrucks);
 
 // اولین بار داده‌ها بارگذاری شود
-onMounted(fetchDrivers);
+onMounted(fetchTrucks);
 </script>
-
 
 <template>
   <div>
@@ -201,23 +201,23 @@ onMounted(fetchDrivers);
           <li>
             <a>
               <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
-              رانندگان
+              کامیون‌ها
             </a>
           </li>
         </ul>
       </div>
 
-      <!-- دکمه ایجاد راننده جدید -->
+      <!-- دکمه ایجاد کامیون جدید -->
       <div class="text-left">
-        <NuxtLink to="/LoadingRecord/drivers/create">
+        <NuxtLink to="/LoadingRecord/truck/create">
           <button class="btn btn-success">
-            ایجاد راننده جدید
+            ایجاد کامیون جدید
             <Icon name="material-symbols-add-circle" size="18"/>
           </button>
         </NuxtLink>
       </div>
 
-      <!-- جدول رانندگان -->
+      <!-- جدول کامیون‌ها -->
       <div class="overflow-x-auto mt-4">
         <div class="flex px-3 py-3.5 border-b border-gray-200">
           <UInput
@@ -227,7 +227,7 @@ onMounted(fetchDrivers);
           />
         </div>
         <UTable
-            :rows="drivers"
+            :rows="trucks"
             :columns="columns"
             v-model:sort="sort"
             :loading="status"
@@ -260,41 +260,47 @@ onMounted(fetchDrivers);
             rounded: '!rounded-full min-w-[32px] justify-center',
             default: { activeButton: { variant: 'outline' } }
           }"
-            @change="fetchDrivers"
+            @change="fetchTrucks"
         />
       </div>
     </div>
 
-    <!-- مودال ویرایش راننده -->
-    <div v-if="selectedDriver" class="modal modal-open">
+    <!-- مودال ویرایش کامیون -->
+    <div v-if="selectedTruck" class="modal modal-open">
       <div class="modal-box">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
         <br>
         <h2 class="text-lg font-bold mb-4">
-          ویرایش راننده: {{ selectedDriver.name }}
+          ویرایش کامیون: {{ selectedTruck.plate_number }}
         </h2>
         <div>
           <input
-              v-model="newDriverData.name"
+              v-model="newTruckData.plate_number"
               type="text"
-              placeholder="نام و نام خانوادگی"
+              placeholder="پلاک کامیون"
               class="input input-bordered w-full mb-2"
           />
           <input
-              v-model="newDriverData.address"
+              v-model="newTruckData.color"
               type="text"
-              placeholder="آدرس"
+              placeholder="رنگ"
               class="input input-bordered w-full mb-2"
           />
           <input
-              v-model="newDriverData.license_number"
+              v-model="newTruckData.type"
               type="text"
-              placeholder="شماره گواهی‌نامه"
+              placeholder="نوع کامیون"
+              class="input input-bordered w-full mb-2"
+          />
+          <input
+              v-model="newTruckData.weight"
+              type="number"
+              placeholder="وزن"
               class="input input-bordered w-full mb-2"
           />
         </div>
         <div class="modal-action" dir="ltr">
-          <button class="btn btn-primary w-full" @click="updateDriver">ذخیره تغییرات</button>
+          <button class="btn btn-primary w-full" @click="updateTruck">ذخیره تغییرات</button>
         </div>
       </div>
     </div>
@@ -304,7 +310,7 @@ onMounted(fetchDrivers);
       <div class="modal-box">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="cancelDelete">✕</button>
         <br>
-        <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این راننده را حذف کنید؟</h2>
+        <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این کامیون را حذف کنید؟</h2>
         <div class="modal-action" dir="ltr">
           <button class="btn btn-outline" @click="cancelDelete">لغو</button>
           <button class="btn btn-error" @click="confirmDelete">بله، حذف کن</button>
@@ -320,6 +326,4 @@ td,
 tr {
   text-align: center !important;
 }
-
-
 </style>

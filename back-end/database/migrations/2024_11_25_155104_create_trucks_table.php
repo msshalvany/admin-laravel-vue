@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('trucks', function (Blueprint $table) {
             $table->id(); // شناسه کامیون
             $table->foreignId('driver_id')->constrained('drivers')->onDelete('cascade'); // شناسه راننده
+            $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
             $table->string('plate_number'); // پلاک کامیون
+            $table->string('color'); // پلاک کامیون
+            $table->enum('type', ['غیره','کامیون', 'تریلی', 'کامیونت', 'خاور', 'وانت'])->nullable(); // نوع وسیله نقلیه
             $table->decimal('weight', 8, 2); // وزن کامیون
-            $table->enum('status', ['active', 'inactive']); // وضعیت کامیون
             $table->softDeletes(); // حذف امن (soft delete)
             $table->timestamps(); // زمان‌های ثبت و بروزرسانی
         });

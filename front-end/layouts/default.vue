@@ -48,6 +48,12 @@
                   </NuxtLink>
                 </li>
                 <li>
+                  <NuxtLink to="/LoadingRecord/truck/">
+                    <Icon name="ph:truck-duotone" size="26"/>
+                    ماشین ها
+                  </NuxtLink>
+                </li>
+                <li>
                   <NuxtLink to="/user/permisition">
                     <Icon name="mdi:truck-fast-outline" size="26"/>
                     ثبت تردد
@@ -62,10 +68,12 @@
                 </li>
               </ul>
             </details>
+            <NuxtLink to="/company">
             <a>
               <Icon name="octicon:organization-16" size="24"></Icon>
               کمپانی ها
             </a>
+            </NuxtLink>
           </li>
         </ul>
       </div>
