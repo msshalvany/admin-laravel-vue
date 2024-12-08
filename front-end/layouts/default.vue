@@ -1,4 +1,3 @@
-<!-- layouts/admin.vue -->
 <template>
   <div>
     <loader></loader>
@@ -20,13 +19,13 @@
               </summary>
               <ul>
                 <li>
-                  <NuxtLink to="/user">
+                  <NuxtLink to="/user" @click="closeDrawer">
                     <Icon name="hugeicons:user-list" size="26"/>
                     لیست کاربران
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/user/permisition">
+                  <NuxtLink to="/user/permisition" @click="closeDrawer">
                     <Icon name="hugeicons:lock-key" size="26"/>
                     سطوح دسترسی
                   </NuxtLink>
@@ -42,25 +41,25 @@
               </summary>
               <ul>
                 <li>
-                  <NuxtLink to="/LoadingRecord/drivers/">
+                  <NuxtLink to="/LoadingRecord/drivers/" @click="closeDrawer">
                     <Icon name="healthicons:truck-driver" size="26"/>
                     رانندگان
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/LoadingRecord/truck/">
+                  <NuxtLink to="/LoadingRecord/truck/" @click="closeDrawer">
                     <Icon name="ph:truck-duotone" size="26"/>
                     ماشین ها
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/user/permisition">
+                  <NuxtLink to="/user/permisition" @click="closeDrawer">
                     <Icon name="mdi:truck-fast-outline" size="26"/>
                     ثبت تردد
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/user/permisition">
+                  <NuxtLink to="/user/permisition" @click="closeDrawer">
                     <Icon name="streamline:shipping-transfer-truck-time-truck-shipping-delivery-time-waiting-delay"
                           size="26"/>
                     تاریخچه
@@ -68,11 +67,11 @@
                 </li>
               </ul>
             </details>
-            <NuxtLink to="/company">
-            <a>
-              <Icon name="octicon:organization-16" size="24"></Icon>
-              کمپانی ها
-            </a>
+            <NuxtLink to="/company" @click="closeDrawer">
+              <a>
+                <Icon name="octicon:organization-16" size="24"></Icon>
+                کمپانی ها
+              </a>
             </NuxtLink>
           </li>
         </ul>
@@ -116,10 +115,19 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 definePageMeta({
   pageTransition: {
     name: 'rotate'
   }
 })
+
+// Function to close the drawer
+function closeDrawer() {
+  const drawerCheckbox = document.getElementById('my-drawer-2') as HTMLInputElement;
+  if (drawerCheckbox) {
+    drawerCheckbox.checked = false;
+  }
+}
 </script>
