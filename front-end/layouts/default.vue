@@ -5,7 +5,7 @@
     <AlertSuccess></AlertSuccess>
     <AlertWarning></AlertWarning>
     <div class="drawer lg:drawer-open" dir="rtl">
-      <input id="my-drawer-2" type="checkbox" class="drawer-toggle"/>
+      <input id="my-drawer-2" type="checkbox" class="drawer-toggle" v-model="isDrawerOpen"/>
 
       <!-- Sidebar (Drawer) -->
       <div class="drawer-side shadow-2xl" style="z-index: 12">
@@ -117,17 +117,16 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+const isDrawerOpen = ref(false);
+
+function closeDrawer() {
+  isDrawerOpen.value = false;
+}
+
 definePageMeta({
   pageTransition: {
-    name: 'rotate'
-  }
-})
-
-// Function to close the drawer
-function closeDrawer() {
-  const drawerCheckbox = document.getElementById('my-drawer-2') as HTMLInputElement;
-  if (drawerCheckbox) {
-    drawerCheckbox.checked = false;
-  }
-}
+    name: 'rotate',
+  },
+});
 </script>
