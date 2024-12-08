@@ -3,9 +3,13 @@ import { ref, onMounted, watch } from "vue";
 import { useCookie } from "nuxt/app";
 import { AlertSuccess, loaderfun } from "~/composables/statFunc.js";
 
+
+const truckType = ['غیره','کامیون', 'تریلی', 'کامیونت', 'خاور', 'وانت']
+const type = ref(truckType[1]);
+
 const columns = [
   { key: "plate_number", label: "پلاک کامیون", sortable: true },
-  { key: "color", label: "رنگ", sortable: true },
+  { key: "actionsColor", label: "رنگ", sortable: true },
   { key: "type", label: "نوع کامیون", sortable: true },
   { key: "weight", label: "وزن", sortable: true },
   { key: "actions", label: "عملیات" },
@@ -246,6 +250,9 @@ onMounted(fetchTrucks);
               </button>
             </UDropdown>
           </template>
+          <template #actionsColor-data="{ row }">
+            <input type="color" v-model="row.color"  disabled>
+          </template>
         </UTable>
       </div>
 
@@ -273,35 +280,41 @@ onMounted(fetchTrucks);
         <h2 class="text-lg font-bold mb-4">
           ویرایش کامیون: {{ selectedTruck.plate_number }}
         </h2>
-        <div>
-          <input
-              v-model="newTruckData.plate_number"
-              type="text"
-              placeholder="پلاک کامیون"
-              class="input input-bordered w-full mb-2"
+        <form class="form-control">
+          <!-- پلاک کامیون -->
+          <label class="input input-bordered flex items-center gap-4 mt-4">
+            <Icon name="solar:plate-linear" size="18" class="ml-2"/>
+            <input v-model="newTruckData.plate_number" type="text" class="grow" placeholder="پلاک کامیون"/>
+          </label>
+
+          <!-- رنگ کامیون -->
+          <label class="input input-bordered flex items-center gap-2 mt-4 w-6/12">
+            <Icon name="material-symbols:colors" size="18" class="ml-2"/>
+            <span>رنگ</span>
+            <input v-model="newTruckData.color" type="color" class="grow" placeholder="رنگ"/>
+          </label>
+
+          <!-- نوع کامیون -->
+          <USelectMenu v-model="type" size="xl"
+                       :options="truckType"
+                       placeholder="انتخاب نوع ماشین"
+                       :popper="{ arrow: true }"
+                       searchable
+                       searchable-placeholder="جستجو....."
+                       class="mt-4"
           />
-          <input
-              v-model="newTruckData.color"
-              type="text"
-              placeholder="رنگ"
-              class="input input-bordered w-full mb-2"
-          />
-          <input
-              v-model="newTruckData.type"
-              type="text"
-              placeholder="نوع کامیون"
-              class="input input-bordered w-full mb-2"
-          />
-          <input
-              v-model="newTruckData.weight"
-              type="number"
-              placeholder="وزن"
-              class="input input-bordered w-full mb-2"
-          />
-        </div>
-        <div class="modal-action" dir="ltr">
-          <button class="btn btn-primary w-full" @click="updateTruck">ذخیره تغییرات</button>
-        </div>
+
+          <!-- وزن کامیون -->
+          <label class="input input-bordered flex items-center gap-2 mt-4">
+            <Icon name="mdi:weight-kilogram" size="18" class="ml-2"/>
+            <input v-model="newTruckData.weight" type="number" class="grow" placeholder="وزن کامیون"/>
+          </label>
+
+          <!-- دکمه ارسال -->
+          <div class="modal-action" dir="ltr">
+            <button type="button" class="btn btn-primary w-full" @click="updateTruck">ذخیره تغییرات</button>
+          </div>
+        </form>
       </div>
     </div>
 

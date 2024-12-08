@@ -199,11 +199,11 @@ onMounted(fetchCompanies);
     <div v-if="showCreateModal" class="modal modal-open">
       <div class="modal-box">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="showCreateModal = false">✕</button>
-        <h2 class="text-lg font-bold mb-4 mt-2">ایجاد کمپانی جدید</h2>
+        <h2 class="text-lg font-bold mb-4 mt-4">ایجاد کمپانی جدید</h2>
 
         <!-- فرم ایجاد کمپانی -->
-        <form @submit.prevent="createCompany">
-          <label class="input input-bordered flex items-center gap-4 mt-4">
+        <form @submit.prevent="createCompany" class="form-control">
+          <label class="input input-bordered flex items-center gap-4">
             <Icon name="octicon:organization-16" size="18" class="ml-2"/>
             <input v-model="newCompany.name" type="text" class="grow" placeholder="نام کمپانی"/>
           </label>

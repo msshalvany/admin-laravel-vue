@@ -295,14 +295,14 @@ onMounted(fetchUsers);
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
           <br>
           <h2 class="text-lg font-bold mb-4">ویرایش کاربر - {{ selectedUser?.username }}</h2>
-          <form @submit.prevent="submitFormEditUser">
+          <form @submit.prevent="submitFormEditUser" class="form-control">
             <label class="input input-bordered flex items-center gap-4 mt-4">
               <Icon name="material-symbols:account-circle-full" size="18" class="ml-2"/>
               <input v-model="selectedUser.username" type="text" class="grow" placeholder="نام کاربری" />
             </label>
             <label class="input input-bordered flex items-center gap-2 mt-4">
               <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2"/>
-              <input v-model="nwePassword"  type="password" class="grow" placeholder="رمز عبور"/>
+              <input v-model="selectedUser.password"  type="password" class="grow" placeholder="رمز عبور"/>
             </label>
             <label class="input input-bordered flex items-center gap-2 mt-4">
               <Icon name="uiw-mobile" size="18" class="ml-2"/>

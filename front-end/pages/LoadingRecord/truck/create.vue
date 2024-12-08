@@ -1,17 +1,22 @@
 <script setup>
-import { loaderfun } from "~/composables/statFunc.js";
-import { onMounted, ref } from "vue";
-import { useCookie } from "nuxt/app";
+import {loaderfun} from "~/composables/statFunc.js";
+import {onMounted, ref} from "vue";
+import {useCookie} from "nuxt/app";
 
 // متغیرهای فرم
+const truckType = ['غیره','کامیون', 'تریلی', 'کامیونت', 'خاور', 'وانت']
+const type = ref(truckType[1]);
 const plate_number = ref('');
 const color = ref('');
-const type = ref('');
 const weight = ref('');
 const jwtCookie = useCookie('jwt');
-const selectedDriver = ref(null); // فقط شناسه راننده ذخیره می‌شود
+const selectedDriver = ref(null);
+const selectedCompany = ref(null);
 const drivers = ref([]); // لیست رانندگان
-const query = ref(''); // جستجو برای رانندگان
+const company = ref([]); // جستجو برای رانندگان
+
+
+
 
 // تابع برای دریافت رانندگان و استخراج نام‌ها
 const fetchDrivers = async () => {
@@ -42,6 +47,33 @@ const fetchDrivers = async () => {
   }
 };
 
+const fetchCompany = async () => {
+  try {
+    const response = await fetch(
+        `${basUrl().value}/companies`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${useCookie("jwt").value}`,
+            "Content-Type": "application/json",
+          },
+        }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      company.value = data.data.map(item => ({
+        label: item.name,
+        value: item.id
+      }));
+    } else {
+      console.error("Error fetching drivers:", response.status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
 // متد ارسال فرم
 const submitForm = async () => {
   loaderfun();
@@ -59,6 +91,7 @@ const submitForm = async () => {
         type: type.value,
         weight: weight.value,
         driver_id: selectedDriver.value.value,  // فقط شناسه راننده ارسال می‌شود
+        company_id: selectedCompany.value.value,  // فقط شناسه راننده ارسال می‌شود
       }),
     });
 
@@ -82,7 +115,10 @@ const submitForm = async () => {
 };
 
 // بارگذاری داده‌های رانندگان هنگام بارگذاری کامپوننت
-onMounted(fetchDrivers);
+onMounted(function () {
+  fetchDrivers()
+  fetchCompany()
+});
 </script>
 
 <template>
@@ -102,7 +138,7 @@ onMounted(fetchDrivers);
           </a>
         </li>
         <li>
-          <nuxt-link to="/LoadingRecord/trucks">
+          <nuxt-link to="/LoadingRecord/truck">
             <a>
               <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
               کامیون‌ها
@@ -119,15 +155,33 @@ onMounted(fetchDrivers);
     </div>
 
     <div class="p-8 m-auto w-10/12">
-      <form @submit.prevent="submitForm">
+      <form class="form-control" @submit.prevent="submitForm">
         <!-- انتخاب راننده با قابلیت جستجو -->
-        <label class="items-center gap-4 mt-4">
-          <UInputMenu v-model="selectedDriver" size="xl"
-                      :options="drivers"
-                      placeholder="انتخاب راننده"
-                      :popper="{ arrow: true }"
-                      filterable/> <!-- ویژگی جستجو فعال -->
-        </label>
+        <USelectMenu v-model="selectedDriver" size="xl"
+                     :options="drivers"
+                     placeholder="انتخاب راننده"
+                     :popper="{ arrow: true }"
+                     searchable
+                     searchable-placeholder="جستجو....."
+                     class="mt-2"
+        />
+        <USelectMenu v-model="selectedCompany" size="xl"
+                     :options="company"
+                     placeholder="انتخاب راننده"
+                     :popper="{ arrow: true }"
+                     searchable
+                     searchable-placeholder="جستجو....."
+                     class="mt-4"
+        />
+
+        <USelectMenu v-model="type" size="xl"
+                     :options="truckType"
+                     placeholder="انتخاب نوع ماشین"
+                     :popper="{ arrow: true }"
+                     searchable
+                     searchable-placeholder="جستجو....."
+                     class="mt-4"
+        />
 
         <!-- پلاک کامیون -->
         <label class="input input-bordered flex items-center gap-4 mt-4">
@@ -136,7 +190,7 @@ onMounted(fetchDrivers);
         </label>
 
         <!-- رنگ کامیون -->
-        <label class="input input-bordered flex items-center gap-2 mt-4 w-2/12">
+        <label class="input input-bordered flex items-center gap-2 mt-4 w-3/12">
           <Icon name="material-symbols:colors" size="18" class="ml-2"/>
           <span>رنگ</span>
           <input v-model="color" type="color" class="grow" placeholder="رنگ"/>

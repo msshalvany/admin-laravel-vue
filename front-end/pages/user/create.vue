@@ -78,7 +78,7 @@ const submitForm = async () => {
       </ul>
     </div>
     <div class="p-8 m-auto w-10/12">
-      <form @submit.prevent="submitForm">
+      <form @submit.prevent="submitForm" class="form-control">
         <label class="input input-bordered flex items-center gap-4 mt-4">
           <Icon name="material-symbols:account-circle-full" size="18" class="ml-2"/>
           <input v-model="username" type="text" class="grow" placeholder="نام کاربری"/>

@@ -88,7 +88,7 @@ class UserController extends Controller
         }
 
         $customer = User::findOrFail($id);
-        if ($request->input('password')==null) {
+        if ($request->input('password')!=$customer->password) {
             $request->merge(['password' => $customer->password]);
         }
         $customer->update($request->all());
