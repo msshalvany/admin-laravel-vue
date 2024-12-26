@@ -53,7 +53,6 @@ const driverToDelete = ref(null); // برای نگه‌داری راننده‌�
 const fetchDrivers = async () => {
   status.value = true;
   try {
-    console.log(q.value)
     const response = await fetch(
         `${basUrl().value}/drivers?page=${page.value}&sort=${sort.value.column}&order=${sort.value.direction}&q=${q.value}`,
         {
@@ -64,9 +63,9 @@ const fetchDrivers = async () => {
           },
         }
     );
-
     if (response.ok) {
       const data = await response.json();
+      console.log(data.total)
       drivers.value = data.data;
       pageCount.value = data.last_page;
       total.value = data.total;
@@ -218,7 +217,7 @@ onMounted(fetchDrivers);
       </div>
 
       <!-- جدول رانندگان -->
-      <div class="overflow-x-auto mt-4">
+      <div class="overflow-x-auto mt-4 card shadow-lg p-2 rounded-2xl">
         <div class="flex px-3 py-3.5 border-b border-gray-200">
           <UInput
               v-model="q"
@@ -234,9 +233,6 @@ onMounted(fetchDrivers);
             :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'در حال پردازش...' }"
             :progress="{ color: 'primary', animation: 'carousel' }"
             class="w-full"
-            :ui="{
-              tr: { base: 'hover:bg-gray-100' }
-            }"
         >
           <template #actions-data="{ row }">
             <UDropdown :items="items(row)">
@@ -247,10 +243,6 @@ onMounted(fetchDrivers);
             </UDropdown>
           </template>
         </UTable>
-      </div>
-
-      <!-- صفحه‌بندی -->
-      <div class="flex justify-end px-3 py-3.5 border-t border-gray-200">
         <UPagination
             v-model="page"
             :page-count="pageCount"

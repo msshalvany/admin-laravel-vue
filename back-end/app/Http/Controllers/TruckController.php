@@ -16,7 +16,7 @@ class TruckController extends Controller
         $sortOrder = $request->query('order', 'asc');
 
         // واکشی کامیون‌ها با فیلترها
-        $trucks = Truck::where('plate_number', 'like', "%{$search}%")
+        $trucks = Truck::with('driver','company')->where('plate_number', 'like', "%{$search}%")
             ->orWhere('color', 'like', "%{$search}%")
             ->orWhere('type', 'like', "%{$search}%")
             ->orderBy($sortColumn, $sortOrder)

@@ -25,27 +25,27 @@ class UserController extends Controller
         }
 
         // انجام صفحه‌بندی با تعداد رکوردهای مشخص
-        $customers = $query->paginate($pageSize, ['*'], 'page', $page);
+        $user = $query->paginate($pageSize, ['*'], 'page', $page);
 
         // بازگرداندن پاسخ
         return response()->json([
             'status' => true,
             'message' => 'Customers retrieved successfully',
-            'data' => $customers->items(), // داده‌های صفحه فعلی
-            'total' => $customers->total(), // تعداد کل کاربران
-            'current_page' => $customers->currentPage(), // صفحه فعلی
-            'last_page' => $customers->lastPage(), // آخرین صفحه
+            'data' => $user->items(), // داده‌های صفحه فعلی
+            'total' => $user->total(), // تعداد کل کاربران
+            'current_page' => $user->currentPage(), // صفحه فعلی
+            'last_page' => $user->lastPage(), // آخرین صفحه
         ], 200);
     }
 
 
     public function show($id)
     {
-        $customer = User::findOrFail($id);
+        $user = User::findOrFail($id);
         return response()->json([
             'status' => true,
             'message' => 'Customer found successfully',
-            'data' => $customer
+            'data' => $user
         ], 200);
     }
 
@@ -54,7 +54,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255',
             'password' => 'required|string|max:255',
-            'mobile'   => 'required|numeric|digits:10',
+            'mobile' => 'required|numeric|digits:10',
         ]);
 
         if ($validator->fails()) {
@@ -86,24 +86,23 @@ class UserController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-
-        $customer = User::findOrFail($id);
-        if ($request->input('password')!=$customer->password) {
-            $request->merge(['password' => $customer->password]);
+        $UserOldData = User::findOrFail($id);
+        if ($request->input('password') != $UserOldData->password || $request->password=='') {
+            $request->merge(['password' => $UserOldData->password]);
         }
-        $customer->update($request->all());
+        $UserOldData->update($request->all());
 
         return response()->json([
             'status' => true,
-            'message' => 'Customer updated successfully',
-            'data' => $customer
+            'message' => 'user updated successfully',
+            'data' => $UserOldData
         ], 200);
     }
 
     public function destroy($id)
     {
-        $customer = User::findOrFail($id);
-        $customer->delete();
+        $user = User::findOrFail($id);
+        $user->delete();
 
         return response()->json([
             'status' => true,

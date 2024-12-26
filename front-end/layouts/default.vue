@@ -53,7 +53,7 @@
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/user/permisition" @click="closeDrawer">
+                  <NuxtLink to="/LoadingRecord" @click="closeDrawer">
                     <Icon name="mdi:truck-fast-outline" size="26"/>
                     ثبت تردد
                   </NuxtLink>

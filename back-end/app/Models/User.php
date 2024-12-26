@@ -20,6 +20,10 @@ class User extends Authenticatable implements JWTSubject
         'mobile'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     protected function casts(): array
     {
         return [

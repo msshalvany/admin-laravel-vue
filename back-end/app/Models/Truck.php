@@ -18,4 +18,9 @@ class Truck extends Model
         return $this->belongsTo(Driver::class);
     }
 
+    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
 }

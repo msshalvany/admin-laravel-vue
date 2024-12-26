@@ -3,27 +3,28 @@
     <h1 class="text-2xl font-bold mb-4">مدیریت دسترسی‌ها</h1>
 
     <!-- جدول دسترسی‌ها -->
-    <table class="table table-sm w-full">
-      <thead>
-      <tr  class="text-center">
-        <th>#</th>
-        <th>نام دسترسی</th>
-        <th>عملیات</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="(permission, index) in permissions" :key="permission.id" class="hover text-center">
-        <td>{{ index + 1 }}</td>
-        <td>{{ permission.name }}</td>
-        <td>
-          <button class="btn btn-sm btn-outline" @click="showUsers(permission)">
-            مشاهده کاربران
-          </button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
+    <div class="overflow-x-auto mt-4 card shadow-lg p-1 rounded-2xl">
+      <table class="table table-sm w-full">
+        <thead>
+        <tr class="text-center">
+          <th>#</th>
+          <th>نام دسترسی</th>
+          <th>عملیات</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(permission, index) in permissions" :key="permission.id" class="hover text-center">
+          <td>{{ index + 1 }}</td>
+          <td>{{ permission.name }}</td>
+          <td>
+            <button class="btn btn-sm btn-outline" @click="showUsers(permission)">
+              مشاهده کاربران
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
     <!-- فرم ایجاد دسترسی جدید -->
     <div class="mt-6">
       <input
@@ -103,7 +104,7 @@ const fetchPermissions = async () => {
 // ایجاد دسترسی جدید
 const createPermission = async () => {
   if (!newPermission.value) {
-    AlertError( 'نام دسترسی را وارد کنید');
+    AlertError('نام دسترسی را وارد کنید');
     return;
   }
   loaderfun()

@@ -12,6 +12,7 @@ const columns = [
   { key: "actionsColor", label: "رنگ", sortable: true },
   { key: "type", label: "نوع کامیون", sortable: true },
   { key: "weight", label: "وزن", sortable: true },
+  { key: "company.name", label: "کمپانی"},
   { key: "actions", label: "عملیات" },
 ];
 
@@ -71,6 +72,7 @@ const fetchTrucks = async () => {
 
     if (response.ok) {
       const data = await response.json();
+      console.log(data.total)
       trucks.value = data.data;
       pageCount.value = data.last_page;
       total.value = data.total;
@@ -222,12 +224,14 @@ onMounted(fetchTrucks);
       </div>
 
       <!-- جدول کامیون‌ها -->
-      <div class="overflow-x-auto mt-4">
-        <div class="flex px-3 py-3.5 border-b border-gray-200">
+      <div class="overflow-x-auto mt-4 shadow-lg p-2 rounded-2xl">
+        <div class="flex px-3 py-3.5 ">
           <UInput
               v-model="q"
               placeholder="جستجو"
               :loading="status"
+              :ui="{ td: { base: 'max-w-[0] truncate' }, default: { checkbox: { color: 'gray'} } }"
+
           />
         </div>
         <UTable
@@ -238,9 +242,6 @@ onMounted(fetchTrucks);
             :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'در حال پردازش...' }"
             :progress="{ color: 'primary', animation: 'carousel' }"
             class="w-full"
-            :ui="{
-              tr: { base: 'hover:bg-gray-100' }
-            }"
         >
           <template #actions-data="{ row }">
             <UDropdown :items="items(row)">
@@ -254,21 +255,19 @@ onMounted(fetchTrucks);
             <input type="color" v-model="row.color"  disabled>
           </template>
         </UTable>
-      </div>
-
-      <!-- صفحه‌بندی -->
-      <div class="flex justify-end px-3 py-3.5 border-t border-gray-200">
-        <UPagination
-            v-model="page"
-            :page-count="pageCount"
-            :total="total"
-            :ui="{
+        <div class="flex px-3 py-3.5 border-t border-gray-200">
+          <UPagination
+              v-model="page"
+              :page-count="pageCount"
+              :total="total"
+              :ui="{
             wrapper: 'flex items-center gap-1',
             rounded: '!rounded-full min-w-[32px] justify-center',
             default: { activeButton: { variant: 'outline' } }
           }"
-            @change="fetchTrucks"
-        />
+              @change="fetchTrucks"
+          />
+        </div>
       </div>
     </div>
 

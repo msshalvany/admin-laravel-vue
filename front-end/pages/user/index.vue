@@ -233,8 +233,8 @@ onMounted(fetchUsers);
       </NuxtLink>
 
       <!-- جدول کاربران -->
-      <div class="overflow-x-auto mt-4 border-2 rounded-2xl p-2">
-        <table class="table table-sm">
+      <div class="overflow-x-auto mt-4 card shadow-lg p-1 rounded-2xl">
+        <table class="table">
           <thead>
           <tr class="text-center">
             <th>نام</th>
