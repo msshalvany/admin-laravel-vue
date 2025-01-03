@@ -1,19 +1,19 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { useCookie } from "nuxt/app";
-import { AlertSuccess, loaderfun } from "~/composables/statFunc.js";
+import {ref, onMounted, watch} from "vue";
+import {useCookie} from "nuxt/app";
+import {AlertSuccess, loaderfun} from "~/composables/statFunc.js";
 
 
-const truckType = ['غیره','کامیون', 'تریلی', 'کامیونت', 'خاور', 'وانت']
+const truckType = ['غیره', 'کامیون', 'تریلی', 'کامیونت', 'خاور', 'وانت']
 const type = ref(truckType[1]);
 
 const columns = [
-  { key: "plate_number", label: "پلاک کامیون", sortable: true },
-  { key: "actionsColor", label: "رنگ", sortable: true },
-  { key: "type", label: "نوع کامیون", sortable: true },
-  { key: "weight", label: "وزن", sortable: true },
-  { key: "company.name", label: "کمپانی"},
-  { key: "actions", label: "عملیات" },
+  {key: "plate_number", label: "پلاک کامیون", sortable: true},
+  {key: "actionsColor", label: "رنگ", sortable: true},
+  {key: "type", label: "نوع کامیون", sortable: true},
+  {key: "weight", label: "وزن", sortable: true},
+  {key: "company.name", label: "کمپانی"},
+  {key: "actions", label: "عملیات"},
 ];
 
 const items = (row) => [
@@ -37,7 +37,7 @@ const trucks = ref([]);
 const page = ref(1);
 const pageCount = ref(0);
 const total = ref(0);
-const sort = ref({ column: "plate_number", direction: "asc" });
+const sort = ref({column: "plate_number", direction: "asc"});
 const q = ref('');
 const status = ref(false);
 
@@ -88,7 +88,7 @@ const fetchTrucks = async () => {
 
 const editTruck = (truck) => {
   selectedTruck.value = truck;
-  newTruckData.value = { ...truck }; // بارگذاری داده‌های کامیون برای ویرایش
+  newTruckData.value = {...truck}; // بارگذاری داده‌های کامیون برای ویرایش
 };
 
 const updateTruck = async () => {
@@ -188,43 +188,45 @@ onMounted(fetchTrucks);
 
 <template>
   <div>
-    <div class="p-4">
+    <div class="p-2">
       <!-- مسیر صفحه -->
-      <div class="breadcrumbs text-sm">
-        <ul>
-          <li>
-            <nuxt-link to="/">
-              <Icon name="ic:baseline-home" size="18" class="ml-2"/>
-              خانه
-            </nuxt-link>
-          </li>
-          <li>
-            <a>
-              <Icon name="ph:truck-trailer-light" class="ml-1" size="18"/>
-              تردد
-            </a>
-          </li>
-          <li>
-            <a>
-              <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
-              کامیون‌ها
-            </a>
-          </li>
-        </ul>
-      </div>
+      <div class="px-4">
+        <div class="breadcrumbs text-sm">
+          <ul>
+            <li>
+              <nuxt-link to="/">
+                <Icon name="ic:baseline-home" size="18" class="ml-2"/>
+                خانه
+              </nuxt-link>
+            </li>
+            <li>
+              <a>
+                <Icon name="ph:truck-trailer-light" class="ml-1" size="18"/>
+                تردد
+              </a>
+            </li>
+            <li>
+              <a>
+                <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
+                کامیون‌ها
+              </a>
+            </li>
+          </ul>
+        </div>
 
-      <!-- دکمه ایجاد کامیون جدید -->
-      <div class="text-left">
-        <NuxtLink to="/LoadingRecord/truck/create">
-          <button class="btn btn-success">
-            ایجاد کامیون جدید
-            <Icon name="material-symbols-add-circle" size="18"/>
-          </button>
-        </NuxtLink>
-      </div>
 
+        <!-- دکمه ایجاد کامیون جدید -->
+        <div class="text-left">
+          <NuxtLink to="/LoadingRecord/truck/create">
+            <button class="btn btn-success">
+              ایجاد کامیون جدید
+              <Icon name="material-symbols-add-circle" size="18"/>
+            </button>
+          </NuxtLink>
+        </div>
+      </div>
       <!-- جدول کامیون‌ها -->
-      <div class="overflow-x-auto mt-4 shadow-lg p-2 rounded-2xl">
+      <div class="border-t overflow-x-auto mt-4 card shadow-lg p-1 rounded-2xl">
         <div class="flex px-3 py-3.5 ">
           <UInput
               v-model="q"
@@ -252,7 +254,7 @@ onMounted(fetchTrucks);
             </UDropdown>
           </template>
           <template #actionsColor-data="{ row }">
-            <input type="color" v-model="row.color"  disabled>
+            <input type="color" v-model="row.color" disabled>
           </template>
         </UTable>
         <div class="flex px-3 py-3.5 border-t border-gray-200">
@@ -324,7 +326,6 @@ onMounted(fetchTrucks);
         <br>
         <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این کامیون را حذف کنید؟</h2>
         <div class="modal-action" dir="ltr">
-          <button class="btn btn-outline" @click="cancelDelete">لغو</button>
           <button class="btn btn-error" @click="confirmDelete">بله، حذف کن</button>
         </div>
       </div>

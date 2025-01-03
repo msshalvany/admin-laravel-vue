@@ -140,7 +140,7 @@ onMounted(fetchCompanies);
     </div>
 
     <!-- جدول کمپانی‌ها -->
-    <div class="overflow-x-auto mt-4 border-2 rounded-2xl p-2">
+    <div class="border-t overflow-x-auto mt-4 shadow-lg p-1 rounded-2xl">
       <table class="table table-sm">
         <thead>
         <tr class="text-center">

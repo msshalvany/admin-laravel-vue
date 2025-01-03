@@ -5,6 +5,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Truck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -54,7 +55,7 @@ class CompanyController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'address' => 'nullable|string',
-            'phone'   => 'nullable|string|max:15',
+            'phone' => 'nullable|string|max:15',
         ]);
 
         if ($validator->fails()) {
@@ -108,5 +109,14 @@ class CompanyController extends Controller
             'status' => true,
             'message' => 'Company deleted successfully'
         ], 204);
+    }
+
+    public function getTrucks($id)
+    {
+        $company = Company::find($id);
+        return response()->json([
+            'status' => true,
+            'data' => $company->trucks,
+        ]);
     }
 }

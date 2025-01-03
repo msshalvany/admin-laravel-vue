@@ -10,5 +10,8 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'light'
   },
-  ssr: false
+  ssr: false,
+  plugins: [
+    {src: '~/plugins/persianDatetimePicker.client.js', mode: 'client',}
+  ],
 })

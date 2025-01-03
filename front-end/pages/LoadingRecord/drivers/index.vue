@@ -1,14 +1,14 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { useCookie } from "nuxt/app";
-import { AlertSuccess, loaderfun } from "~/composables/statFunc.js";
+import {ref, onMounted, watch} from "vue";
+import {useCookie} from "nuxt/app";
+import {AlertSuccess, loaderfun} from "~/composables/statFunc.js";
 
 const columns = [
-  { key: "id", label: "#", sortable: true },
-  { key: "name", label: "نام و نام خانوادگی", sortable: true },
-  { key: "address", label: "آدرس", sortable: true },
-  { key: "license_number", label: "شماره گواهی‌نامه", sortable: true },
-  { key: "actions", label: "عملیات" },
+  {key: "id", label: "#", sortable: true},
+  {key: "name", label: "نام و نام خانوادگی", sortable: true},
+  {key: "address", label: "آدرس", sortable: true},
+  {key: "license_number", label: "شماره گواهی‌نامه", sortable: true},
+  {key: "actions", label: "عملیات"},
 ];
 
 const items = (row) => [
@@ -32,7 +32,7 @@ const drivers = ref([]);
 const page = ref(1);
 const pageCount = ref(0);
 const total = ref(0);
-const sort = ref({ column: "name", direction: "asc" });
+const sort = ref({column: "name", direction: "asc"});
 const q = ref('');
 const status = ref(false);
 
@@ -81,7 +81,7 @@ const fetchDrivers = async () => {
 
 const editDriver = (driver) => {
   selectedDriver.value = driver;
-  newDriverData.value = { ...driver }; // بارگذاری داده‌های راننده برای ویرایش
+  newDriverData.value = {...driver}; // بارگذاری داده‌های راننده برای ویرایش
 };
 
 const updateDriver = async () => {
@@ -181,43 +181,44 @@ onMounted(fetchDrivers);
 
 <template>
   <div>
-    <div class="p-4">
+    <div class="p-2">
       <!-- مسیر صفحه -->
-      <div class="breadcrumbs text-sm">
-        <ul>
-          <li>
-            <nuxt-link to="/">
-              <Icon name="ic:baseline-home" size="18" class="ml-2"/>
-              خانه
-            </nuxt-link>
-          </li>
-          <li>
-            <a>
-              <Icon name="ph:truck-trailer-light" class="ml-1" size="18"/>
-              تردد
-            </a>
-          </li>
-          <li>
-            <a>
-              <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
-              رانندگان
-            </a>
-          </li>
-        </ul>
-      </div>
+      <div class="px-4">
+        <div class="breadcrumbs text-sm">
+          <ul>
+            <li>
+              <nuxt-link to="/">
+                <Icon name="ic:baseline-home" size="18" class="ml-2"/>
+                خانه
+              </nuxt-link>
+            </li>
+            <li>
+              <a>
+                <Icon name="ph:truck-trailer-light" class="ml-1" size="18"/>
+                تردد
+              </a>
+            </li>
+            <li>
+              <a>
+                <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
+                رانندگان
+              </a>
+            </li>
+          </ul>
+        </div>
 
-      <!-- دکمه ایجاد راننده جدید -->
-      <div class="text-left">
-        <NuxtLink to="/LoadingRecord/drivers/create">
-          <button class="btn btn-success">
-            ایجاد راننده جدید
-            <Icon name="material-symbols-add-circle" size="18"/>
-          </button>
-        </NuxtLink>
+        <!-- دکمه ایجاد راننده جدید -->
+        <div class="text-left">
+          <NuxtLink to="/LoadingRecord/drivers/create">
+            <button class="btn btn-success">
+              ایجاد راننده جدید
+              <Icon name="material-symbols-add-circle" size="18"/>
+            </button>
+          </NuxtLink>
+        </div>
       </div>
-
       <!-- جدول رانندگان -->
-      <div class="overflow-x-auto mt-4 card shadow-lg p-2 rounded-2xl">
+      <div class="border-t overflow-x-auto mt-4 card shadow-lg p-1 rounded-2xl">
         <div class="flex px-3 py-3.5 border-b border-gray-200">
           <UInput
               v-model="q"
@@ -298,7 +299,6 @@ onMounted(fetchDrivers);
         <br>
         <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این راننده را حذف کنید؟</h2>
         <div class="modal-action" dir="ltr">
-          <button class="btn btn-outline" @click="cancelDelete">لغو</button>
           <button class="btn btn-error" @click="confirmDelete">بله، حذف کن</button>
         </div>
       </div>
