@@ -54,48 +54,73 @@ const submitForm = async () => {
 
 
 <template>
-  <div>
-    <div class="breadcrumbs text-sm p-4">
-      <ul>
-        <li>
-          <nuxt-link to="/">
-            <Icon name="ic:baseline-home" size="18" class="ml-2"/>
-            خانه
-          </nuxt-link>
-        </li>
-        <li>
-          <nuxt-link to="/user">
-            <Icon name="ph:users-three-light" size="18" class="ml-2"/>
-            لیست کاربران
-          </nuxt-link>
-        </li>
-        <li>
-          <a>
-            <Icon name="hugeicons:user" size="18" class="ml-2"/>
-            کاربر جدید
-          </a>
-        </li>
-      </ul>
+  <div class="p-4">
+    <div class="card shadow-md px-5 py-1 rounded-lg">
+      <div class="flex justify-between items-center mb-4">
+        <div class="breadcrumbs text-sm">
+          <ul class="flex items-center">
+            <li>
+              <nuxt-link to="/">
+                <Icon name="ic:baseline-home" size="18" class="ml-2"/>
+                خانه
+              </nuxt-link>
+            </li>
+            <li>
+              <nuxt-link to="/user">
+                <Icon name="ph:users-three-light" size="18" class="ml-2"/>
+                لیست کاربران
+              </nuxt-link>
+            </li>
+            <li>
+              <a>
+                <Icon name="hugeicons:user" size="18" class="ml-2"/>
+                کاربر جدید
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="p-8 m-auto w-10/12">
-      <form @submit.prevent="submitForm" class="form-control">
-        <label class="input input-bordered flex items-center gap-4 mt-4">
-          <Icon name="material-symbols:account-circle-full" size="18" class="ml-2"/>
-          <input v-model="username" type="text" class="grow" placeholder="نام کاربری"/>
+    <div class="p-8 m-auto flex justify-center content-center w-10/12 shadow-xl">
+      <form @submit.prevent="submitForm" class="form-control w-full space-y-6">
+        <!-- نام کاربری -->
+        <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
+    <span class="flex items-center">
+      <Icon name="material-symbols:account-circle-full" size="18" class="ml-2" />
+      نام کاربری
+    </span>
+          <input v-model="username" type="text" class="grow" placeholder="نام کاربری" />
         </label>
-        <label class="input input-bordered flex items-center gap-2 mt-4">
-          <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2"/>
-          <input v-model="password" type="password" class="grow" placeholder="رمز عبور"/>
+
+        <!-- رمز عبور -->
+        <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
+    <span class="flex items-center">
+      <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2" />
+      رمز عبور
+    </span>
+          <input v-model="password" type="password" class="grow" placeholder="رمز عبور" />
         </label>
-        <label class="input input-bordered flex items-center gap-2 mt-4">
-          <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2"/>
-          <input v-model="passwordConfirmation" type="password" class="grow" placeholder="تکرار رمز عبور"/>
+
+        <!-- تکرار رمز عبور -->
+        <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
+    <span class="flex items-center">
+      <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2" />
+      تکرار رمز عبور
+    </span>
+          <input v-model="passwordConfirmation" type="password" class="grow" placeholder="تکرار رمز عبور" />
         </label>
-        <label class="input input-bordered flex items-center gap-2 mt-4">
-          <Icon name="uiw-mobile" size="18" class="ml-2"/>
-          <input v-model="mobile" name="mobile" type="number" class="grow" placeholder="شماره همراه"/>
+
+        <!-- شماره همراه -->
+        <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
+    <span class="flex items-center">
+      <Icon name="uiw-mobile" size="18" class="ml-2" />
+      شماره همراه
+    </span>
+          <input v-model="mobile" name="mobile" type="number" class="grow" placeholder="شماره همراه" />
         </label>
-        <button type="submit" class="btn btn-primary mt-4">ثبت</button>
+
+        <!-- دکمه ارسال -->
+        <button type="submit" class="btn btn-primary w-full mt-4">ثبت</button>
       </form>
     </div>
   </div>

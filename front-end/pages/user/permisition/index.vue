@@ -1,6 +1,8 @@
 <template>
   <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">مدیریت دسترسی‌ها</h1>
+    <h1 class="text-lg font-bold mb-6 text-center">
+      مدیریت دسترسی‌ها
+    </h1>
 
     <!-- جدول دسترسی‌ها -->
     <div class="overflow-x-auto mt-4 card shadow-lg p-1 rounded-2xl">
@@ -42,8 +44,7 @@
     <div v-if="selectedPermission" class="modal modal-open">
       <div class="modal-box">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
-        <br>
-        <h2 class="text-lg font-bold mb-4">
+        <h2 class="text-lg font-bold mb-6 text-center">
           لیست کاربران - {{ selectedPermission.name }}
         </h2>
         <div>

@@ -11,26 +11,20 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        // دریافت پارامترهای صفحه‌بندی و جستجو
-        $page = $request->input('page', 1); // صفحه فعلی (پیش‌فرض 1)
-        $pageSize = $request->input('pageSize', 10); // تعداد رکوردها در هر صفحه (پیش‌فرض 10)
-        $search = $request->input('search', ''); // جستجو بر اساس نام
+        $page = $request->input('page', 1);
+        $pageSize = $request->input('pageSize', 10);
+        $search = $request->input('search', '');
 
-        // ساخت کوئری برای گرفتن لیست کاربران با فیلتر جستجو و صفحه‌بندی
         $query = User::query();
 
-        // اگر جستجویی وجود داشته باشد، فیلتر را اعمال می‌کنیم
         if ($search) {
             $query->where('username', 'like', '%' . $search . '%');
         }
 
-        // انجام صفحه‌بندی با تعداد رکوردهای مشخص
         $user = $query->paginate($pageSize, ['*'], 'page', $page);
 
-        // بازگرداندن پاسخ
         return response()->json([
             'status' => true,
-            'message' => 'Customers retrieved successfully',
             'data' => $user->items(), // داده‌های صفحه فعلی
             'total' => $user->total(), // تعداد کل کاربران
             'current_page' => $user->currentPage(), // صفحه فعلی

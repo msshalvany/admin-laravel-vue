@@ -9,6 +9,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\TruckController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\LocationController;
 
 
 Route::get('/', function () {
@@ -60,4 +61,11 @@ Route::prefix('companies')->group(function () {
     Route::prefix('/trucks')->group(function () {
         Route::get('/{id}', [CompanyController::class, 'getTrucks']);
     });
+});
+
+Route::prefix('location')->group(function () {
+    Route::get('/', [LocationController::class, 'index']); // لیست کمپانی‌ها
+    Route::post('/', [LocationController::class, 'store']); // ایجاد کمپانی
+    Route::put('/{id}', [LocationController::class, 'update']); // ویرایش کمپانی
+    Route::delete('/{id}', [LocationController::class, 'destroy']); // حذف کمپانی
 });

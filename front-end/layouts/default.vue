@@ -73,6 +73,12 @@
                 کمپانی ها
               </a>
             </NuxtLink>
+            <NuxtLink to="/location" @click="closeDrawer">
+              <a>
+                <Icon name="ic:outline-place" size="24"></Icon>
+                مکان ها
+              </a>
+            </NuxtLink>
           </li>
         </ul>
       </div>

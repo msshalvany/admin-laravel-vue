@@ -34,6 +34,7 @@ const fetchUsers = async () => {
     if (response.ok) {
       const data = await response.json();
       users.value = data.data;
+      console.log(data)
     } else {
       console.error('Error fetching users:', response.status);
     }
@@ -202,40 +203,40 @@ const items = (row) => [
 onMounted(fetchUsers);
 </script>
 <template>
-  <div>
-    <div class="p-2">
-      <!-- مسیر صفحه -->
-      <div class="px-4">
+  <div class="p-4">
+    <div class="card shadow-md px-5 py-1 rounded-lg">
+      <div class="flex justify-between items-center mb-4">
         <div class="breadcrumbs text-sm">
-          <ul>
+          <ul class="flex items-center">
             <li>
-              <nuxt-link to="/">
+              <nuxt-link to="/" class="flex items-center">
                 <Icon name="ic:baseline-home" size="18" class="ml-2"/>
                 خانه
               </nuxt-link>
             </li>
             <li>
-              <a>
+              <a class="flex items-center">
                 <Icon name="ph:users-three-light" size="18" class="ml-2"/>
                 کاربران
               </a>
             </li>
           </ul>
         </div>
-
-        <!-- دکمه ایجاد کاربر جدید -->
-        <NuxtLink to="/user/create">
-          <div class="text-left">
-            <button class="btn btn-success">
-              ایجاد کاربر جدید
+        <div>
+          <NuxtLink to="/user/create">
+            <button class="btn btn-success flex items-center">
+              <span> کاربر جدید</span>
               <Icon name="material-symbols-add-circle" size="18"/>
             </button>
-          </div>
-        </NuxtLink>
+          </NuxtLink>
+        </div>
       </div>
+    </div>
 
-      <!-- جدول کاربران -->
-      <div class="border-t overflow-x-auto mt-4 card shadow-lg p-1 rounded-2xl">
+
+    <!-- بخش جدول کاربران -->
+    <div class="card shadow-lg p-4 rounded-lg">
+      <div class="overflow-x-auto">
         <table class="table">
           <thead>
           <tr class="text-center">
@@ -250,8 +251,8 @@ onMounted(fetchUsers);
             <td>{{ user.mobile }}</td>
             <td>
               <UDropdown :items="items(user)">
-                <button class="btn btn-sm btn-primary">
-                  عملیات
+                <button class="btn btn-sm btn-primary flex items-center">
+                  <span>عملیات</span>
                   <Icon name="hugeicons:account-setting-01" size="18"/>
                 </button>
               </UDropdown>
@@ -260,71 +261,98 @@ onMounted(fetchUsers);
           </tbody>
         </table>
       </div>
+    </div>
 
-      <!-- مودال مدیریت دسترسی‌ها -->
-      <div v-if="showModal" class="modal modal-open">
-        <div class="modal-box">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
-          <br>
-          <h2 class="text-lg font-bold mb-4">مدیریت دسترسی‌ها - {{ selectedUser?.username }}</h2>
-          <table class="table w-full">
-            <thead>
-            <tr>
-              <th>#</th>
-              <th>نام دسترسی</th>
-              <th>وضعیت</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(permission, index) in userPermissions" :key="permission.id">
-              <td>{{ index + 1 }}</td>
-              <td>{{ permission.name }}</td>
-              <td>
-                <input
-                    type="checkbox"
-                    class="toggle toggle-primary"
-                    :checked="permission.hasPermission"
-                    @change="togglePermission(permission)"
-                />
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+    <!-- مودال‌ها -->
+    <div v-if="showModal" class="modal modal-open">
+      <div class="modal-box">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+        <h2 class="text-lg font-bold mb-6 text-center">
+          مدیریت دسترسی‌ها - {{ selectedUser?.username }}
+        </h2>
+        <table class="table w-full">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>نام دسترسی</th>
+            <th>وضعیت</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(permission, index) in userPermissions" :key="permission.id">
+            <td>{{ index + 1 }}</td>
+            <td>{{ permission.name }}</td>
+            <td>
+              <input
+                  type="checkbox"
+                  class="toggle toggle-primary"
+                  :checked="permission.hasPermission"
+                  @change="togglePermission(permission)"
+              />
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
-      <div v-if="showModalEdit" class="modal modal-open">
-        <div class="modal-box">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
-          <br>
-          <h2 class="text-lg font-bold mb-4">ویرایش کاربر - {{ selectedUser?.username }}</h2>
-          <form @submit.prevent="submitFormEditUser" class="form-control">
-            <label class="input input-bordered flex items-center gap-4 mt-4">
-              <Icon name="material-symbols:account-circle-full" size="18" class="ml-2"/>
-              <input v-model="selectedUser.username" type="text" class="grow" placeholder="نام کاربری"/>
-            </label>
-            <label class="input input-bordered flex items-center gap-2 mt-4">
-              <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2"/>
-              <input v-model="selectedUser.password" type="password" class="grow" placeholder="رمز عبور"/>
-            </label>
-            <label class="input input-bordered flex items-center gap-2 mt-4">
-              <Icon name="uiw-mobile" size="18" class="ml-2"/>
-              <input v-model="selectedUser.mobile" name="mobile" type="number" class="grow" placeholder="شماره همراه"/>
-            </label>
-            <button type="submit" class="btn btn-primary mt-4">ثبت</button>
-          </form>
-        </div>
+    </div>
+
+    <div v-if="showModalEdit" class="modal modal-open">
+      <div class="modal-box relative">
+        <!-- دکمه بستن -->
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+
+        <!-- فرم -->
+        <form @submit.prevent="submitFormEditUser" class="form-control space-y-6">
+          <!-- عنوان فرم -->
+          <h2 class="text-lg font-bold mb-6 text-center">
+            {{ selectedUser?.username }} - ویرایش کاربر
+          </h2>
+
+          <!-- نام کاربری -->
+          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+        <span class="flex items-center">
+          <Icon name="material-symbols:account-circle-full" size="18" class="ml-2"/>
+          نام کاربری
+        </span>
+            <input v-model="selectedUser.username" type="text" class="grow" placeholder="نام کاربری"/>
+          </label>
+
+          <!-- رمز عبور -->
+          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+        <span class="flex items-center">
+          <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2"/>
+          رمز عبور
+        </span>
+            <input v-model="selectedUser.password" type="password" class="grow" placeholder="رمز عبور"/>
+          </label>
+
+          <!-- شماره همراه -->
+          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+        <span class="flex items-center">
+          <Icon name="uiw-mobile" size="18" class="ml-2"/>
+          شماره همراه
+        </span>
+            <input v-model="selectedUser.mobile" name="mobile" type="number" class="grow" placeholder="شماره همراه"/>
+          </label>
+
+          <!-- دکمه ارسال -->
+          <button type="submit" class="btn btn-primary w-full mt-6">ویرایش کاربر</button>
+        </form>
       </div>
-      <div v-if="showDeleteConfirmation" class="modal modal-open">
-        <div class="modal-box">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
-          <br>
-          <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟</h2>
-          <div class="modal-action" dir="ltr">
-            <button class="btn btn-error" @click="confirmDelete">بله، حذف کن</button>
-          </div>
+    </div>
+
+
+    <div v-if="showDeleteConfirmation" class="modal modal-open">
+      <div class="modal-box">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+        <br>
+        <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟</h2>
+        <div class="modal-action" dir="ltr">
+          <button class="btn btn-error" @click="confirmDelete">بله، حذف کن</button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 

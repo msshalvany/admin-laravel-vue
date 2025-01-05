@@ -44,52 +44,72 @@ const submitForm = async () => {
 
 
 <template>
-  <div>
-    <div class="breadcrumbs text-sm p-4">
-      <ul>
-        <li>
-          <nuxt-link to="/">
-            <Icon name="ic:baseline-home" size="18" class="ml-2"/>
-            خانه
-          </nuxt-link>
-        </li>
-        <li>
-          <a>
-            <Icon name="ph:truck-trailer-light" class="ml-1" size="18"/>
-            تردد
-          </a>
-        </li>
-        <li>
-          <nuxt-link to="/LoadingRecord/drivers">
-          <a>
-            <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
-            رانندگان
-          </a>
-          </nuxt-link>
-        </li>
-        <li>
-          <a>
-            <Icon name="hugeicons:user" size="18" class="ml-2"/>
-            راننده جدید
-          </a>
-        </li>
-      </ul>
+  <div class="p-4">
+    <div class="card shadow-md px-5 py-1 rounded-lg">
+      <div class="flex justify-between items-center mb-4">
+        <div class="breadcrumbs text-sm">
+          <ul class="flex items-center">
+            <li>
+              <nuxt-link to="/">
+                <Icon name="ic:baseline-home" size="18" class="ml-2"/>
+                خانه
+              </nuxt-link>
+            </li>
+            <li>
+              <a>
+                <Icon name="ph:truck-trailer-light" class="ml-1" size="18"/>
+                تردد
+              </a>
+            </li>
+            <li>
+              <nuxt-link to="/LoadingRecord/drivers">
+                <a>
+                  <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
+                  رانندگان
+                </a>
+              </nuxt-link>
+            </li>
+            <li>
+              <a>
+                <Icon name="hugeicons:user" size="18" class="ml-2"/>
+                راننده جدید
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="p-8 m-auto w-10/12">
-      <form @submit.prevent="submitForm">
-        <label class="input input-bordered flex items-center gap-4 mt-4">
-          <Icon name="mdi:user" size="18" class="ml-2"/>
-          <input v-model="name" type="text" class="grow" placeholder="نام و نام خانوادگی"/>
+    <div class="p-8 m-auto flex justify-center items-center w-10/12 shadow-xl rounded-lg bg-white">
+      <form @submit.prevent="submitForm" class="form-control w-full space-y-6">
+        <!-- نام و نام خانوادگی -->
+        <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
+      <span class="flex items-center">
+        <Icon name="mdi:user" size="18" class="ml-2" />
+        نام و نام خانوادگی
+      </span>
+          <input v-model="name" type="text" class="grow" placeholder="نام و نام خانوادگی" />
         </label>
-        <label class="input input-bordered flex items-center gap-2 mt-4">
-            <Icon name="mdi:map-marker-account" size="18" class="ml-2"/>
-          <input v-model="address" type="text" class="grow" placeholder="آدرس"/>
+
+        <!-- آدرس -->
+        <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
+      <span class="flex items-center">
+        <Icon name="mdi:map-marker-account" size="18" class="ml-2" />
+        آدرس
+      </span>
+          <input v-model="address" type="text" class="grow" placeholder="آدرس" />
         </label>
-        <label class="input input-bordered flex items-center gap-2 mt-4">
-          <Icon name="fa6-solid:address-card" size="18" class="ml-2"/>
-          <input v-model="license_number" type="text" class="grow" placeholder="شماره گواهی نامه"/>
+
+        <!-- شماره گواهی نامه -->
+        <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
+      <span class="flex items-center">
+        <Icon name="fa6-solid:address-card" size="18" class="ml-2" />
+        شماره گواهی نامه
+      </span>
+          <input v-model="license_number" type="text" class="grow" placeholder="شماره گواهی نامه" />
         </label>
-        <button type="submit" class="btn btn-primary mt-4">ثبت</button>
+
+        <!-- دکمه ثبت -->
+        <button type="submit" class="btn btn-primary w-full mt-6">ثبت</button>
       </form>
     </div>
   </div>

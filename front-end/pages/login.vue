@@ -6,22 +6,24 @@
     <div class="w-10/12 p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
       <h1 class="text-3xl font-semibold text-center text-gray-700">
         <span class="m-3">ورود</span>
-        <Icon class="align-top" style="vertical-align:-6px" name="lets-icons:sign-in"></Icon>
+        <Icon class="align-top" style="vertical-align:-10px" name="ic:outline-log-in" />
       </h1>
       <form @submit.prevent="login">
-        <div>
-          <label class="label">
-            <span class="text-base label-text">نام کاربری :</span>
-          </label>
-          <input v-model="username" type="text" name="username" placeholder="نام کاربری خود را وارد کنید"
-                 class="w-full input input-bordered"/>
-        </div>
-        <div>
-          <label class="label">
-            <span class="text-base label-text">رمز عبور :</span>
-          </label>
-          <input v-model="password" type="password" name="password" placeholder="رمز عبور خود را وارد کنید"
-                 class="w-full input input-bordered"/>
+        <div class="mt-4">
+          <div>
+            <label class="input input-bordered flex items-center gap-2 w-full">
+              <Icon name="material-symbols:person-outline" size="24" />
+              <input v-model="username" type="text" name="username" placeholder="نام کاربری خود را وارد کنید"
+                class="grow" />
+            </label>
+          </div>
+          <div class="mt-3">
+            <label class="input input-bordered flex items-center gap-2 w-full">
+              <Icon name="material-symbols:vpn-key-outline" size="24" />
+              <input v-model="password" type="password" name="password" placeholder="رمز عبور خود را وارد کنید"
+                class="w-full mt-2" />
+            </label>
+          </div>
         </div>
         <div class="mt-4">
           <button type="submit" class="btn-neutral btn btn-block">ورود</button>

@@ -67,7 +67,7 @@ const fetchDrivers = async () => {
       const data = await response.json();
       console.log(data.total)
       drivers.value = data.data;
-      pageCount.value = data.last_page;
+      pageCount.value = data.per_page;
       total.value = data.total;
     } else {
       console.error("Error fetching drivers:", response.status);
@@ -181,44 +181,46 @@ onMounted(fetchDrivers);
 
 <template>
   <div>
-    <div class="p-2">
-      <!-- مسیر صفحه -->
-      <div class="px-4">
-        <div class="breadcrumbs text-sm">
-          <ul>
-            <li>
-              <nuxt-link to="/">
-                <Icon name="ic:baseline-home" size="18" class="ml-2"/>
-                خانه
-              </nuxt-link>
-            </li>
-            <li>
-              <a>
-                <Icon name="ph:truck-trailer-light" class="ml-1" size="18"/>
-                تردد
-              </a>
-            </li>
-            <li>
-              <a>
-                <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
-                رانندگان
-              </a>
-            </li>
-          </ul>
-        </div>
+    <div class="p-4">
+      <div class="card shadow-md px-5 py-1 rounded-lg">
+        <div class="flex justify-between items-center mb-4">
+          <div class="breadcrumbs text-sm">
+            <ul class="flex items-center">
+              <li>
+                <nuxt-link to="/">
+                  <Icon name="ic:baseline-home" size="18" class="ml-2"/>
+                  خانه
+                </nuxt-link>
+              </li>
+              <li>
+                <a>
+                  <Icon name="ph:truck-trailer-light" class="ml-1" size="18"/>
+                  تردد
+                </a>
+              </li>
+              <li>
+                <a class="flex items-center">
+                  <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
+                  رانندگان
+                </a>
+              </li>
+            </ul>
+          </div>
 
-        <!-- دکمه ایجاد راننده جدید -->
-        <div class="text-left">
-          <NuxtLink to="/LoadingRecord/drivers/create">
-            <button class="btn btn-success">
-              ایجاد راننده جدید
-              <Icon name="material-symbols-add-circle" size="18"/>
-            </button>
-          </NuxtLink>
+
+          <!-- دکمه ایجاد راننده جدید -->
+          <div class="text-left">
+            <NuxtLink to="/LoadingRecord/drivers/create">
+              <button class="btn btn-success">
+                 راننده جدید
+                <Icon name="material-symbols-add-circle" size="18"/>
+              </button>
+            </NuxtLink>
+          </div>
         </div>
       </div>
       <!-- جدول رانندگان -->
-      <div class="border-t overflow-x-auto mt-4 card shadow-lg p-1 rounded-2xl">
+      <div class="overflow-x-auto mt-2 card shadow-lg p-1 rounded-2xl">
         <div class="flex px-3 py-3.5 border-b border-gray-200">
           <UInput
               v-model="q"
@@ -260,37 +262,64 @@ onMounted(fetchDrivers);
 
     <!-- مودال ویرایش راننده -->
     <div v-if="selectedDriver" class="modal modal-open">
-      <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
-        <br>
-        <h2 class="text-lg font-bold mb-4">
+      <div class="modal-box p-6">
+        <!-- دکمه بستن -->
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4" @click="closeModal">✕</button>
+        <!-- عنوان -->
+        <h2 class="text-lg font-bold mb-6 text-center">
           ویرایش راننده: {{ selectedDriver.name }}
         </h2>
-        <div>
-          <input
-              v-model="newDriverData.name"
-              type="text"
-              placeholder="نام و نام خانوادگی"
-              class="input input-bordered w-full mb-2"
-          />
-          <input
-              v-model="newDriverData.address"
-              type="text"
-              placeholder="آدرس"
-              class="input input-bordered w-full mb-2"
-          />
-          <input
-              v-model="newDriverData.license_number"
-              type="text"
-              placeholder="شماره گواهی‌نامه"
-              class="input input-bordered w-full mb-2"
-          />
+        <!-- فرم ورودی‌ها -->
+        <div class="space-y-6">
+          <!-- نام و نام خانوادگی -->
+          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+        <span class="flex items-center">
+          <Icon name="mdi:user" size="18" class="ml-2" />
+          نام و نام خانوادگی
+        </span>
+            <input
+                v-model="newDriverData.name"
+                type="text"
+                placeholder="نام و نام خانوادگی"
+                class="grow"
+            />
+          </label>
+
+          <!-- آدرس -->
+          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+        <span class="flex items-center">
+          <Icon name="mdi:map-marker-account" size="18" class="ml-2" />
+          آدرس
+        </span>
+            <input
+                v-model="newDriverData.address"
+                type="text"
+                placeholder="آدرس"
+                class="grow"
+            />
+          </label>
+
+          <!-- شماره گواهی‌نامه -->
+          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+        <span class="flex items-center">
+          <Icon name="fa6-solid:address-card" size="18" class="ml-2" />
+          شماره گواهی‌نامه
+        </span>
+            <input
+                v-model="newDriverData.license_number"
+                type="text"
+                placeholder="شماره گواهی‌نامه"
+                class="grow"
+            />
+          </label>
         </div>
-        <div class="modal-action" dir="ltr">
+        <!-- دکمه ذخیره تغییرات -->
+        <div class="modal-action mt-8" dir="ltr">
           <button class="btn btn-primary w-full" @click="updateDriver">ذخیره تغییرات</button>
         </div>
       </div>
     </div>
+
 
     <!-- مودال تایید حذف -->
     <div v-if="showDeleteConfirmation" class="modal modal-open">

@@ -74,7 +74,7 @@ const fetchTrucks = async () => {
       const data = await response.json();
       console.log(data.total)
       trucks.value = data.data;
-      pageCount.value = data.last_page;
+      pageCount.value = data.per_page;
       total.value = data.total;
     } else {
       console.error("Error fetching trucks:", response.status);
@@ -188,45 +188,43 @@ onMounted(fetchTrucks);
 
 <template>
   <div>
-    <div class="p-2">
-      <!-- مسیر صفحه -->
-      <div class="px-4">
-        <div class="breadcrumbs text-sm">
-          <ul>
-            <li>
-              <nuxt-link to="/">
-                <Icon name="ic:baseline-home" size="18" class="ml-2"/>
-                خانه
-              </nuxt-link>
-            </li>
-            <li>
-              <a>
-                <Icon name="ph:truck-trailer-light" class="ml-1" size="18"/>
-                تردد
-              </a>
-            </li>
-            <li>
-              <a>
-                <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
-                کامیون‌ها
-              </a>
-            </li>
-          </ul>
-        </div>
-
-
-        <!-- دکمه ایجاد کامیون جدید -->
-        <div class="text-left">
-          <NuxtLink to="/LoadingRecord/truck/create">
-            <button class="btn btn-success">
-              ایجاد کامیون جدید
-              <Icon name="material-symbols-add-circle" size="18"/>
-            </button>
-          </NuxtLink>
+    <div class="p-4">
+      <div class="card shadow-md px-5 py-1 rounded-lg">
+        <div class="flex justify-between items-center mb-4">
+          <div class="breadcrumbs text-sm">
+            <ul class="flex items-center">
+              <li>
+                <nuxt-link to="/">
+                  <Icon name="ic:baseline-home" size="18" class="ml-2"/>
+                  خانه
+                </nuxt-link>
+              </li>
+              <li>
+                <a>
+                  <Icon name="ph:truck-trailer-light" class="ml-1" size="18"/>
+                  تردد
+                </a>
+              </li>
+              <li>
+                <a class="flex items-center">
+                  <Icon name="fa6-solid:truck" class="ml-1" style="vertical-align: -5px" size="15"/>
+                  کامیون‌ها
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="text-left">
+            <NuxtLink to="/LoadingRecord/truck/create">
+              <button class="btn btn-success flex items-center">
+                <span> کامیون جدید</span>
+                <Icon name="material-symbols-add-circle" size="18"/>
+              </button>
+            </NuxtLink>
+          </div>
         </div>
       </div>
       <!-- جدول کامیون‌ها -->
-      <div class="border-t overflow-x-auto mt-4 card shadow-lg p-1 rounded-2xl">
+      <div class="overflow-x-auto mt-4 card shadow-lg p-1 rounded-2xl">
         <div class="flex px-3 py-3.5 ">
           <UInput
               v-model="q"
@@ -277,16 +275,18 @@ onMounted(fetchTrucks);
     <div v-if="selectedTruck" class="modal modal-open">
       <div class="modal-box">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
-        <br>
-        <h2 class="text-lg font-bold mb-4">
+        <h2 class="text-lg font-bold mb-6 mt-4 text-center">
           ویرایش کامیون: {{ selectedTruck.plate_number }}
         </h2>
         <form class="form-control">
-          <!-- پلاک کامیون -->
-          <label class="input input-bordered flex items-center gap-4 mt-4">
+          <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
+          <span class="flex items-center">
             <Icon name="solar:plate-linear" size="18" class="ml-2"/>
+            پلاک کامیون
+          </span>
             <input v-model="newTruckData.plate_number" type="text" class="grow" placeholder="پلاک کامیون"/>
           </label>
+
 
           <!-- رنگ کامیون -->
           <label class="input input-bordered flex items-center gap-2 mt-4 w-6/12">
@@ -306,10 +306,14 @@ onMounted(fetchTrucks);
           />
 
           <!-- وزن کامیون -->
-          <label class="input input-bordered flex items-center gap-2 mt-4">
-            <Icon name="mdi:weight-kilogram" size="18" class="ml-2"/>
-            <input v-model="newTruckData.weight" type="number" class="grow" placeholder="وزن کامیون"/>
+          <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
+          <span class="flex items-center">
+            <Icon name="mdi:weight-kilogram" size="18" class="ml-2" />
+            وزن کامیون
+          </span>
+            <input v-model="newTruckData.weight" type="number" class="grow" placeholder="وزن کامیون" />
           </label>
+
 
           <!-- دکمه ارسال -->
           <div class="modal-action" dir="ltr">

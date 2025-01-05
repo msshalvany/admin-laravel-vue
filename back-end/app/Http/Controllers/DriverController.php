@@ -23,7 +23,7 @@ class DriverController extends Controller
             ->orWhere('id', 'like', "%{$search}%")
             ->orWhere('license_number', 'like', "%{$search}%")
             ->orderBy($sortColumn, $sortOrder)
-            ->paginate(10); // تعداد آیتم‌ها در هر صفحه
+            ->paginate(50);
 
         return response()->json($drivers, 200);
     }
