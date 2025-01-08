@@ -27,6 +27,25 @@ class TruckController extends Controller
 
     public function store(Request $request)
     {
+        // پیام‌های اعتبارسنجی به زبان فارسی
+        $messages = [
+            'driver_id.required' => 'شناسه راننده الزامی است.',
+            'driver_id.exists' => 'راننده با این شناسه یافت نشد.',
+            'company_id.required' => 'شناسه شرکت الزامی است.',
+            'company_id.exists' => 'شرکت با این شناسه یافت نشد.',
+            'plate_number.required' => 'شماره پلاک الزامی است.',
+            'plate_number.string' => 'شماره پلاک باید به صورت متن باشد.',
+            'plate_number.max' => 'شماره پلاک نباید بیشتر از ۲۵۵ کاراکتر باشد.',
+            'color.required' => 'رنگ کامیون الزامی است.',
+            'color.string' => 'رنگ کامیون باید به صورت متن باشد.',
+            'color.max' => 'رنگ کامیون نباید بیشتر از ۲۵۵ کاراکتر باشد.',
+            'type.string' => 'نوع کامیون باید به صورت متن باشد.',
+            'type.in' => 'نوع کامیون باید یکی از مقادیر: "غیره", "کامیون", "تریلی", "کامیونت", "خاور", "وانت" باشد.',
+            'weight.required' => 'وزن کامیون الزامی است.',
+            'weight.numeric' => 'وزن کامیون باید به صورت عدد باشد.',
+            'weight.min' => 'وزن کامیون نمی‌تواند منفی باشد.',
+        ];
+
         // اعتبارسنجی داده‌ها
         $validator = Validator::make($request->all(), [
             'driver_id' => 'required|exists:drivers,id',
@@ -35,12 +54,12 @@ class TruckController extends Controller
             'color' => 'required|string|max:255',
             'type' => 'nullable|string|in:غیره,کامیون,تریلی,کامیونت,خاور,وانت',
             'weight' => 'required|numeric|min:0',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Validation error',
+                'message' => 'خطای اعتبارسنجی',
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -49,13 +68,32 @@ class TruckController extends Controller
         $truck = Truck::create($request->all());
         return response()->json([
             'status' => true,
-            'message' => 'کامیون با موفقیت ایجاد شد',
+            'message' => 'کامیون با موفقیت ایجاد شد.',
             'data' => $truck
         ], 201);
     }
 
     public function update(Request $request, Truck $truck)
     {
+        // پیام‌های اعتبارسنجی به زبان فارسی
+        $messages = [
+            'driver_id.required' => 'شناسه راننده الزامی است.',
+            'driver_id.exists' => 'راننده با این شناسه یافت نشد.',
+            'company_id.required' => 'شناسه شرکت الزامی است.',
+            'company_id.exists' => 'شرکت با این شناسه یافت نشد.',
+            'plate_number.required' => 'شماره پلاک الزامی است.',
+            'plate_number.string' => 'شماره پلاک باید به صورت متن باشد.',
+            'plate_number.max' => 'شماره پلاک نباید بیشتر از ۲۵۵ کاراکتر باشد.',
+            'color.required' => 'رنگ کامیون الزامی است.',
+            'color.string' => 'رنگ کامیون باید به صورت متن باشد.',
+            'color.max' => 'رنگ کامیون نباید بیشتر از ۲۵۵ کاراکتر باشد.',
+            'type.string' => 'نوع کامیون باید به صورت متن باشد.',
+            'type.in' => 'نوع کامیون باید یکی از مقادیر: "غیره", "کامیون", "تریلی", "کامیونت", "خاور", "وانت" باشد.',
+            'weight.required' => 'وزن کامیون الزامی است.',
+            'weight.numeric' => 'وزن کامیون باید به صورت عدد باشد.',
+            'weight.min' => 'وزن کامیون نمی‌تواند منفی باشد.',
+        ];
+
         // اعتبارسنجی داده‌ها
         $validator = Validator::make($request->all(), [
             'driver_id' => 'required|exists:drivers,id',
@@ -64,17 +102,22 @@ class TruckController extends Controller
             'color' => 'required|string|max:255',
             'type' => 'nullable|string|in:غیره,کامیون,تریلی,کامیونت,خاور,وانت',
             'weight' => 'required|numeric|min:0',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => false,
+                'message' => 'خطای اعتبارسنجی',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         // بروزرسانی کامیون
         $truck->update($request->all());
 
         return response()->json([
-            'message' => 'کامیون با موفقیت ویرایش شد',
+            'status' => true,
+            'message' => 'کامیون با موفقیت ویرایش شد.',
             'data' => $truck
         ], 200);
     }
@@ -85,14 +128,14 @@ class TruckController extends Controller
 
         if (!$truck) {
             return response()->json([
-                'message' => 'کامیون یافت نشد',
+                'message' => 'کامیون یافت نشد.',
             ], 404);
         }
 
         $truck->delete();
 
         return response()->json([
-            'message' => 'کامیون با موفقیت حذف شد',
+            'message' => 'کامیون با موفقیت حذف شد.',
         ], 200);
     }
 }

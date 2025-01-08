@@ -18,3 +18,14 @@
     color: #0f9038;
     font-weight: bold;
 }
+@font-face {
+    font-family: 'sans'; /* نام دلخواه برای فونت */
+    src: url('../fonts/sans.ttf') format('truetype'); /* مسیر صحیح به فونت */
+    font-weight: normal;
+    font-style: normal;
+}
+
+body{
+    font-family: sans;
+    font-feature-settings: 'lnum' 0, 'pnum' 1;
+}

@@ -17,7 +17,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Companies retrieved successfully',
+            'message' => 'لیست شرکت‌ها با موفقیت دریافت شد',
             'data' => $companies,
         ], 200);
     }
@@ -27,23 +27,31 @@ class CompanyController extends Controller
         $company = Company::findOrFail($id);
         return response()->json([
             'status' => true,
-            'message' => 'Company found successfully',
+            'message' => 'شرکت با موفقیت پیدا شد',
             'data' => $company
         ], 200);
     }
 
     public function store(Request $request)
     {
+        // اعتبارسنجی داده‌ها
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'address' => 'nullable|string',
             'phone' => 'nullable|string|max:15',
+        ], [
+            'name.required' => 'نام شرکت الزامی است.',
+            'name.string' => 'نام شرکت باید به صورت متن باشد.',
+            'name.max' => 'نام شرکت نباید بیشتر از ۲۵۵ کاراکتر باشد.',
+            'address.string' => 'آدرس باید به صورت متن باشد.',
+            'phone.string' => 'شماره تلفن باید به صورت متن باشد.',
+            'phone.max' => 'شماره تلفن نباید بیشتر از ۱۵ کاراکتر باشد.',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Validation error',
+                'message' => 'خطای اعتبارسنجی',
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -51,23 +59,31 @@ class CompanyController extends Controller
         $company = Company::create($request->all());
         return response()->json([
             'status' => true,
-            'message' => 'Company created successfully',
+            'message' => 'شرکت با موفقیت ایجاد شد',
             'data' => $company
         ], 201);
     }
 
     public function update(Request $request, $id)
     {
+        // اعتبارسنجی داده‌ها
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'address' => 'nullable|string',
             'phone' => 'nullable|string|max:15',
+        ], [
+            'name.required' => 'نام شرکت الزامی است.',
+            'name.string' => 'نام شرکت باید به صورت متن باشد.',
+            'name.max' => 'نام شرکت نباید بیشتر از ۲۵۵ کاراکتر باشد.',
+            'address.string' => 'آدرس باید به صورت متن باشد.',
+            'phone.string' => 'شماره تلفن باید به صورت متن باشد.',
+            'phone.max' => 'شماره تلفن نباید بیشتر از ۱۵ کاراکتر باشد.',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Validation error',
+                'message' => 'خطای اعتبارسنجی',
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -77,7 +93,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Company updated successfully',
+            'message' => 'شرکت با موفقیت ویرایش شد',
             'data' => $company
         ], 200);
     }
@@ -89,7 +105,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Company deleted successfully'
+            'message' => 'شرکت با موفقیت حذف شد'
         ], 204);
     }
 

@@ -14,7 +14,7 @@ class LocationController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Location retrieved successfully',
+            'message' => 'مکان‌ها با موفقیت دریافت شدند',
             'data' => $locations,
         ], 200);
     }
@@ -24,22 +24,28 @@ class LocationController extends Controller
         $locations = Location::findOrFail($id);
         return response()->json([
             'status' => true,
-            'message' => 'Location found successfully',
+            'message' => 'مکان با موفقیت پیدا شد',
             'data' => $locations,
         ], 200);
     }
 
     public function store(Request $request)
     {
+        // اعتبارسنجی به زبان فارسی
         $validator = Validator::make($request->all(), [
             'location_name' => 'required|string|max:255',
             'description' => 'nullable|string',
+        ], [
+            'location_name.required' => 'نام مکان الزامی است.',
+            'location_name.string' => 'نام مکان باید به صورت متن باشد.',
+            'location_name.max' => 'نام مکان نباید بیشتر از ۲۵۵ کاراکتر باشد.',
+            'description.string' => 'توضیحات باید به صورت متن باشد.',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Validation error',
+                'message' => 'خطای اعتبارسنجی',
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -47,22 +53,28 @@ class LocationController extends Controller
         $locations = Location::create($request->all());
         return response()->json([
             'status' => true,
-            'message' => 'Location created successfully',
+            'message' => 'مکان با موفقیت ایجاد شد',
             'data' => $locations
         ], 201);
     }
 
     public function update(Request $request, $id)
     {
+        // اعتبارسنجی به زبان فارسی
         $validator = Validator::make($request->all(), [
             'location_name' => 'required|string|max:255',
             'description' => 'nullable|string',
+        ], [
+            'location_name.required' => 'نام مکان الزامی است.',
+            'location_name.string' => 'نام مکان باید به صورت متن باشد.',
+            'location_name.max' => 'نام مکان نباید بیشتر از ۲۵۵ کاراکتر باشد.',
+            'description.string' => 'توضیحات باید به صورت متن باشد.',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Validation error',
+                'message' => 'خطای اعتبارسنجی',
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -72,7 +84,7 @@ class LocationController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Location updated successfully',
+            'message' => 'مکان با موفقیت ویرایش شد',
             'data' => $locations
         ], 200);
     }
@@ -84,7 +96,7 @@ class LocationController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Location deleted successfully'
+            'message' => 'مکان با موفقیت حذف شد'
         ], 204);
     }
 }

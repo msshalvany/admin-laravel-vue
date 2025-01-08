@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -9,27 +10,41 @@ class LoadingRecord extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'loading_records';
+//
     protected $fillable = [
-        'truck_id', 'empty_weight', 'loaded_weight', 'total_weight',
-        'customer_weight', 'load_percentage', 'entry_time', 'exit_time',
-        'loading_start_time', 'loading_end_time', 'location_id', 'driver_satisfaction'
+        'truck_id',
+        'location_id',
+        'company_id',
+        'driver_id',
+        'empty_weight',
+        'loaded_weight',
+        'status',
+        'entry_time',
+        'exit_time',
+        'driver_star',
     ];
 
-    // رابطه با کامیون (یک بارگیری مربوط به یک کامیون)
-    public function truck(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    protected $dates = ['exit_time', 'created_at', 'updated_at', 'deleted_at'];
+
+    // روابط
+    public function truck()
     {
         return $this->belongsTo(Truck::class);
     }
 
-    // رابطه با مکان (یک بارگیری مربوط به یک مکان)
-    public function location(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function location()
     {
         return $this->belongsTo(Location::class);
     }
 
-    // رابطه با راننده (یک بارگیری از طریق کامیون، به راننده مرتبط است)
-    public function driver(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function company()
     {
-        return $this->belongsTo(Driver::class, 'truck_id');
+        return $this->belongsTo(Company::class);
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class);
     }
 }

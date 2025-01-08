@@ -10,6 +10,7 @@ use App\Http\Controllers\DriverController;
 use App\Http\Controllers\TruckController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\LoadingRecordsController;
 
 
 Route::get('/', function () {
@@ -68,4 +69,8 @@ Route::prefix('location')->group(function () {
     Route::post('/', [LocationController::class, 'store']); // ایجاد کمپانی
     Route::put('/{id}', [LocationController::class, 'update']); // ویرایش کمپانی
     Route::delete('/{id}', [LocationController::class, 'destroy']); // حذف کمپانی
+});
+
+Route::prefix('loading_records')->group(function () {
+    Route::post('/store', [LoadingRecordsController::class, 'store']); // ایجاد کمپانی
 });

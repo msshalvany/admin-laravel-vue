@@ -19,9 +19,14 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|unique:users',
             'password' => 'required|min:6',
+        ], [
+            'username.required' => 'نام کاربری الزامی است.',
+            'username.unique' => 'نام کاربری قبلاً انتخاب شده است.',
+            'password.required' => 'رمز عبور الزامی است.',
+            'password.min' => 'رمز عبور باید حداقل ۶ کاراکتر باشد.',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
 
@@ -60,7 +65,7 @@ class AuthController extends Controller
     public function logout(): JsonResponse
     {
         Auth::logout();
-        return response()->json(['message' => 'با موفقیت خارج شدید']);
+        return response()->json(['message' => 'با موفقیت از حساب کاربری خود خارج شدید']);
     }
 
     /**

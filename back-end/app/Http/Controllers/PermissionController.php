@@ -14,19 +14,26 @@ class PermissionController extends Controller
         $permissions = Permission::all();
         return response()->json($permissions); // ارسال لیست به فرانت‌اند
     }
+
     public function store(Request $request)
     {
+        // پیام‌های اعتبارسنجی به زبان فارسی
         $validated = $request->validate([
             'name' => 'required|string|unique:permissions,name',
+        ], [
+            'name.required' => 'نام دسترسی الزامی است.',
+            'name.string' => 'نام دسترسی باید به صورت متن باشد.',
+            'name.unique' => 'این نام دسترسی قبلاً وجود دارد.',
         ]);
 
         $permission = Permission::create(['name' => $validated['name']]);
 
         return response()->json([
-            'message' => 'Permission created successfully!',
+            'message' => 'دسترسی با موفقیت ایجاد شد!',
             'permission' => $permission
         ]);
     }
+
     public function getUsers(Permission $permission , $search = '')
     {
         $users = User::query()
@@ -52,7 +59,8 @@ class PermissionController extends Controller
             $user->revokePermissionTo($permission->name);
         }
 
-        return response()->json(['message' => 'Permission updated successfully']);
+        return response()->json([
+            'message' => 'دسترسی با موفقیت بروزرسانی شد.'
+        ]);
     }
-
 }
