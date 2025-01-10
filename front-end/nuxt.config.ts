@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   },
   ssr: false,
   plugins: [
-    {src: '~/plugins/persianDatetimePicker.client.js', mode: 'client',}
+    {src: '~/plugins/persianDatetimePicker.client.js', mode: 'client',},
+    {src: '~/plugins/ag-charts.client.js', mode: 'client',}
   ],
 })

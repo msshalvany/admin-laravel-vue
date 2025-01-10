@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Hekmatinasser\Verta\Verta;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +12,7 @@ class LoadingRecord extends Model
     use SoftDeletes;
 
     protected $table = 'loading_records';
-//
+
     protected $fillable = [
         'truck_id',
         'location_id',
@@ -46,5 +47,29 @@ class LoadingRecord extends Model
     public function driver()
     {
         return $this->belongsTo(Driver::class);
+    }
+
+    // Accessor برای created_at
+    public function getCreatedAtAttribute($value)
+    {
+        return (new Verta($value))->format('Y/m/d');
+    }
+
+    // Accessor برای updated_at
+    public function getUpdatedAtAttribute($value)
+    {
+        return (new Verta($value))->format('Y/m/d H:i:s');
+    }
+
+    // Accessor برای exit_time
+    public function getExitTimeAttribute($value)
+    {
+        return (new Verta($value))->format('H:i'); // فقط ساعت و دقیقه
+    }
+
+    // Accessor برای entry_time
+    public function getEntryTimeAttribute($value)
+    {
+        return (new Verta($value))->format('H:i'); // فقط ساعت و دقیقه
     }
 }

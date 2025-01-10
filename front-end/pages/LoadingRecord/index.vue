@@ -7,7 +7,7 @@ const entry_date = ref(null)
 const entry_time = ref(null)
 const companies = ref([]);
 const selectedCompany = ref(null);
-
+const pendingAll = ref(null);
 const trucks = ref([]);
 const selectedTrucks = ref(null)
 
@@ -111,9 +111,51 @@ const fetchTrucks = async () => {
   }
 };
 
+const fetchpendingAll = async () => {
+  loaderfun()
+  try {
+    const response = await fetch(`${basUrl().value}/loading_records/pendingAll`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${useCookie('jwt').value}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      pendingAll.value = data.data
+      console.log()
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+  loaderfun()
+};
+
+const checkForm = () => {
+  if (selectedCompany.value == null) {
+    AlertError('کمپانی را انتخاب کنید')
+  }
+  if (selectedTrucks.value == null) {
+    AlertError('ماشین را انتخاب کنید')
+  }
+  if (selectedDriver.value == null) {
+    AlertError('راننده را انتخاب کنید')
+  }
+  if (selectedLocation.value == null) {
+    AlertError('مکان را انتخاب کنید')
+  }
+  if (entry_date.value == null) {
+    AlertError('تاریخ تردد را انتخاب کنید')
+  }
+  if (entry_time.value == null) {
+    AlertError('زمان ورود را انتخاب کنید')
+  }
+}
 const LoadingRecords = async () => {
   loaderfun();
   try {
+    checkForm()
     const response = await fetch(`${basUrl().value}/loading_records/store`, {
       method: 'POST',
       headers: {
@@ -128,7 +170,7 @@ const LoadingRecords = async () => {
         driver_id: selectedDriver.value.value,
         empty_weight: selectedDriver.value.value,
         entry_date: entry_date.value,
-        entry_time:entry_time.value
+        entry_time: entry_time.value
       }),
     });
 
@@ -137,7 +179,7 @@ const LoadingRecords = async () => {
       console.error(errorData.errors);
       AlertError(response.error[0]);
     } else {
-      AlertSuccess('کامیون با موفقیت اضافه شد');
+      AlertSuccess('تردد به شکل موقت ثبت شد');
     }
   } catch (error) {
     console.error('Error:', error);
@@ -206,7 +248,7 @@ watch(selectedTrucks, function () {
 
     <div class="xl:w-8/12 md:w-12/12 p-4 m-auto flex flex-col mt-4 shadow-xl rounded-2xl">
       <div role="tablist" class="tabs tabs-box">
-        <input checked="radio" type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="ثبت موقت"/>
+        <input checked type="radio" name="my_tab_2" id="tab" role="tab-for-form" class="tab" aria-label="ثبت موقت"/>
         <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
           <div class="mt-2">
             <div>
@@ -312,9 +354,28 @@ watch(selectedTrucks, function () {
             <button class="w-full btn btn-primary" @click="LoadingRecords">ثبت موقت ورود</button>
           </div>
         </div>
-        <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="ثبت نهایی"/>
+        <input type="radio" name="my_tab_2" id="tab-for-list" @click="fetchpendingAll" role="tab" class="tab"
+               aria-label="ثبت نهایی"/>
         <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
-          ثبت نهایی
+          <ul class="list bg-base-100 rounded-box shadow-md" v-for="item in pendingAll">
+            <li class="w-full list-row">
+              <li class="list-row">
+                <div class="list-col-grow">
+                  <div><b>نام کمپانی :</b>{{ item.company.name }}</div>
+                  <div> <b>تاریخ ثبت:</b> {{ item.created_at }} <b> ساعت :</b> {{ item.entry_time }} </div>
+                  <div> <b> راننده:</b>  {{ item.driver.name }}</div>
+                </div>
+                  <button class="btn btn-sm btn-primary">
+                    ثبت نهایی
+                    <Icon name="carbon:task-complete" size="18"/>
+                  </button>
+                  <button class="btn btn-error btn-sm">
+                     لغو
+                    <Icon name="material-symbols:auto-delete" size="18"/>
+                  </button>
+              </li>
+            </li>
+          </ul>
         </div>
       </div>
 

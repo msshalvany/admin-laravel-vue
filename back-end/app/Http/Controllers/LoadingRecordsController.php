@@ -57,10 +57,6 @@ class LoadingRecordsController extends Controller
             ], 422);
         }
 
-//        LoadingRecord::create($request->all());
-
-        // ساخت رکورد
-        return $request->company_id;
         LoadingRecord::create([
             'truck_id' => $request->truck_id,
             'location_id' => $request->location_id,
@@ -76,5 +72,12 @@ class LoadingRecordsController extends Controller
         ]);
     }
 
+    public function pendingAll(){
+        $pendingAll = LoadingRecord::with(['truck','location','company','driver'])->where('status', 'pending')->get();
+        return response()->json([
+            'status' => true,
+            'data' => $pendingAll
+        ]);
+    }
 
 }

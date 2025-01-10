@@ -20,7 +20,7 @@
 }
 @font-face {
     font-family: 'sans'; /* نام دلخواه برای فونت */
-    src: url('../fonts/sans.ttf') format('truetype'); /* مسیر صحیح به فونت */
+    src: url('../fonts/IRANSansWeb.woff2') format('truetype'); /* مسیر صحیح به فونت */
     font-weight: normal;
     font-style: normal;
 }

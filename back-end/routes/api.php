@@ -72,5 +72,6 @@ Route::prefix('location')->group(function () {
 });
 
 Route::prefix('loading_records')->group(function () {
-    Route::post('/store', [LoadingRecordsController::class, 'store']); // ایجاد کمپانی
+    Route::post('/store', [LoadingRecordsController::class, 'store']);
+    Route::get('/pendingAll', [LoadingRecordsController::class, 'pendingAll']);
 });
