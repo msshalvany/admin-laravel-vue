@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,52 +25,69 @@ class LoadingRecord extends Model
         'entry_time',
         'exit_time',
         'driver_star',
+        'entry_date'
     ];
 
     protected $dates = ['exit_time', 'created_at', 'updated_at', 'deleted_at'];
 
     // روابط
-    public function truck()
+    public function truck(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Truck::class);
     }
 
-    public function location()
+    public function locations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsTo(Location::class);
+        return $this->belongsToMany(Location::class, 'loading_record_locations');
     }
 
-    public function company()
+    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function driver()
+    public function driver(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Driver::class);
     }
 
-    // Accessor برای created_at
+    // Accessors
     public function getCreatedAtAttribute($value)
     {
         return (new Verta($value))->format('Y/m/d');
     }
 
-    // Accessor برای updated_at
     public function getUpdatedAtAttribute($value)
     {
         return (new Verta($value))->format('Y/m/d H:i:s');
     }
 
-    // Accessor برای exit_time
     public function getExitTimeAttribute($value)
     {
-        return (new Verta($value))->format('H:i'); // فقط ساعت و دقیقه
+        return (new Verta($value))->format('H:i');
     }
 
-    // Accessor برای entry_time
     public function getEntryTimeAttribute($value)
     {
-        return (new Verta($value))->format('H:i'); // فقط ساعت و دقیقه
+        return (new Verta($value))->format('H:i');
+    }
+
+    public function getTotalDurationAttribute()
+    {
+        if ($this->entry_time && $this->exit_time) {
+            $entryTime = Carbon::createFromFormat('H:i:s', $this->entry_time);
+            $exitTime = Carbon::createFromFormat('H:i:s', $this->exit_time);
+            return $entryTime->diff($exitTime)->format('%H:%I:%S');
+        }
+        return null; // اگر خروج ثبت نشده باشد
+    }
+
+    // اکسسور برای وزن خالص
+    public function getNetWeightAttribute()
+    {
+        if ($this->loaded_weight !== null && $this->empty_weight !== null) {
+            return $this->loaded_weight - $this->empty_weight;
+        }
+        return null; // اگر وزن بار یا وزن خالی ثبت نشده باشد
     }
 }

@@ -8,6 +8,7 @@ const columns = [
   {key: "name", label: "نام و نام خانوادگی", sortable: true},
   {key: "address", label: "آدرس", sortable: true},
   {key: "license_number", label: "شماره گواهی‌نامه", sortable: true},
+  {key: "actionsStar", label: "امتیاز"},
   {key: "actions", label: "عملیات"},
 ];
 
@@ -35,6 +36,8 @@ const total = ref(0);
 const sort = ref({column: "name", direction: "asc"});
 const q = ref('');
 const status = ref(false);
+const pageCountList = [10,15,20,25,30]
+const pageCountListSelected = ref(pageCountList[0])
 
 // برای نگه‌داری وضعیت راننده‌ای که قرار است ویرایش شود
 const selectedDriver = ref(null);
@@ -52,9 +55,10 @@ const driverToDelete = ref(null); // برای نگه‌داری راننده‌�
 
 const fetchDrivers = async () => {
   status.value = true;
+  drivers.value = []
   try {
     const response = await fetch(
-        `${basUrl().value}/drivers?page=${page.value}&sort=${sort.value.column}&order=${sort.value.direction}&q=${q.value}`,
+        `${basUrl().value}/drivers?page=${page.value}&sort=${sort.value.column}&order=${sort.value.direction}&q=${q.value}&countPage=${pageCountListSelected.value}`,
         {
           method: "GET",
           headers: {
@@ -65,7 +69,6 @@ const fetchDrivers = async () => {
     );
     if (response.ok) {
       const data = await response.json();
-      console.log(data.total)
       drivers.value = data.data;
       pageCount.value = data.per_page;
       total.value = data.total;
@@ -166,15 +169,12 @@ const closeDeleteModal = () => {
   driverToDelete.value = null;
 };
 
-// استفاده از واچر برای صفحه‌بندی
 watch(page, fetchDrivers);
-
-// استفاده از واچر برای مرتب‌سازی
+watch(pageCountListSelected, fetchDrivers);
 watch(sort, fetchDrivers);
 
 watch(q, fetchDrivers);
 
-// اولین بار داده‌ها بارگذاری شود
 onMounted(fetchDrivers);
 </script>
 
@@ -212,7 +212,7 @@ onMounted(fetchDrivers);
           <div class="text-left">
             <NuxtLink to="/LoadingRecord/drivers/create">
               <button class="btn btn-success">
-                 راننده جدید
+                راننده جدید
                 <Icon name="material-symbols-add-circle" size="18"/>
               </button>
             </NuxtLink>
@@ -227,6 +227,11 @@ onMounted(fetchDrivers);
               placeholder="جستجو"
               :loading="status"
           />
+          <USelectMenu class="mx-2" placeholder="ردیف" v-model="pageCountListSelected" :options="pageCountList" >
+            <template #leading>
+              <Icon name="material-symbols-light:format-list-bulleted" size="18"/>
+            </template>
+          </USelectMenu>
         </div>
         <UTable
             :rows="drivers"
@@ -245,6 +250,82 @@ onMounted(fetchDrivers);
               </button>
             </UDropdown>
           </template>
+          <template #actionsStar-data="{ row }">
+            <div class="rating rating-lg rating-half">
+              <input type="radio" name="rating-readonly" class="rating-hidden" />
+              <input
+                  type="radio"
+                  name="rating-readonly"
+                  class="mask mask-star-2 mask-half-1 bg-orange-400"
+                  :checked="row.average_star >= 0.5"
+                  disabled
+              />
+              <input
+                  type="radio"
+                  name="rating-readonly"
+                  class="mask mask-star-2 mask-half-2 bg-orange-400"
+                  :checked="row.average_star >= 1"
+                  disabled
+              />
+              <input
+                  type="radio"
+                  name="rating-readonly"
+                  class="mask mask-star-2 mask-half-1 bg-orange-400"
+                  :checked="row.average_star >= 1.5"
+                  disabled
+              />
+              <input
+                  type="radio"
+                  name="rating-readonly"
+                  class="mask mask-star-2 mask-half-2 bg-orange-400"
+                  :checked="row.average_star >= 2"
+                  disabled
+              />
+              <input
+                  type="radio"
+                  name="rating-readonly"
+                  class="mask mask-star-2 mask-half-1 bg-orange-400"
+                  :checked="row.average_star >= 2.5"
+                  disabled
+              />
+              <input
+                  type="radio"
+                  name="rating-readonly"
+                  class="mask mask-star-2 mask-half-2 bg-orange-400"
+                  :checked="row.average_star >= 3"
+                  disabled
+              />
+              <input
+                  type="radio"
+                  name="rating-readonly"
+                  class="mask mask-star-2 mask-half-1 bg-orange-400"
+                  :checked="row.average_star >= 3.5"
+                  disabled
+              />
+              <input
+                  type="radio"
+                  name="rating-readonly"
+                  class="mask mask-star-2 mask-half-2 bg-orange-400"
+                  :checked="row.average_star >= 4"
+                  disabled
+              />
+              <input
+                  type="radio"
+                  name="rating-readonly"
+                  class="mask mask-star-2 mask-half-1 bg-orange-400"
+                  :checked="row.average_star >= 4.5"
+                  disabled
+              />
+              <input
+                  type="radio"
+                  name="rating-readonly"
+                  class="mask mask-star-2 mask-half-2 bg-orange-400"
+                  :checked="row.average_star >= 5"
+                  disabled
+              />
+            </div>
+          </template>
+
         </UTable>
         <UPagination
             v-model="page"
@@ -264,7 +345,9 @@ onMounted(fetchDrivers);
     <div v-if="selectedDriver" class="modal modal-open">
       <div class="modal-box p-6">
         <!-- دکمه بستن -->
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4" @click="closeModal">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 close-btn" @click="closeModal">
+          <Icon name="material-symbols:close"/>
+        </button>
         <!-- عنوان -->
         <h2 class="text-lg font-bold mb-6 text-center">
           ویرایش راننده: {{ selectedDriver.name }}
@@ -274,7 +357,7 @@ onMounted(fetchDrivers);
           <!-- نام و نام خانوادگی -->
           <label class="floating-label input input-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
-          <Icon name="mdi:user" size="18" class="ml-2" />
+          <Icon name="mdi:user" size="18" class="ml-2"/>
           نام و نام خانوادگی
         </span>
             <input
@@ -288,7 +371,7 @@ onMounted(fetchDrivers);
           <!-- آدرس -->
           <label class="floating-label input input-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
-          <Icon name="mdi:map-marker-account" size="18" class="ml-2" />
+          <Icon name="mdi:map-marker-account" size="18" class="ml-2"/>
           آدرس
         </span>
             <input
@@ -302,7 +385,7 @@ onMounted(fetchDrivers);
           <!-- شماره گواهی‌نامه -->
           <label class="floating-label input input-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
-          <Icon name="fa6-solid:address-card" size="18" class="ml-2" />
+          <Icon name="fa6-solid:address-card" size="18" class="ml-2"/>
           شماره گواهی‌نامه
         </span>
             <input
@@ -324,7 +407,9 @@ onMounted(fetchDrivers);
     <!-- مودال تایید حذف -->
     <div v-if="showDeleteConfirmation" class="modal modal-open">
       <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="cancelDelete">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="cancelDelete">
+          <Icon name="material-symbols:close"/>
+        </button>
         <br>
         <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این راننده را حذف کنید؟</h2>
         <div class="modal-action" dir="ltr">

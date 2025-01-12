@@ -43,7 +43,9 @@
     <!-- مودال کاربران -->
     <div v-if="selectedPermission" class="modal modal-open">
       <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+          <Icon name="material-symbols:close"/>
+        </button>
         <h2 class="text-lg font-bold mb-6 text-center">
           لیست کاربران - {{ selectedPermission.name }}
         </h2>

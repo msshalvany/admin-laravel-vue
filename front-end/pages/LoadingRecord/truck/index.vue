@@ -40,6 +40,8 @@ const total = ref(0);
 const sort = ref({column: "plate_number", direction: "asc"});
 const q = ref('');
 const status = ref(false);
+const pageCountList = [10,15,20,25,30]
+const pageCountListSelected = ref(pageCountList[0])
 
 // برای نگه‌داری وضعیت کامیونی که قرار است ویرایش شود
 const selectedTruck = ref(null);
@@ -58,9 +60,10 @@ const truckToDelete = ref(null); // برای نگه‌داری کامیونی ک
 
 const fetchTrucks = async () => {
   status.value = true;
+  trucks.value = []
   try {
     const response = await fetch(
-        `${basUrl().value}/trucks?page=${page.value}&sort=${sort.value.column}&order=${sort.value.direction}&q=${q.value}`,
+        `${basUrl().value}/trucks?page=${page.value}&sort=${sort.value.column}&order=${sort.value.direction}&q=${q.value}&countPage=${pageCountListSelected.value}`,
         {
           method: "GET",
           headers: {
@@ -174,15 +177,14 @@ const closeDeleteModal = () => {
   truckToDelete.value = null;
 };
 
-// استفاده از واچر برای صفحه‌بندی
 watch(page, fetchTrucks);
 
-// استفاده از واچر برای مرتب‌سازی
+watch(pageCountListSelected, fetchTrucks);
+
 watch(sort, fetchTrucks);
 
 watch(q, fetchTrucks);
 
-// اولین بار داده‌ها بارگذاری شود
 onMounted(fetchTrucks);
 </script>
 
@@ -233,6 +235,11 @@ onMounted(fetchTrucks);
               :ui="{ td: { base: 'max-w-[0] truncate' }, default: { checkbox: { color: 'gray'} } }"
 
           />
+          <USelectMenu class="mx-2" placeholder="ردیف" v-model="pageCountListSelected" :options="pageCountList" >
+            <template #leading>
+              <Icon name="material-symbols-light:format-list-bulleted" size="18"/>
+            </template>
+          </USelectMenu>
         </div>
         <UTable
             :rows="trucks"
@@ -274,7 +281,9 @@ onMounted(fetchTrucks);
     <!-- مودال ویرایش کامیون -->
     <div v-if="selectedTruck" class="modal modal-open">
       <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+          <Icon name="material-symbols:close"/>
+        </button>
         <h2 class="text-lg font-bold mb-6 mt-4 text-center">
           ویرایش کامیون: {{ selectedTruck.plate_number }}
         </h2>
@@ -326,7 +335,9 @@ onMounted(fetchTrucks);
     <!-- مودال تایید حذف -->
     <div v-if="showDeleteConfirmation" class="modal modal-open">
       <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="cancelDelete">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="cancelDelete">
+          <Icon name="material-symbols:close"/>
+        </button>
         <br>
         <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این کامیون را حذف کنید؟</h2>
         <div class="modal-action" dir="ltr">

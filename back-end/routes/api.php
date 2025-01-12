@@ -14,7 +14,7 @@ use App\Http\Controllers\LoadingRecordsController;
 
 
 Route::get('/', function () {
-    return response()->json('hello world',200);
+    return response()->json('hello world', 200);
 });
 
 Route::controller(AuthController::class)->group(function () {
@@ -47,11 +47,12 @@ Route::prefix('drivers')->group(function () {
 });
 
 Route::prefix('trucks')->group(function () {
-    Route::get('/', [TruckController::class, 'index']); // لیست کامیون‌ها
-    Route::post('/store', [TruckController::class, 'store']); // ایجاد کامیون جدید
-    Route::get('{truck}', [TruckController::class, 'show']); // نمایش جزئیات کامیون
-    Route::put('{truck}', [TruckController::class, 'update']); // ویرایش کامیون
-    Route::delete('{truck}', [TruckController::class, 'destroy']); // حذف کامیون
+    Route::get('/', [TruckController::class, 'index']);
+    Route::post('/store', [TruckController::class, 'store']);
+    Route::get('/all', [TruckController::class, 'all']);
+    Route::get('{truck}', [TruckController::class, 'show']);
+    Route::put('{truck}', [TruckController::class, 'update']);
+    Route::delete('{truck}', [TruckController::class, 'destroy']);
 });
 
 Route::prefix('companies')->group(function () {
@@ -72,6 +73,9 @@ Route::prefix('location')->group(function () {
 });
 
 Route::prefix('loading_records')->group(function () {
+    Route::get('/', [LoadingRecordsController::class, 'index']);
     Route::post('/store', [LoadingRecordsController::class, 'store']);
+    Route::post('/finalStore', [LoadingRecordsController::class, 'finalStore']);
     Route::get('/pendingAll', [LoadingRecordsController::class, 'pendingAll']);
+    Route::delete('/destroy/{id}', [LoadingRecordsController::class, 'destroy']);
 });

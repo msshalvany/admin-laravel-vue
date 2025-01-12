@@ -132,7 +132,6 @@ const submitFormEditUser = async () => {
 // تابع برای شروع فرآیند حذف راننده
 const DeleteUser = (user) => {
   selectedUser.value = user
-  console.log(user)
   showDeleteConfirmation.value = true; // نمایش مودال تایید حذف
 };
 
@@ -266,7 +265,9 @@ onMounted(fetchUsers);
     <!-- مودال‌ها -->
     <div v-if="showModal" class="modal modal-open">
       <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+          <Icon name="material-symbols:close"/>
+        </button>
         <h2 class="text-lg font-bold mb-6 text-center">
           مدیریت دسترسی‌ها - {{ selectedUser?.username }}
         </h2>
@@ -299,7 +300,9 @@ onMounted(fetchUsers);
     <div v-if="showModalEdit" class="modal modal-open">
       <div class="modal-box relative">
         <!-- دکمه بستن -->
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+          <Icon name="material-symbols:close"/>
+        </button>
 
         <!-- فرم -->
         <form @submit.prevent="submitFormEditUser" class="form-control space-y-6">
@@ -341,10 +344,11 @@ onMounted(fetchUsers);
       </div>
     </div>
 
-
     <div v-if="showDeleteConfirmation" class="modal modal-open">
       <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+          <Icon name="material-symbols:close"/>
+        </button>
         <br>
         <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟</h2>
         <div class="modal-action" dir="ltr">

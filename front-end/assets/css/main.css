@@ -1,23 +1,27 @@
-.alert-primery-soft{
+.alert-primery-soft {
     background: #b4e3ff;
     color: #0088a7;
     font-weight: bold;
 }
-.alert-error-soft{
+
+.alert-error-soft {
     background: #ffc8c8;
     color: #FF0736;
     font-weight: bold;
 }
-.alert-warning-soft{
+
+.alert-warning-soft {
     background: #ffe227;
     color: #ad7002;
     font-weight: bold;
 }
-.alert-success-soft{
+
+.alert-success-soft {
     background: #b5ffb0;
     color: #0f9038;
     font-weight: bold;
 }
+
 @font-face {
     font-family: 'sans'; /* نام دلخواه برای فونت */
     src: url('../fonts/IRANSansWeb.woff2') format('truetype'); /* مسیر صحیح به فونت */
@@ -25,7 +29,18 @@
     font-style: normal;
 }
 
-body{
+body {
     font-family: sans;
     font-feature-settings: 'lnum' 0, 'pnum' 1;
+}
+
+.close-btn:hover {
+    transition: all 0.4s;
+    transform: rotate(180deg);
+    font-size: 18px;
+    font-weight: bold;
+    transform-origin: center;
+    color: #ff4f4f;
+    border: 1px #ff4f4f solid;
+    background: #ffcccc;
 }

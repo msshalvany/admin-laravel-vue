@@ -10,19 +10,30 @@ class TruckController extends Controller
 {
     public function index(Request $request)
     {
-        // دریافت پارامترها برای جستجو، مرتب‌سازی و صفحه‌بندی
+        // دریافت پارامتر ها برای جستجو، مرتب‌سازی و صفحه‌بندی
         $search = $request->query('q', '');
         $sortColumn = $request->query('sort', 'plate_number');
         $sortOrder = $request->query('order', 'asc');
+        $countPage = $request->query('countPage', 10);
 
         // واکشی کامیون‌ها با فیلترها
         $trucks = Truck::with('driver','company')->where('plate_number', 'like', "%{$search}%")
-            ->orWhere('color', 'like', "%{$search}%")
             ->orWhere('type', 'like', "%{$search}%")
+            ->orWhere('id', 'like', "%{$search}%")
             ->orderBy($sortColumn, $sortOrder)
-            ->paginate(10);
+            ->paginate($countPage);
 
         return response()->json($trucks, 200);
+    }
+
+    public function all(Request $request)
+    {
+        $search = $request->query('q', '');
+        $trucks = Truck::with('driver','company')->where('plate_number', 'like', "%{$search}%")->get();
+        return response()->json([
+            'data' => $trucks,
+            'status'=>200
+        ]);
     }
 
     public function store(Request $request)

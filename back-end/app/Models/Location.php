@@ -11,8 +11,8 @@ class Location extends Model
 
     protected $fillable = ['location_name', 'description'];
 
-    public function loadingRecords(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function loadingRecords(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->hasMany(LoadingRecord::class);
+        return $this->belongsToMany(LoadingRecord::class, 'loading_record_locations');
     }
 }

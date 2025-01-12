@@ -12,32 +12,28 @@ class DriverController extends Controller
 {
     public function index(Request $request)
     {
-        // دریافت پارامترها
-        $search = $request->query('q', '');
+        $search = trim($request->query('q', ''));
         $sortColumn = $request->query('sort', 'name');
         $sortOrder = $request->query('order', 'asc');
+        $countPage = $request->query('countPage', 10);
 
-        // واکشی داده‌ها با جستجو، مرتب‌سازی و صفحه‌بندی
         $drivers = Driver::where('name', 'like', "%{$search}%")
             ->orWhere('address', 'like', "%{$search}%")
             ->orWhere('id', 'like', "%{$search}%")
             ->orWhere('license_number', 'like', "%{$search}%")
             ->orderBy($sortColumn, $sortOrder)
-            ->paginate(50);
-
+            ->paginate($countPage);
         return response()->json($drivers, 200);
     }
 
     public function all(Request $request)
     {
-        // دریافت پارامترها
         $search = $request->query('q', '');
-        // واکشی داده‌ها با جستجو، مرتب‌سازی و صفحه‌بندی
-        $drivers = Driver::where('name', 'like', "%{$search}%")
-            ->orWhere('address', 'like', "%{$search}%")
-            ->orWhere('id', 'like', "%{$search}%")
-            ->orWhere('license_number', 'like', "%{$search}%")->get();
-        return response()->json($drivers, 200);
+        $drivers = Driver::where('name', 'like', "%{$search}%")->get();
+        return response()->json([
+            'data' => $drivers,
+            'status'=>200
+        ]);
     }
 
     public function store(Request $request)

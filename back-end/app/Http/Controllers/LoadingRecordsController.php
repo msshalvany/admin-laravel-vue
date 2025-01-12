@@ -4,19 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\LoadingRecord;
 use Carbon\Carbon;
+use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class LoadingRecordsController extends Controller
 {
 
+    public function index(Request $request)
+    {
+            $search = trim($request->query('q', ''));
+            $sortColumn = $request->query('sort', 'created_at');
+            $sortOrder = $request->query('order', 'asc');
+            $countPage = $request->query('countPage', 10);
+
+            $LoadingRecord  = LoadingRecord::where('status','ended')->where('id', 'like', "%{$search}%")
+                ->orderBy($sortColumn, $sortOrder)
+                ->paginate($countPage);
+
+            return response()->json($LoadingRecord , 200);
+    }
+
     public function store(Request $request)
     {
         $messages = [
             'truck_id.required' => 'شناسه کامیون الزامی است.',
             'truck_id.exists' => 'شناسه کامیون معتبر نیست.',
-            'location_id.required' => 'شناسه مکان بارگیری الزامی است.',
-            'location_id.exists' => 'شناسه مکان بارگیری معتبر نیست.',
+            'location_ids.required' => 'شناسه مکان‌ها الزامی است.',
+            'location_ids.array' => 'شناسه مکان‌ها باید یک آرایه باشد.',
+            'location_ids.*.exists' => 'یکی از شناسه‌های مکان معتبر نیست.',
             'company_id.required' => 'شناسه شرکت الزامی است.',
             'company_id.exists' => 'شناسه شرکت معتبر نیست.',
             'driver_id.required' => 'شناسه راننده الزامی است.',
@@ -30,23 +46,21 @@ class LoadingRecordsController extends Controller
             'loaded_weight.max' => 'وزن بار نمی‌تواند بیشتر از 999999.99 باشد.',
             'entry_time.required' => 'زمان ورود الزامی است.',
             'entry_time.date_format:H:i' => 'زمان ورود باید یک تاریخ معتبر باشد.',
-            'exit_time.date' => 'زمان خروج باید یک تاریخ معتبر باشد.',
-            'exit_time.after_or_equal' => 'زمان خروج باید برابر یا بعد از زمان ورود باشد.',
             'driver_star.integer' => 'امتیاز راننده باید عدد صحیح باشد.',
             'driver_star.min' => 'امتیاز راننده نمی‌تواند کمتر از صفر باشد.',
             'driver_star.max' => 'امتیاز راننده نمی‌تواند بیشتر از 5 باشد.',
+            'date.required' => 'تاریخ تردد الزامی است'
         ];
-
         $validator = Validator::make($request->all(), [
             'truck_id' => 'required|exists:trucks,id',
-            'location_id' => 'required|exists:locations,id',
+            'location_ids' => 'required|array',
+            'location_ids.*' => 'exists:locations,id',
             'company_id' => 'required|exists:companies,id',
             'driver_id' => 'required|exists:drivers,id',
             'empty_weight' => 'required|numeric|min:0|max:999999.99',
-            'loaded_weight' => 'nullable|numeric|min:0|max:999999.99',
+            'entry_date' => 'nullable|date|min:0|max:999999.99',
             'entry_time' => 'required|date_format:H:i',
-            'exit_time' => 'nullable|date|after_or_equal:entry_time',
-            'driver_star' => 'integer|min:0|max:5',
+            'date' => 'date',
         ], $messages);
 
         if ($validator->fails()) {
@@ -57,27 +71,69 @@ class LoadingRecordsController extends Controller
             ], 422);
         }
 
-        LoadingRecord::create([
+        // ایجاد رکورد جدید در جدول loading_records
+        $loadingRecord = LoadingRecord::create([
             'truck_id' => $request->truck_id,
-            'location_id' => $request->location_id,
             'company_id' => $request->company_id,
             'driver_id' => $request->driver_id,
             'empty_weight' => $request->empty_weight,
-            'entry_date' => Carbon::createFromFormat('Y/m/d', $request->entry_date)->toDateString(),
+            'loaded_weight' => $request->loaded_weight,
+            'entry_date' => Verta::parse($request->entry_date)->toCarbon(),
             'entry_time' => $request->entry_time,
+            'exit_time' => $request->exit_time,
         ]);
+
+        // ذخیره شناسه مکان‌ها در جدول واسط
+        $loadingRecord->locations()->sync($request->location_ids);
+
         return response()->json([
             'status' => true,
             'message' => 'عملیات موفقیت‌آمیز بود',
+            'data' => $loadingRecord
         ]);
     }
 
-    public function pendingAll(){
-        $pendingAll = LoadingRecord::with(['truck','location','company','driver'])->where('status', 'pending')->get();
+    public function pendingAll()
+    {
+        $pendingAll = LoadingRecord::with(['truck', 'locations', 'company', 'driver'])->where('status', 'pending')->get();
         return response()->json([
             'status' => true,
             'data' => $pendingAll
         ]);
     }
 
+    public function destroy($id)
+    {
+        LoadingRecord::find($id)->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'تردد با موفقیت حذف شد',
+        ]);
+    }
+
+    public function finalStore(Request $request)
+    {
+        $messages = [
+            'loaded_weight.numeric' => 'وزن بار باید عدد باشد.',
+            'loaded_weight.min' => 'وزن بار نمی‌تواند کمتر از صفر باشد.',
+            'loaded_weight.max' => 'وزن بار نمی‌تواند بیشتر از 999999.99 باشد.',
+            'driver_star.integer' => 'امتیاز راننده باید عدد صحیح باشد.',
+            'driver_star.min' => 'امتیاز راننده نمی‌تواند کمتر از صفر باشد.',
+            'driver_star.max' => 'امتیاز راننده نمی‌تواند بیشتر از 5 باشد.',
+        ];
+        $validator = Validator::make($request->all(), [
+            'loaded_weight' => 'required|numeric|min:0|max:999999.99',
+            'exit_time' => 'required|date|after_or_equal:entry_time',
+        ], $messages);
+        $loaded = LoadingRecord::find($request->id);
+        $loaded->update([
+            'loaded_weight' => $request->loaded_weight,
+            'exit_time' => $request->exit_time,
+            'driver_star' => $request->driver_star,
+            'status' => 'ended',
+        ]);
+        return response()->json([
+            'message' => 'تردد با نهاییی شد',
+        ]);
+    }
 }

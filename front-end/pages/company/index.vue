@@ -233,7 +233,9 @@ onMounted(fetchCompanies);
     <div v-if="showEditModal" class="modal modal-open">
       <div class="modal-box relative">
         <!-- دکمه بستن -->
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="showEditModal = false">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="showEditModal = false">
+          <Icon name="material-symbols:close"/>
+        </button>
 
         <!-- عنوان ویرایش -->
         <h2 class="text-lg font-bold mb-6 text-center mt-2">
@@ -279,7 +281,9 @@ onMounted(fetchCompanies);
     <div v-if="showCreateModal" class="modal modal-open">
       <div class="modal-box relative">
         <!-- دکمه بستن -->
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="showCreateModal = false">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="showCreateModal = false">
+          <Icon name="material-symbols:close"/>
+        </button>
 
         <!-- عنوان فرم -->
         <h2 class="text-lg font-bold mb-6 text-center mt-2">کمپانی جدید</h2>
@@ -320,7 +324,9 @@ onMounted(fetchCompanies);
     </div>
     <div v-if="showDeleteConfirmation" class="modal modal-open">
       <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+          <Icon name="material-symbols:close"/>
+        </button>
         <br>
         <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این کمپانی را حذف کنید؟</h2>
         <div class="modal-action" dir="ltr">

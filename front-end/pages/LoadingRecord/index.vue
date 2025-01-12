@@ -1,7 +1,6 @@
 <script setup>
 import {basUrl} from "~/composables/states.js";
 import {ref} from "vue";
-import {loaderfun} from "~/composables/statFunc.js";
 
 const entry_date = ref(null)
 const entry_time = ref(null)
@@ -10,10 +9,25 @@ const selectedCompany = ref(null);
 const pendingAll = ref(null);
 const trucks = ref([]);
 const selectedTrucks = ref(null)
-
+const empty_weight = ref(0)
+const selectedStar = ref(2)
+const exit_time = ref(null)
 const locations = ref([])
-const selectedLocation = ref(null)
+const selectedLocation = ref([])
+const showDeleteConfirmation = ref(false);
+const showComplateConfirmation = ref(false);
+const loaded_weight = ref(0)
 
+const selectedLoading = ref(null);
+const DeleteLoading = (item) => {
+  selectedLoading.value = item
+  showDeleteConfirmation.value = true; // نمایش مودال تایید حذف
+};
+const closeModal = () => {
+  selectedLoading.value = null;
+  showDeleteConfirmation.value = false;
+  showComplateConfirmation.value = false;
+};
 
 const drivers = ref([])
 const selectedDriver = ref(null)
@@ -40,7 +54,7 @@ const fetchCompanies = async () => {
 const fetchDrivers = async () => {
   try {
     const response = await fetch(
-        `${basUrl().value}/drivers`,
+        `${basUrl().value}/drivers/all`,
         {
           method: "GET",
           headers: {
@@ -87,7 +101,7 @@ const fetchLocation = async () => {
 };
 const fetchTrucks = async () => {
   try {
-    const response = await fetch(`${basUrl().value}/trucks`, {
+    const response = await fetch(`${basUrl().value}/trucks/all`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${useCookie('jwt').value}`,
@@ -110,7 +124,6 @@ const fetchTrucks = async () => {
     console.error('Error:', error);
   }
 };
-
 const fetchpendingAll = async () => {
   loaderfun()
   try {
@@ -131,6 +144,38 @@ const fetchpendingAll = async () => {
   }
   loaderfun()
 };
+const confirmDelete = async () => {
+  loaderfun();
+  try {
+    const response = await fetch(
+        `${basUrl().value}/loading_records/destroy/${selectedLoading.value.id}`,
+        {
+          method: "delete",
+          headers: {
+            Authorization: `Bearer ${useCookie("jwt").value}`,
+            "Content-Type": "application/json",
+          },
+        }
+    );
+
+    if (response.ok) {
+      fetchpendingAll()
+      AlertSuccess("تردد با موفقیت حذف شد");
+      showDeleteConfirmation.value = false;
+      selectedLoading.value = null;
+    } else {
+      console.error("Error deleting driver:", response.status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+  loaderfun();
+};
+
+const EndSubmit = (item) => {
+  selectedLoading.value = item
+  showComplateConfirmation.value = true
+}
 
 const checkForm = () => {
   if (selectedCompany.value == null) {
@@ -154,6 +199,9 @@ const checkForm = () => {
 }
 const LoadingRecords = async () => {
   loaderfun();
+  const selectedLocationIds = selectedLocation.value.map(function (item) {
+    return item.value
+  }); // استخراج آرایه از شناسه‌ها
   try {
     checkForm()
     const response = await fetch(`${basUrl().value}/loading_records/store`, {
@@ -165,7 +213,7 @@ const LoadingRecords = async () => {
       },
       body: JSON.stringify({
         truck_id: selectedTrucks.value.value,
-        location_id: selectedLocation.value.value,
+        location_ids: selectedLocationIds,
         company_id: selectedCompany.value.value,
         driver_id: selectedDriver.value.value,
         empty_weight: selectedDriver.value.value,
@@ -185,6 +233,39 @@ const LoadingRecords = async () => {
     console.error('Error:', error);
   }
   loaderfun();
+}
+
+const finalSubmit = async () => {
+  loaderfun();
+  try {
+    const response = await fetch(`${basUrl().value}/loading_records/finalStore`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${useCookie('jwt').value}`,
+      },
+      body: JSON.stringify({
+        driver_star: selectedStar.value,
+        exit_time: exit_time.value,
+        loaded_weight: loaded_weight.value,
+        id: selectedLoading.value.id
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error(errorData.errors);
+      AlertError(response.error[0]);
+    } else {
+      AlertSuccess('تردد به شکل نهایی ثبت شد');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+  loaderfun();
+  fetchpendingAll()
+  closeModal()
 }
 
 onMounted(function () {
@@ -309,7 +390,7 @@ watch(selectedTrucks, function () {
             <Icon name="material-symbols-light:calendar-clock-rounded" size="24"/>
               ساعت شروع
             </span>
-                <input id="timeStartPicker" type="text" class="grow" placeholder=" ساعت پایان"/>
+                <input id="timeStartPicker" type="text" class="grow" placeholder=" ساعت شروع"/>
               </label>
               <date-picker
                   type="time"
@@ -323,10 +404,16 @@ watch(selectedTrucks, function () {
                            placeholder="انتخاب مکان"
                            :popper="{ arrow: true }"
                            searchable
+                           multiple
                            icon="ic:outline-place"
                            searchable-placeholder="جستجو....."
                            class="mt-2 "
               >
+                <template #label>
+                  <template v-if="selectedLocation.length">
+                    <span>{{ selectedLocation.length }} مکان انتخاب شده</span>
+                  </template>
+                </template>
               </USelectMenu>
             </div>
           </div>
@@ -335,7 +422,7 @@ watch(selectedTrucks, function () {
               وزن گیری
               <span class="loading loading-spinner"></span>
             </button>
-            <div class="flex justify-evenly lg:w-6/12">
+            <div class="flex justify-evenly lg:w-6/12 mt-2">
               <div class="flex flex-col items-center justify-center bg-black text-white rounded-lg w-20 h-24">
                 <p class="text-3xl font-bold">00</p>
                 <span class="text-sm mt-1">گرم</span>
@@ -349,6 +436,7 @@ watch(selectedTrucks, function () {
                 <span class="text-sm mt-1">تن</span>
               </div>
             </div>
+            <input type="hidden" v-model="empty_weight">
           </div>
           <div class="mt-4">
             <button class="w-full btn btn-primary" @click="LoadingRecords">ثبت موقت ورود</button>
@@ -359,21 +447,27 @@ watch(selectedTrucks, function () {
         <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
           <ul class="list bg-base-100 rounded-box shadow-md" v-for="item in pendingAll">
             <li class="w-full list-row">
-              <li class="list-row">
+              <div class="list-row">
                 <div class="list-col-grow">
                   <div><b>نام کمپانی :</b>{{ item.company.name }}</div>
-                  <div> <b>تاریخ ثبت:</b> {{ item.created_at }} <b> ساعت :</b> {{ item.entry_time }} </div>
-                  <div> <b> راننده:</b>  {{ item.driver.name }}</div>
+                  <div><b>تاریخ ثبت:</b> {{ item.created_at }} <b> ساعت :</b> {{ item.entry_time }}</div>
+                  <div><b> راننده:</b> {{ item.driver.name }}</div>
+                  <div>
+                    <p><b>مکان ها :</b></p>
+                    <ol v-for="loc in item.locations">
+                      <li>{{ loc.location_name }}</li>
+                    </ol>
+                  </div>
                 </div>
-                  <button class="btn btn-sm btn-primary">
-                    ثبت نهایی
-                    <Icon name="carbon:task-complete" size="18"/>
-                  </button>
-                  <button class="btn btn-error btn-sm">
-                     لغو
-                    <Icon name="material-symbols:auto-delete" size="18"/>
-                  </button>
-              </li>
+                <button class="btn btn-sm btn-primary" @click="EndSubmit(item)">
+                  ثبت نهایی
+                  <Icon name="carbon:task-complete" size="18"/>
+                </button>
+                <button class="btn btn-error btn-sm" @click="DeleteLoading(item)">
+                  لغو
+                  <Icon name="material-symbols:auto-delete" size="18"/>
+                </button>
+              </div>
             </li>
           </ul>
         </div>
@@ -381,10 +475,104 @@ watch(selectedTrucks, function () {
 
 
     </div>
-    <!-- جدول رانندگان -->
+    <div v-if="showDeleteConfirmation" class="modal modal-open">
+      <div class="modal-box">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+          <Icon name="material-symbols:close"/>
+        </button>
+        <br>
+        <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟</h2>
+        <div class="modal-action" dir="ltr">
+          <button class="btn btn-error" @click="confirmDelete">بله، حذف کن</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showComplateConfirmation" class="modal modal-open">
+      <div class="modal-box w-11/12 max-w-5xl" style="height: 450px">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+          <Icon name="material-symbols:close"/>
+        </button>
+        <br>
+        <div>
+          <div class="mt-4">
+            <label class="floating-label input input-bordered flex items-center gap-2">
+            <span class="flex items-center">
+            <Icon name="material-symbols-light:calendar-clock-rounded" size="24"/>
+              ساعت پایان
+            </span>
+              <input id="timeEndPicker" type="text" class="grow" placeholder=" ساعت پایان"/>
+            </label>
+            <date-picker
+                type="time"
+                v-model="exit_time"
+                custom-input="#timeEndPicker"
+            />
+          </div>
+          <div class="mt-2 flex flex-wrap justify-between items-center">
+            <button class="btn btn-primary btn-lg">
+              وزن گیری
+              <span class="loading loading-spinner"></span>
+            </button>
+            <div class="flex justify-evenly lg:w-6/12 mt-2">
+              <div class="flex flex-col items-center justify-center bg-black text-white rounded-lg w-20 h-24">
+                <p class="text-3xl font-bold">00</p>
+                <span class="text-sm mt-1">گرم</span>
+              </div>
+              <div class="flex flex-col items-center justify-center bg-black text-white rounded-lg w-20 h-24">
+                <p class="text-3xl font-bold">00</p>
+                <span class="text-sm mt-1">کیلو</span>
+              </div>
+              <div class="flex flex-col items-center justify-center bg-black text-white rounded-lg w-20 h-24">
+                <p class="text-3xl font-bold">00</p>
+                <span class="text-sm mt-1">تن</span>
+              </div>
+            </div>
+            <input type="hidden" v-model="loaded_weight">
+          </div>
+        </div>
+        <div class="mt-3 flex flex-wrap">
+          <div>
+            امتیاز راننده :
+          </div>
+          <div class="rating rating-lg rating-half">
+            <input v-model="selectedStar" type="radio" name="rating-11" class="rating-hidden"/>
+            <input v-model="selectedStar" type="radio" name="rating-11"
+                   class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="0.5 star" value="0.5"/>
+            <input v-model="selectedStar" type="radio" name="rating-11"
+                   class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="1 star" value="1"/>
+            <input v-model="selectedStar" type="radio" name="rating-11"
+                   class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="1.5 star" value="1.5"/>
+            <input v-model="selectedStar" type="radio" name="rating-11"
+                   class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="2 star" value="2"/>
+            <input v-model="selectedStar" type="radio" name="rating-11"
+                   class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="2.5 star" value="2.5"/>
+            <input v-model="selectedStar" type="radio" name="rating-11"
+                   class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="3 star" value="3"/>
+            <input v-model="selectedStar" type="radio" name="rating-11"
+                   class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="3.5 star" value="3.5"/>
+            <input v-model="selectedStar" type="radio" name="rating-11"
+                   class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="4 star" value="4"/>
+            <input v-model="selectedStar" type="radio" name="rating-11"
+                   class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="4.5 star" value="4.5"/>
+            <input v-model="selectedStar" type="radio" name="rating-11"
+                   class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="5 star" value="5"/>
+          </div>
+        </div>
+        <div class="mt-4 absolute text-center bottom-4" style="width: 94%;">
+          <button class="btn btn-primary w-full" @click="finalSubmit">ثبت نهایی تردد</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-
+@media only screen and (max-width: 600px) {
+  .list-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    margin: 0 0 12px 0;
+  }
+}
 </style>

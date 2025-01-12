@@ -59,7 +59,7 @@
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/user/permisition" @click="closeDrawer">
+                  <NuxtLink to="/LoadingRecord/history" @click="closeDrawer">
                     <Icon name="streamline:shipping-transfer-truck-time-truck-shipping-delivery-time-waiting-delay"
                           size="26"/>
                     تاریخچه
