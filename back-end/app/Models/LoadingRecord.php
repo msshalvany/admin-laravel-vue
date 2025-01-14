@@ -72,6 +72,11 @@ class LoadingRecord extends Model
         return (new Verta($value))->format('H:i');
     }
 
+    public function getEntryDateAttribute($value)
+    {
+        return (new Verta($value))->format('Y/m/d');
+    }
+
     public function getTotalDurationAttribute()
     {
         if ($this->entry_time && $this->exit_time) {

@@ -17,11 +17,10 @@ const total = ref(0);
 const sort = ref({column: "created_at", direction: "asc"});
 const q = ref('');
 const status = ref(false);
-const pageCountList = [10,15,20,25,30]
+const pageCountList = [10, 15, 20, 25, 30]
 const pageCountListSelected = ref(pageCountList[0])
 
 const LoadingRecord = ref([])
-
 
 
 const fetchLoadingRecord = async () => {
@@ -68,9 +67,11 @@ watch(pageCountListSelected, fetchLoadingRecord);
 watch(sort, fetchLoadingRecord);
 watch(q, fetchLoadingRecord);
 onMounted(fetchLoadingRecord);
+const expand = ref({
+  openedRows: [LoadingRecord],
+  row: {}
+})
 </script>
-
-
 <template>
   <div>
     <div class="p-4">
@@ -109,7 +110,7 @@ onMounted(fetchLoadingRecord);
               placeholder="جستجو"
               :loading="status"
           />
-          <USelectMenu class="mx-2" placeholder="ردیف" v-model="pageCountListSelected" :options="pageCountList" >
+          <USelectMenu class="mx-2" placeholder="ردیف" v-model="pageCountListSelected" :options="pageCountList">
             <template #leading>
               <Icon name="material-symbols-light:format-list-bulleted" size="18"/>
             </template>
@@ -122,8 +123,18 @@ onMounted(fetchLoadingRecord);
             :loading="status"
             :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'در حال پردازش...' }"
             :progress="{ color: 'primary', animation: 'carousel' }"
-            class="w-full"
+            v-model:expand="expand"
         >
+          <template #expand="{ row }">
+            <pre class="p-4">
+              {{ row }}
+            </pre>
+          </template>
+          <template #expand-action="{ row, isExpanded, toggle }">
+            <UButton @click="toggle">
+              مشاهده جزعیات
+            </UButton>
+          </template>
         </UTable>
         <UPagination
             v-model="page"

@@ -9,7 +9,7 @@ const selectedCompany = ref(null);
 const pendingAll = ref(null);
 const trucks = ref([]);
 const selectedTrucks = ref(null)
-const empty_weight = ref(0)
+const empty_weight = ref(0.00)
 const selectedStar = ref(2)
 const exit_time = ref(null)
 const locations = ref([])
@@ -280,6 +280,15 @@ watch(selectedCompany, function () {
 watch(selectedTrucks, function () {
   console.log(selectedTrucks.value)
 })
+const TabItems = [{
+  label: 'ثبت موقت',
+  icon: 'material-symbols:pending-actions',
+  key: 'pending'
+}, {
+  label: 'ثبت نهایی',
+  icon: 'material-symbols:weekend-outline',
+  key: 'final'
+}]
 </script>
 
 <template>
@@ -328,152 +337,151 @@ watch(selectedTrucks, function () {
     </div>
 
     <div class="xl:w-8/12 md:w-12/12 p-4 m-auto flex flex-col mt-4 shadow-xl rounded-2xl">
-      <div role="tablist" class="tabs tabs-box">
-        <input checked type="radio" name="my_tab_2" id="tab" role="tab-for-form" class="tab" aria-label="ثبت موقت"/>
-        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
-          <div class="mt-2">
-            <div>
-              <USelectMenu v-model="selectedCompany" size="xl"
-                           :options="companies"
-                           placeholder="انتخاب شرکت"
-                           :popper="{ arrow: true }"
-                           searchable
-                           icon="octicon:organization-16"
-                           searchable-placeholder="جستجو....."
-                           class="p-0"
-              />
-            </div>
-            <div class="mt-4">
-              <USelectMenu v-model="selectedTrucks" size="xl"
-                           :options="trucks"
-                           placeholder="انتخاب ماشین"
-                           :popper="{ arrow: true }"
-                           searchable
-                           icon="ph:truck-duotone"
-                           searchable-placeholder="جستجو....."
-                           class="mt-2 "
-              >
-                <template #option="{ option:truck }">
-                  <span class="h-2 w-2 rounded-full" :style="`background-color:${truck.color}`"></span>
-                  <span class="truncate">{{ truck.label }}</span>
-                </template>
-              </USelectMenu>
-            </div>
-            <div class="mt-4">
-              <USelectMenu v-model="selectedDriver" size="xl"
-                           :options="drivers"
-                           placeholder="انتخاب راننده"
-                           :popper="{ arrow: true }"
-                           searchable
-                           icon="healthicons:truck-driver"
-                           searchable-placeholder="جستجو....."
-                           class="mt-2 w-full"
-              />
-            </div>
-            <div class="mt-6">
-              <label class="floating-label input input-bordered flex items-center gap-2">
+      <UTabs @change="fetchpendingAll" :items="TabItems" class="w-full">
+        <template #icon="{ item, selected }">
+          <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0 me-2"
+                 :class="[selected && 'text-primary-500 dark:text-primary-400']"/>
+        </template>
+        <template #item="{ item }">
+          <div v-if="item.key === 'pending'" class="space-y-3">
+            <div class="mt-2">
+              <div>
+                <USelectMenu v-model="selectedCompany" size="xl"
+                             :options="companies"
+                             placeholder="انتخاب شرکت"
+                             :popper="{ arrow: true }"
+                             searchable
+                             icon="octicon:organization-16"
+                             searchable-placeholder="جستجو....."
+                             class="p-0"
+                />
+              </div>
+              <div class="mt-4">
+                <USelectMenu v-model="selectedTrucks" size="xl"
+                             :options="trucks"
+                             placeholder="انتخاب ماشین"
+                             :popper="{ arrow: true }"
+                             searchable
+                             icon="ph:truck-duotone"
+                             searchable-placeholder="جستجو....."
+                             class="mt-2 "
+                >
+                  <template #option="{ option:truck }">
+                    <span class="h-2 w-2 rounded-full" :style="`background-color:${truck.color}`"></span>
+                    <span class="truncate">{{ truck.label }}</span>
+                  </template>
+                </USelectMenu>
+              </div>
+              <div class="mt-4">
+                <USelectMenu v-model="selectedDriver" size="xl"
+                             :options="drivers"
+                             placeholder="انتخاب راننده"
+                             :popper="{ arrow: true }"
+                             searchable
+                             icon="healthicons:truck-driver"
+                             searchable-placeholder="جستجو....."
+                             class="mt-2 w-full"
+                />
+              </div>
+              <div class="mt-6">
+                <label class="floating-label input input-bordered flex items-center gap-2">
             <span class="flex items-center">
             <Icon name="material-symbols-light:calendar-clock-rounded" size="24"/>
               تاریخ تردد
             </span>
-                <input id="datePicker" type="text" class="grow" placeholder="تاریخ تردد"/>
-              </label>
-              <date-picker
-                  v-model="entry_date"
-                  type="date"
-                  custom-input="#datePicker"
-              />
-            </div>
-            <div class="mt-4">
-              <label class="floating-label input input-bordered flex items-center gap-2">
+                  <input id="datePicker" type="text" class="grow" placeholder="تاریخ تردد"/>
+                </label>
+                <date-picker
+                    v-model="entry_date"
+                    type="date"
+                    custom-input="#datePicker"
+                />
+              </div>
+              <div class="mt-4">
+                <label class="floating-label input input-bordered flex items-center gap-2">
             <span class="flex items-center">
             <Icon name="material-symbols-light:calendar-clock-rounded" size="24"/>
               ساعت شروع
             </span>
-                <input id="timeStartPicker" type="text" class="grow" placeholder=" ساعت شروع"/>
-              </label>
-              <date-picker
-                  type="time"
-                  v-model="entry_time"
-                  custom-input="#timeStartPicker"
-              />
+                  <input id="timeStartPicker" type="text" class="grow" placeholder=" ساعت شروع"/>
+                </label>
+                <date-picker
+                    type="time"
+                    v-model="entry_time"
+                    custom-input="#timeStartPicker"
+                />
+              </div>
+              <div class="mt-4">
+                <USelectMenu v-model="selectedLocation" size="xl"
+                             :options="locations"
+                             placeholder="انتخاب مکان"
+                             :popper="{ arrow: true }"
+                             searchable
+                             multiple
+                             icon="ic:outline-place"
+                             searchable-placeholder="جستجو....."
+                             class="mt-2 "
+                >
+                  <template #label>
+                    <template v-if="selectedLocation.length">
+                      <span>{{ selectedLocation.length }} مکان انتخاب شده</span>
+                    </template>
+                  </template>
+                </USelectMenu>
+              </div>
+            </div>
+            <div class="mt-12 flex flex-wrap justify-between items-center">
+              <button class="btn btn-primary btn-lg">
+                وزن گیری
+                <span class="loading loading-spinner"></span>
+              </button>
+              <div style="font-family: digitalNumber" class="mt-5 px-4 pb-6 bg-gray-800 rounded-2xl">
+                <div class="text-red-700 shadow-amber-400 text-9xl flex justify-center items-center"
+                     style="letter-spacing: 6px">
+                  {{ empty_weight }}
+                </div>
+              </div>
+              <input type="hidden" v-model="empty_weight">
             </div>
             <div class="mt-4">
-              <USelectMenu v-model="selectedLocation" size="xl"
-                           :options="locations"
-                           placeholder="انتخاب مکان"
-                           :popper="{ arrow: true }"
-                           searchable
-                           multiple
-                           icon="ic:outline-place"
-                           searchable-placeholder="جستجو....."
-                           class="mt-2 "
-              >
-                <template #label>
-                  <template v-if="selectedLocation.length">
-                    <span>{{ selectedLocation.length }} مکان انتخاب شده</span>
-                  </template>
-                </template>
-              </USelectMenu>
+              <button class="w-full btn btn-primary" @click="LoadingRecords">ثبت موقت ورود</button>
             </div>
           </div>
-          <div class="mt-12 flex flex-wrap justify-between items-center">
-            <button class="btn btn-primary btn-lg">
-              وزن گیری
-              <span class="loading loading-spinner"></span>
-            </button>
-            <div class="flex justify-evenly lg:w-6/12 mt-2">
-              <div class="flex flex-col items-center justify-center bg-black text-white rounded-lg w-20 h-24">
-                <p class="text-3xl font-bold">00</p>
-                <span class="text-sm mt-1">گرم</span>
-              </div>
-              <div class="flex flex-col items-center justify-center bg-black text-white rounded-lg w-20 h-24">
-                <p class="text-3xl font-bold">00</p>
-                <span class="text-sm mt-1">کیلو</span>
-              </div>
-              <div class="flex flex-col items-center justify-center bg-black text-white rounded-lg w-20 h-24">
-                <p class="text-3xl font-bold">00</p>
-                <span class="text-sm mt-1">تن</span>
+          <div v-else-if="item.key === 'final'" class="space-y-3">
+            <div v-if="pendingAll==0">
+              <div class="alert-error alert alert-soft">
+                داده ای وجود ندارد !
+                <Icon name="ic:baseline-error" size="18"/>
               </div>
             </div>
-            <input type="hidden" v-model="empty_weight">
-          </div>
-          <div class="mt-4">
-            <button class="w-full btn btn-primary" @click="LoadingRecords">ثبت موقت ورود</button>
-          </div>
-        </div>
-        <input type="radio" name="my_tab_2" id="tab-for-list" @click="fetchpendingAll" role="tab" class="tab"
-               aria-label="ثبت نهایی"/>
-        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
-          <ul class="list bg-base-100 rounded-box shadow-md" v-for="item in pendingAll">
-            <li class="w-full list-row">
-              <div class="list-row">
-                <div class="list-col-grow">
-                  <div><b>نام کمپانی :</b>{{ item.company.name }}</div>
-                  <div><b>تاریخ ثبت:</b> {{ item.created_at }} <b> ساعت :</b> {{ item.entry_time }}</div>
-                  <div><b> راننده:</b> {{ item.driver.name }}</div>
-                  <div>
-                    <p><b>مکان ها :</b></p>
-                    <ol v-for="loc in item.locations">
-                      <li>{{ loc.location_name }}</li>
-                    </ol>
+            <ul class="list bg-base-100 rounded-box shadow-md" v-for="item in pendingAll">
+              <li class="w-full list-row">
+                <div class="list-row">
+                  <div class="list-col-grow">
+                    <div><b>نام کمپانی :</b>{{ item.company.name }}</div>
+                    <div><b>تاریخ ثبت:</b> {{ item.created_at }} <b> ساعت :</b> {{ item.entry_time }}</div>
+                    <div><b> راننده:</b> {{ item.driver.name }}</div>
+                    <div>
+                      <p><b>مکان ها :</b></p>
+                      <ol v-for="loc in item.locations">
+                        <li>{{ loc.location_name }}</li>
+                      </ol>
+                    </div>
                   </div>
+                  <button class="btn btn-sm btn-primary" @click="EndSubmit(item)">
+                    ثبت نهایی
+                    <Icon name="carbon:task-complete" size="18"/>
+                  </button>
+                  <button class="btn btn-error btn-sm" @click="DeleteLoading(item)">
+                    لغو
+                    <Icon name="material-symbols:auto-delete" size="18"/>
+                  </button>
                 </div>
-                <button class="btn btn-sm btn-primary" @click="EndSubmit(item)">
-                  ثبت نهایی
-                  <Icon name="carbon:task-complete" size="18"/>
-                </button>
-                <button class="btn btn-error btn-sm" @click="DeleteLoading(item)">
-                  لغو
-                  <Icon name="material-symbols:auto-delete" size="18"/>
-                </button>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-
+              </li>
+            </ul>
+          </div>
+        </template>
+      </UTabs>
     </div>
     <div v-if="showDeleteConfirmation" class="modal modal-open">
       <div class="modal-box">
@@ -487,7 +495,6 @@ watch(selectedTrucks, function () {
         </div>
       </div>
     </div>
-
     <div v-if="showComplateConfirmation" class="modal modal-open">
       <div class="modal-box w-11/12 max-w-5xl" style="height: 450px">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
@@ -514,18 +521,10 @@ watch(selectedTrucks, function () {
               وزن گیری
               <span class="loading loading-spinner"></span>
             </button>
-            <div class="flex justify-evenly lg:w-6/12 mt-2">
-              <div class="flex flex-col items-center justify-center bg-black text-white rounded-lg w-20 h-24">
-                <p class="text-3xl font-bold">00</p>
-                <span class="text-sm mt-1">گرم</span>
-              </div>
-              <div class="flex flex-col items-center justify-center bg-black text-white rounded-lg w-20 h-24">
-                <p class="text-3xl font-bold">00</p>
-                <span class="text-sm mt-1">کیلو</span>
-              </div>
-              <div class="flex flex-col items-center justify-center bg-black text-white rounded-lg w-20 h-24">
-                <p class="text-3xl font-bold">00</p>
-                <span class="text-sm mt-1">تن</span>
+            <div style="font-family: digitalNumber" class="mt-4 px-4 pb-6 bg-gray-800 rounded-2xl">
+              <div class="text-red-700 shadow-amber-400 text-9xl flex justify-center items-center"
+                   style="letter-spacing: 6px">
+                {{ loaded_weight }}
               </div>
             </div>
             <input type="hidden" v-model="loaded_weight">

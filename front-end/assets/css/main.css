@@ -28,6 +28,12 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: 'digitalNumber'; /* نام دلخواه برای فونت */
+    src: url('../fonts/digital-7.ttf') format('truetype'); /* مسیر صحیح به فونت */
+    font-weight: normal;
+    font-style: normal;
+}
 
 body {
     font-family: sans;

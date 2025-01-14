@@ -13,16 +13,23 @@ class LoadingRecordsController extends Controller
 
     public function index(Request $request)
     {
-            $search = trim($request->query('q', ''));
-            $sortColumn = $request->query('sort', 'created_at');
-            $sortOrder = $request->query('order', 'asc');
-            $countPage = $request->query('countPage', 10);
+        $search = trim($request->query('q', ''));
+        $sortColumn = $request->query('sort', 'created_at');
+        $sortOrder = $request->query('order', 'asc');
+        $countPage = $request->query('countPage', 10);
 
-            $LoadingRecord  = LoadingRecord::where('status','ended')->where('id', 'like', "%{$search}%")
-                ->orderBy($sortColumn, $sortOrder)
-                ->paginate($countPage);
+        $LoadingRecord = LoadingRecord::with('truck', 'locations', 'company', 'driver')->where('status', 'ended')->where('id', 'like', "%{$search}%")
+            ->orderBy($sortColumn, $sortOrder)
+            ->paginate($countPage);
 
-            return response()->json($LoadingRecord , 200);
+        return response()->json($LoadingRecord, 200);
+    }
+
+    public function count()
+    {
+        return response()->json([
+            'count' => LoadingRecord::where('status', 'ended')->count()
+        ]);
     }
 
     public function store(Request $request)

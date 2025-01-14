@@ -33,10 +33,9 @@ const fetchDrivers = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      // فقط نام رانندگان و شناسه‌ها را استخراج می‌کنیم
-      drivers.value = data.map(item => ({
-        label: item.name,  // نام راننده برای نمایش
-        value: item.id    // شناسه راننده برای ارسال
+      drivers.value = data.data.map(item => ({
+        label: item.name,
+        value: item.id
       }));
     } else {
       console.error("Error fetching drivers:", response.status);

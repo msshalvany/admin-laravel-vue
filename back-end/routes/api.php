@@ -74,6 +74,7 @@ Route::prefix('location')->group(function () {
 
 Route::prefix('loading_records')->group(function () {
     Route::get('/', [LoadingRecordsController::class, 'index']);
+    Route::get('/count', [LoadingRecordsController::class, 'count']);
     Route::post('/store', [LoadingRecordsController::class, 'store']);
     Route::post('/finalStore', [LoadingRecordsController::class, 'finalStore']);
     Route::get('/pendingAll', [LoadingRecordsController::class, 'pendingAll']);

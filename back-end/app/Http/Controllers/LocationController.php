@@ -14,7 +14,7 @@ class LocationController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'مکان‌ها با موفقیت دریافت شدند',
+            'message' => ' با موفقیت دریافت شدند',
             'data' => $locations,
         ], 200);
     }
