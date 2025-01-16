@@ -10,7 +10,7 @@
       <!-- Sidebar (Drawer) -->
       <div class="drawer-side shadow-2xl" style="z-index: 12">
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
-        <ul class="menu bg-base-100 text-base-content min-h-full w-80 p-4">
+        <ul class="menu bg-base-100 text-base-content min-h-full w-64 p-2.5">
           <li>
             <details>
               <summary>
@@ -117,6 +117,11 @@
         <main class="h-full">
           <slot/> <!-- محتویات صفحات -->
         </main>
+        <footer class="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
+          <aside>
+            <p>© 2025 شرکت پارسیان. تمامی حقوق محفوظ است. | طراحی و توسعه توسط تیم پارسیان.</p>
+          </aside>
+        </footer>
       </div>
     </div>
   </div>

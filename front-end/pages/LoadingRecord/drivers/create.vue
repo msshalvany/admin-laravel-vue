@@ -79,7 +79,7 @@ const submitForm = async () => {
         </div>
       </div>
     </div>
-    <div class="p-8 m-auto flex justify-center items-center w-10/12 shadow-xl rounded-lg bg-white">
+    <div class="p-8 m-auto flex justify-center items-center w-10/12 shadow-xl rounded-lg">
       <form @submit.prevent="submitForm" class="form-control w-full space-y-6">
         <!-- نام و نام خانوادگی -->
         <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">

@@ -5,11 +5,12 @@ let loader = useLoader()
 <template>
   <Transition>
     <div
-        class="loader bg-white w-screen h-screen fixed flex justify-center items-center"
+        class="loader bg-base-100 w-screen h-screen fixed flex justify-center items-center"
         style="z-index: 10000000;"
         v-if="loader"
     >
-      <div class="loading loading-ring w-28"></div>
+<!--      <div class="loading loading-ring"></div>-->
+      <span class="loading loading-spinner w-2/12"></span>
     </div>
   </Transition>
 </template>

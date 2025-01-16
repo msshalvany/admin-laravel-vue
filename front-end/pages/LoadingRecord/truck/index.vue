@@ -354,4 +354,19 @@ td,
 tr {
   text-align: center !important;
 }
+
+::-webkit-scrollbar{
+  width:10px;
+  background:#000;
+}
+
+::-webkit-scrollbar-track{
+  -webkit-box-shadow: inset 0px 0px 6px rgba(0,0,0,.3);
+  background:#f4f4f4;
+}
+
+::-webkit-scrollbar-thumb{
+  background:#1baaae;
+  background-image:-webkit-linear-gradient(20deg, rgba(255,255,255,.5) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.5) 50%, rgba(255,255,255,.5) 75%, transparent 75%)
+}
 </style>
