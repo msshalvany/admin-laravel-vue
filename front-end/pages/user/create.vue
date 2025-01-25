@@ -55,7 +55,7 @@ const submitForm = async () => {
 
 <template>
   <div class="p-4">
-    <div class="card shadow-md px-5 py-1 rounded-lg">
+    <div class="card shadow-md px-5 rounded-lg">
       <div class="flex justify-between items-center mb-4">
         <div class="breadcrumbs text-sm">
           <ul class="flex items-center">
@@ -83,44 +83,50 @@ const submitForm = async () => {
     </div>
     <div class="p-8 m-auto flex justify-center content-center w-10/12 shadow-xl">
       <form @submit.prevent="submitForm" class="form-control w-full space-y-6">
-        <!-- نام کاربری -->
-        <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
+        <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+          <legend class="fieldset-legend">
+            کاربر جدید
+            <Icon name="material-symbols:account-circle" size="18" class="ml-2"/>
+          </legend>
+          <!-- نام کاربری -->
+          <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
     <span class="flex items-center">
-      <Icon name="material-symbols:account-circle-full" size="18" class="ml-2" />
+      <Icon name="material-symbols:account-circle-full" size="18" class="ml-2"/>
       نام کاربری
     </span>
-          <input v-model="username" type="text" class="grow" placeholder="نام کاربری" />
-        </label>
+            <input v-model="username" type="text" class="grow" placeholder="نام کاربری"/>
+          </label>
 
-        <!-- رمز عبور -->
-        <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
+          <!-- رمز عبور -->
+          <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
     <span class="flex items-center">
-      <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2" />
+      <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2"/>
       رمز عبور
     </span>
-          <input v-model="password" type="password" class="grow" placeholder="رمز عبور" />
-        </label>
+            <input v-model="password" type="password" class="grow" placeholder="رمز عبور"/>
+          </label>
 
-        <!-- تکرار رمز عبور -->
-        <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
+          <!-- تکرار رمز عبور -->
+          <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
     <span class="flex items-center">
-      <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2" />
+      <Icon name="solar-lock-password-unlocked-linear" size="18" class="ml-2"/>
       تکرار رمز عبور
     </span>
-          <input v-model="passwordConfirmation" type="password" class="grow" placeholder="تکرار رمز عبور" />
-        </label>
+            <input v-model="passwordConfirmation" type="password" class="grow" placeholder="تکرار رمز عبور"/>
+          </label>
 
-        <!-- شماره همراه -->
-        <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
+          <!-- شماره همراه -->
+          <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-4">
     <span class="flex items-center">
-      <Icon name="uiw-mobile" size="18" class="ml-2" />
+      <Icon name="uiw-mobile" size="18" class="ml-2"/>
       شماره همراه
     </span>
-          <input v-model="mobile" name="mobile" type="number" class="grow" placeholder="شماره همراه" />
-        </label>
+            <input v-model="mobile" name="mobile" type="number" class="grow" placeholder="شماره همراه"/>
+          </label>
 
-        <!-- دکمه ارسال -->
-        <button type="submit" class="btn btn-primary w-full mt-4">ثبت</button>
+          <!-- دکمه ارسال -->
+          <button type="submit" class="btn btn-primary w-full mt-4">ثبت</button>
+        </fieldset>
       </form>
     </div>
   </div>

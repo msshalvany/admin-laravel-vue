@@ -293,7 +293,7 @@ const TabItems = [{
 
 <template>
   <div class="p-4">
-    <div class="card shadow-md px-5 py-1 rounded-lg">
+    <div class="card shadow-md px-5 rounded-lg">
       <div class="flex flex-wrap justify-between items-center mb-4">
         <div class="breadcrumbs text-sm">
           <ul class="flex items-center">
@@ -344,108 +344,112 @@ const TabItems = [{
         </template>
         <template #item="{ item }">
           <div v-if="item.key === 'pending'" class="space-y-3">
-            <div class="mt-2">
-              <div>
-                <USelectMenu v-model="selectedCompany" size="xl"
-                             :options="companies"
-                             placeholder="انتخاب شرکت"
-                             :popper="{ arrow: true }"
-                             searchable
-                             icon="octicon:organization-16"
-                             searchable-placeholder="جستجو....."
-                             class="p-0"
-                />
-              </div>
-              <div class="mt-4">
-                <USelectMenu v-model="selectedTrucks" size="xl"
-                             :options="trucks"
-                             placeholder="انتخاب ماشین"
-                             :popper="{ arrow: true }"
-                             searchable
-                             icon="ph:truck-duotone"
-                             searchable-placeholder="جستجو....."
-                             class="mt-2 "
-                >
-                  <template #option="{ option:truck }">
-                    <span class="h-2 w-2 rounded-full" :style="`background-color:${truck.color}`"></span>
-                    <span class="truncate">{{ truck.label }}</span>
-                  </template>
-                </USelectMenu>
-              </div>
-              <div class="mt-4">
-                <USelectMenu v-model="selectedDriver" size="xl"
-                             :options="drivers"
-                             placeholder="انتخاب راننده"
-                             :popper="{ arrow: true }"
-                             searchable
-                             icon="healthicons:truck-driver"
-                             searchable-placeholder="جستجو....."
-                             class="mt-2 w-full"
-                />
-              </div>
-              <div class="mt-6">
-                <label class="floating-label input input-bordered flex items-center gap-2">
-            <span class="flex items-center">
-            <Icon name="material-symbols-light:calendar-clock-rounded" size="24"/>
-              تاریخ تردد
-            </span>
-                  <input id="datePicker" type="text" class="grow" placeholder="تاریخ تردد"/>
-                </label>
-                <date-picker
-                    v-model="entry_date"
-                    type="date"
-                    custom-input="#datePicker"
-                />
-              </div>
-              <div class="mt-4">
-                <label class="floating-label input input-bordered flex items-center gap-2">
-            <span class="flex items-center">
-            <Icon name="material-symbols-light:calendar-clock-rounded" size="24"/>
-              ساعت شروع
-            </span>
-                  <input id="timeStartPicker" type="text" class="grow" placeholder=" ساعت شروع"/>
-                </label>
-                <date-picker
-                    type="time"
-                    v-model="entry_time"
-                    custom-input="#timeStartPicker"
-                />
-              </div>
-              <div class="mt-4">
-                <USelectMenu v-model="selectedLocation" size="xl"
-                             :options="locations"
-                             placeholder="انتخاب مکان"
-                             :popper="{ arrow: true }"
-                             searchable
-                             multiple
-                             icon="ic:outline-place"
-                             searchable-placeholder="جستجو....."
-                             class="mt-2 "
-                >
-                  <template #label>
-                    <template v-if="selectedLocation.length">
-                      <span>{{ selectedLocation.length }} مکان انتخاب شده</span>
-                    </template>
-                  </template>
-                </USelectMenu>
-              </div>
-            </div>
-            <div class="mt-12 flex flex-wrap justify-between items-center">
-              <button class="btn btn-primary btn-lg">
-                وزن گیری
-                <span class="loading loading-spinner"></span>
-              </button>
-              <div style="font-family: digitalNumber" class="mt-5 px-4 pb-6 bg-gray-800 rounded-2xl">
-                <div class="text-red-700 shadow-amber-400 text-9xl flex justify-center items-center"
-                     style="letter-spacing: 6px">
-                  {{ empty_weight }}
+            <form class="form-control w-full space-y-6">
+              <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+                <div class="mt-2">
+                  <div>
+                    <USelectMenu v-model="selectedCompany" size="xl"
+                                 :options="companies"
+                                 placeholder="انتخاب شرکت"
+                                 :popper="{ arrow: true }"
+                                 searchable
+                                 icon="octicon:organization-16"
+                                 searchable-placeholder="جستجو....."
+                                 class="p-0"
+                    />
+                  </div>
+                  <div class="mt-4">
+                    <USelectMenu v-model="selectedTrucks" size="xl"
+                                 :options="trucks"
+                                 placeholder="انتخاب ماشین"
+                                 :popper="{ arrow: true }"
+                                 searchable
+                                 icon="ph:truck-duotone"
+                                 searchable-placeholder="جستجو....."
+                                 class="mt-2 "
+                    >
+                      <template #option="{ option:truck }">
+                        <span class="h-2 w-2 rounded-full" :style="`background-color:${truck.color}`"></span>
+                        <span class="truncate">{{ truck.label }}</span>
+                      </template>
+                    </USelectMenu>
+                  </div>
+                  <div class="mt-4">
+                    <USelectMenu v-model="selectedDriver" size="xl"
+                                 :options="drivers"
+                                 placeholder="انتخاب راننده"
+                                 :popper="{ arrow: true }"
+                                 searchable
+                                 icon="healthicons:truck-driver"
+                                 searchable-placeholder="جستجو....."
+                                 class="mt-2 w-full"
+                    />
+                  </div>
+                  <div class="mt-6">
+                    <label class="floating-label input input-bordered flex items-center gap-2">
+              <span class="flex items-center">
+              <Icon name="material-symbols-light:calendar-clock-rounded" size="24"/>
+                تاریخ تردد
+              </span>
+                      <input id="datePicker" type="text" class="grow" placeholder="تاریخ تردد"/>
+                    </label>
+                    <date-picker
+                        v-model="entry_date"
+                        type="date"
+                        custom-input="#datePicker"
+                    />
+                  </div>
+                  <div class="mt-4">
+                    <label class="floating-label input input-bordered flex items-center gap-2">
+              <span class="flex items-center">
+              <Icon name="material-symbols-light:calendar-clock-rounded" size="24"/>
+                ساعت شروع
+              </span>
+                      <input id="timeStartPicker" type="text" class="grow" placeholder=" ساعت شروع"/>
+                    </label>
+                    <date-picker
+                        type="time"
+                        v-model="entry_time"
+                        custom-input="#timeStartPicker"
+                    />
+                  </div>
+                  <div class="mt-4">
+                    <USelectMenu v-model="selectedLocation" size="xl"
+                                 :options="locations"
+                                 placeholder="انتخاب مکان"
+                                 :popper="{ arrow: true }"
+                                 searchable
+                                 multiple
+                                 icon="ic:outline-place"
+                                 searchable-placeholder="جستجو....."
+                                 class="mt-2 "
+                    >
+                      <template #label>
+                        <template v-if="selectedLocation.length">
+                          <span>{{ selectedLocation.length }} مکان انتخاب شده</span>
+                        </template>
+                      </template>
+                    </USelectMenu>
+                  </div>
                 </div>
-              </div>
-              <input type="hidden" v-model="empty_weight">
-            </div>
-            <div class="mt-4">
-              <button class="w-full btn btn-primary" @click="LoadingRecords">ثبت موقت ورود</button>
-            </div>
+                <div class="mt-12 flex flex-wrap justify-between items-center">
+                  <button class="btn btn-primary btn-lg">
+                    وزن گیری
+                    <span class="loading loading-spinner"></span>
+                  </button>
+                  <div style="font-family: digitalNumber" class="mt-5 px-4 pb-6 bg-gray-800 rounded-2xl">
+                    <div class="text-red-700 shadow-amber-400 text-9xl flex justify-center items-center"
+                         style="letter-spacing: 6px">
+                      {{ empty_weight }}
+                    </div>
+                  </div>
+                  <input type="hidden" v-model="empty_weight">
+                </div>
+                <div class="mt-4">
+                  <button class="w-full btn btn-primary" @click="LoadingRecords">ثبت موقت ورود</button>
+                </div>
+              </fieldset>
+            </form>
           </div>
           <div v-else-if="item.key === 'final'" class="space-y-3">
             <div v-if="pendingAll==0">
@@ -501,66 +505,74 @@ const TabItems = [{
           <Icon name="material-symbols:close"/>
         </button>
         <br>
-        <div>
-          <div class="mt-4">
-            <label class="floating-label input input-bordered flex items-center gap-2">
+        <form class="form-control w-full space-y-6">
+          <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+            <legend class="fieldset-legend">
+              ثبت نهایی
+              <Icon name="material-symbols:weekend-outline" size="18"></Icon>
+            </legend>
+            <div>
+              <div class="mt-4">
+                <label class="floating-label input input-bordered flex items-center gap-2">
             <span class="flex items-center">
             <Icon name="material-symbols-light:calendar-clock-rounded" size="24"/>
               ساعت پایان
             </span>
-              <input id="timeEndPicker" type="text" class="grow" placeholder=" ساعت پایان"/>
-            </label>
-            <date-picker
-                type="time"
-                v-model="exit_time"
-                custom-input="#timeEndPicker"
-            />
-          </div>
-          <div class="mt-2 flex flex-wrap justify-between items-center">
-            <button class="btn btn-primary btn-lg">
-              وزن گیری
-              <span class="loading loading-spinner"></span>
-            </button>
-            <div style="font-family: digitalNumber" class="mt-4 px-4 pb-6 bg-gray-800 rounded-2xl">
-              <div class="text-red-700 shadow-amber-400 text-9xl flex justify-center items-center"
-                   style="letter-spacing: 6px">
-                {{ loaded_weight }}
+                  <input id="timeEndPicker" type="text" class="grow" placeholder=" ساعت پایان"/>
+                </label>
+                <date-picker
+                    type="time"
+                    v-model="exit_time"
+                    custom-input="#timeEndPicker"
+                />
+              </div>
+              <div class="mt-2 flex flex-wrap justify-between items-center">
+                <button class="btn btn-primary btn-lg">
+                  وزن گیری
+                  <span class="loading loading-spinner"></span>
+                </button>
+                <div style="font-family: digitalNumber" class="mt-4 px-4 pb-6 bg-gray-800 rounded-2xl">
+                  <div class="text-red-700 shadow-amber-400 text-9xl flex justify-center items-center"
+                       style="letter-spacing: 6px">
+                    {{ loaded_weight }}
+                  </div>
+                </div>
+                <input type="hidden" v-model="loaded_weight">
               </div>
             </div>
-            <input type="hidden" v-model="loaded_weight">
-          </div>
-        </div>
-        <div class="mt-3 flex flex-wrap">
-          <div>
-            امتیاز راننده :
-          </div>
-          <div class="rating rating-lg rating-half">
-            <input v-model="selectedStar" type="radio" name="rating-11" class="rating-hidden"/>
-            <input v-model="selectedStar" type="radio" name="rating-11"
-                   class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="0.5 star" value="0.5"/>
-            <input v-model="selectedStar" type="radio" name="rating-11"
-                   class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="1 star" value="1"/>
-            <input v-model="selectedStar" type="radio" name="rating-11"
-                   class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="1.5 star" value="1.5"/>
-            <input v-model="selectedStar" type="radio" name="rating-11"
-                   class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="2 star" value="2"/>
-            <input v-model="selectedStar" type="radio" name="rating-11"
-                   class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="2.5 star" value="2.5"/>
-            <input v-model="selectedStar" type="radio" name="rating-11"
-                   class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="3 star" value="3"/>
-            <input v-model="selectedStar" type="radio" name="rating-11"
-                   class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="3.5 star" value="3.5"/>
-            <input v-model="selectedStar" type="radio" name="rating-11"
-                   class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="4 star" value="4"/>
-            <input v-model="selectedStar" type="radio" name="rating-11"
-                   class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="4.5 star" value="4.5"/>
-            <input v-model="selectedStar" type="radio" name="rating-11"
-                   class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="5 star" value="5"/>
-          </div>
-        </div>
-        <div class="mt-4 absolute text-center bottom-4" style="width: 94%;">
-          <button class="btn btn-primary w-full" @click="finalSubmit">ثبت نهایی تردد</button>
-        </div>
+            <div class="mt-3 flex flex-wrap">
+              <div>
+                امتیاز راننده :
+              </div>
+              <div class="rating rating-lg rating-half">
+                <input v-model="selectedStar" type="radio" name="rating-11" class="rating-hidden"/>
+                <input v-model="selectedStar" type="radio" name="rating-11"
+                       class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="0.5 star" value="0.5"/>
+                <input v-model="selectedStar" type="radio" name="rating-11"
+                       class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="1 star" value="1"/>
+                <input v-model="selectedStar" type="radio" name="rating-11"
+                       class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="1.5 star" value="1.5"/>
+                <input v-model="selectedStar" type="radio" name="rating-11"
+                       class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="2 star" value="2"/>
+                <input v-model="selectedStar" type="radio" name="rating-11"
+                       class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="2.5 star" value="2.5"/>
+                <input v-model="selectedStar" type="radio" name="rating-11"
+                       class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="3 star" value="3"/>
+                <input v-model="selectedStar" type="radio" name="rating-11"
+                       class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="3.5 star" value="3.5"/>
+                <input v-model="selectedStar" type="radio" name="rating-11"
+                       class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="4 star" value="4"/>
+                <input v-model="selectedStar" type="radio" name="rating-11"
+                       class="mask mask-star-2 mask-half-1 bg-orange-400" aria-label="4.5 star" value="4.5"/>
+                <input v-model="selectedStar" type="radio" name="rating-11"
+                       class="mask mask-star-2 mask-half-2 bg-orange-400" aria-label="5 star" value="5"/>
+              </div>
+            </div>
+            <div class="mt-4 absolute text-center bottom-4" style="width: 94%;">
+              <button class="btn btn-primary w-full" @click="finalSubmit">ثبت نهایی تردد</button>
+            </div>
+          </fieldset>
+        </form>
       </div>
     </div>
   </div>

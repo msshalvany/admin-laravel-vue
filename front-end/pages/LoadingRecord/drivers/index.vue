@@ -36,7 +36,7 @@ const total = ref(0);
 const sort = ref({column: "name", direction: "asc"});
 const q = ref('');
 const status = ref(false);
-const pageCountList = [10,15,20,25,30]
+const pageCountList = [10, 15, 20, 25, 30]
 const pageCountListSelected = ref(pageCountList[0])
 
 // برای نگه‌داری وضعیت راننده‌ای که قرار است ویرایش شود
@@ -182,7 +182,7 @@ onMounted(fetchDrivers);
 <template>
   <div>
     <div class="p-4">
-      <div class="card shadow-md px-5 py-1 rounded-lg">
+      <div class="card shadow-md px-5 rounded-lg">
         <div class="flex justify-between items-center mb-4">
           <div class="breadcrumbs text-sm">
             <ul class="flex items-center">
@@ -227,7 +227,7 @@ onMounted(fetchDrivers);
               placeholder="جستجو"
               :loading="status"
           />
-          <USelectMenu class="mx-2" placeholder="ردیف" v-model="pageCountListSelected" :options="pageCountList" >
+          <USelectMenu class="mx-2" placeholder="ردیف" v-model="pageCountListSelected" :options="pageCountList">
             <template #leading>
               <Icon name="material-symbols-light:format-list-bulleted" size="18"/>
             </template>
@@ -252,7 +252,7 @@ onMounted(fetchDrivers);
           </template>
           <template #actionsStar-data="{ row }">
             <div class="rating rating-lg rating-half">
-              <input type="radio" name="rating-readonly" class="rating-hidden" />
+              <input type="radio" name="rating-readonly" class="rating-hidden"/>
               <input
                   type="radio"
                   name="rating-readonly"
@@ -348,58 +348,62 @@ onMounted(fetchDrivers);
         <button class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 close-btn" @click="closeModal">
           <Icon name="material-symbols:close"/>
         </button>
-        <!-- عنوان -->
-        <h2 class="text-lg font-bold mb-6 text-center">
-          ویرایش راننده: {{ selectedDriver.name }}
-        </h2>
-        <!-- فرم ورودی‌ها -->
-        <div class="space-y-6">
-          <!-- نام و نام خانوادگی -->
-          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+        <form class="form-control w-full space-y-6">>
+          <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+            <legend class="fieldset-legend">
+              ویرایش راننده: {{ selectedDriver.name }}
+              <Icon name="ic:outline-place" size="18"></Icon>
+            </legend>
+
+            <div class="space-y-6">
+              <!-- نام و نام خانوادگی -->
+              <label class="floating-label input input-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
           <Icon name="mdi:user" size="18" class="ml-2"/>
           نام و نام خانوادگی
         </span>
-            <input
-                v-model="newDriverData.name"
-                type="text"
-                placeholder="نام و نام خانوادگی"
-                class="grow"
-            />
-          </label>
+                <input
+                    v-model="newDriverData.name"
+                    type="text"
+                    placeholder="نام و نام خانوادگی"
+                    class="grow"
+                />
+              </label>
 
-          <!-- آدرس -->
-          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+              <!-- آدرس -->
+              <label class="floating-label input input-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
           <Icon name="mdi:map-marker-account" size="18" class="ml-2"/>
           آدرس
         </span>
-            <input
-                v-model="newDriverData.address"
-                type="text"
-                placeholder="آدرس"
-                class="grow"
-            />
-          </label>
+                <input
+                    v-model="newDriverData.address"
+                    type="text"
+                    placeholder="آدرس"
+                    class="grow"
+                />
+              </label>
 
-          <!-- شماره گواهی‌نامه -->
-          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+              <!-- شماره گواهی‌نامه -->
+              <label class="floating-label input input-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
           <Icon name="fa6-solid:address-card" size="18" class="ml-2"/>
           شماره گواهی‌نامه
         </span>
-            <input
-                v-model="newDriverData.license_number"
-                type="text"
-                placeholder="شماره گواهی‌نامه"
-                class="grow"
-            />
-          </label>
-        </div>
-        <!-- دکمه ذخیره تغییرات -->
-        <div class="modal-action mt-8" dir="ltr">
-          <button class="btn btn-primary w-full" @click="updateDriver">ذخیره تغییرات</button>
-        </div>
+                <input
+                    v-model="newDriverData.license_number"
+                    type="text"
+                    placeholder="شماره گواهی‌نامه"
+                    class="grow"
+                />
+              </label>
+            </div>
+            <!-- دکمه ذخیره تغییرات -->
+            <div class="modal-action mt-8" dir="ltr">
+              <button class="btn btn-primary w-full" @click="updateDriver">ذخیره تغییرات</button>
+            </div>
+          </fieldset>
+        </form>
       </div>
     </div>
 

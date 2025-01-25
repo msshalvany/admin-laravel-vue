@@ -122,7 +122,7 @@ onMounted(function () {
 
 <template>
   <div class="p-4">
-    <div class="card shadow-md px-5 py-1 rounded-lg">
+    <div class="card shadow-md px-5 rounded-lg">
       <div class="flex justify-between items-center mb-4">
         <div class="breadcrumbs text-sm">
           <ul class="flex items-center">
@@ -159,81 +159,87 @@ onMounted(function () {
 
     <div class="p-8 m-auto flex justify-center content-center w-10/12 shadow-xl">
       <form @submit.prevent="submitForm" class="form-control w-full">
-        <!-- انتخاب راننده با قابلیت جستجو -->
-        <USelectMenu v-model="selectedDriver" size="xl"
-                     :options="drivers"
-                     placeholder="انتخاب راننده"
-                     :popper="{ arrow: true }"
-                     searchable
-                     icon="healthicons:truck-driver"
-                     searchable-placeholder="جستجو....."
-                     class="mt-2 w-full"
-        />
-        <USelectMenu v-model="selectedCompany" size="xl"
-                     :options="company"
-                     placeholder="انتخاب کمپانی"
-                     :popper="{ arrow: true }"
-                     searchable
-                     icon="fa6-solid:truck"
-                     searchable-placeholder="جستجو....."
-                     class="mt-4"
-        />
+        <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+          <legend class="fieldset-legend">
+            ماشین جدید
+            <Icon name="fa6-solid:truck" class="ml-2" style="vertical-align: -5px" size="15"/>
+          </legend>
+          <!-- انتخاب راننده با قابلیت جستجو -->
+          <USelectMenu v-model="selectedDriver" size="xl"
+                       :options="drivers"
+                       placeholder="انتخاب راننده"
+                       :popper="{ arrow: true }"
+                       searchable
+                       icon="healthicons:truck-driver"
+                       searchable-placeholder="جستجو....."
+                       class="mt-2 w-full"
+          />
+          <USelectMenu v-model="selectedCompany" size="xl"
+                       :options="company"
+                       placeholder="انتخاب کمپانی"
+                       :popper="{ arrow: true }"
+                       searchable
+                       icon="fa6-solid:truck"
+                       searchable-placeholder="جستجو....."
+                       class="mt-4"
+          />
 
-        <!--        <USelectMenu v-model="type" size="xl"-->
-        <!--                     :options="truckType"-->
-        <!--                     placeholder="انتخاب نوع ماشین"-->
-        <!--                     :popper="{ arrow: true }"-->
-        <!--                     searchable-->
-        <!--                     searchable-placeholder="جستجو....."-->
-        <!--                     class="mt-4 w-full"-->
-        <!--        />-->
-        <div class="mt-4">
-          <div class="filter flex items-center justify-center">
-            <label class="ml-2" for=""> نوع کامیون : </label>
-            <input class="btn btn-square" type="reset" value="×"/>
-            <input
-                class="btn"
-                type="radio"
-                v-model="type"
-                v-for="item of truckType"
-                :value="item"
-                :aria-label="item"
-            />
+          <!--        <USelectMenu v-model="type" size="xl"-->
+          <!--                     :options="truckType"-->
+          <!--                     placeholder="انتخاب نوع ماشین"-->
+          <!--                     :popper="{ arrow: true }"-->
+          <!--                     searchable-->
+          <!--                     searchable-placeholder="جستجو....."-->
+          <!--                     class="mt-4 w-full"-->
+          <!--        />-->
+          <div class="mt-4">
+            <div class="filter flex items-center justify-center">
+              <label class="ml-2" for=""> نوع کامیون : </label>
+              <input class="btn btn-square" type="reset" value="×"/>
+              <input
+                  class="btn"
+                  type="radio"
+                  v-model="type"
+                  v-for="item of truckType"
+                  :value="item"
+                  :aria-label="item"
+              />
+            </div>
           </div>
-        </div>
-        <!-- پلاک کامیون -->
-        <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
+          <!-- پلاک کامیون -->
+          <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
           <span class="flex items-center">
             <Icon name="solar:plate-linear" size="18" class="ml-2"/>
             پلاک کامیون
           </span>
-          <input v-model="plate_number" type="text" class="grow" placeholder="پلاک کامیون"/>
-        </label>
+            <input v-model="plate_number" type="text" class="grow" placeholder="پلاک کامیون"/>
+          </label>
 
-        <!-- رنگ کامیون -->
-        <label class="input input-bordered flex items-center gap-2 mt-4 w-3/12">
-          <Icon name="material-symbols:colors" size="18" class="ml-2"/>
-          <span>رنگ</span>
-          <input v-model="color" type="color" class="grow" placeholder="رنگ"/>
-        </label>
+          <!-- رنگ کامیون -->
+          <label class="input input-bordered flex items-center gap-2 mt-4 w-3/12">
+            <Icon name="material-symbols:colors" size="18" class="ml-2"/>
+            <span>رنگ</span>
+            <input v-model="color" type="color" class="grow" placeholder="رنگ"/>
+          </label>
 
-        <!-- نوع کامیون -->
-        <!--        <label class="input input-bordered flex items-center gap-2 mt-4 w-full">-->
-        <!--          <Icon name="material-symbols:directions-car-outline" size="18" class="ml-2"/>-->
-        <!--          <input v-model="type" type="text" class="grow" placeholder="نوع کامیون"/>-->
-        <!--        </label>-->
+          <!-- نوع کامیون -->
+          <!--        <label class="input input-bordered flex items-center gap-2 mt-4 w-full">-->
+          <!--          <Icon name="material-symbols:directions-car-outline" size="18" class="ml-2"/>-->
+          <!--          <input v-model="type" type="text" class="grow" placeholder="نوع کامیون"/>-->
+          <!--        </label>-->
 
-        <!-- وزن کامیون -->
-        <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
+          <!-- وزن کامیون -->
+          <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
           <span class="flex items-center">
-            <Icon name="mdi:weight-kilogram" size="18" class="ml-2" />
+            <Icon name="mdi:weight-kilogram" size="18" class="ml-2"/>
             وزن کامیون
           </span>
-          <input v-model="weight" type="number" class="grow" placeholder="وزن کامیون" />
-        </label>
+            <input v-model="weight" type="number" class="grow" placeholder="وزن کامیون"/>
+          </label>
 
-        <!-- دکمه ارسال -->
-        <button type="submit" class="btn btn-primary mt-4">ثبت</button>
+          <!-- دکمه ارسال -->
+          <button type="submit" class="btn btn-primary mt-4">ثبت</button>
+        </fieldset>
       </form>
     </div>
   </div>

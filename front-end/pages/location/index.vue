@@ -170,7 +170,7 @@ onMounted(fetchLocation);
 
 <template>
   <div class="p-4">
-    <div class="card shadow-md px-5 py-1 rounded-lg">
+    <div class="card shadow-md px-5   rounded-lg">
       <div class="flex justify-between items-center mb-4">
         <div class="breadcrumbs text-sm">
           <ul class="flex items-center">
@@ -216,7 +216,7 @@ onMounted(fetchLocation);
             <UDropdown :items="items(location)">
               <button class="btn btn-sm btn-primary flex items-center">
                 <span>عملیات</span>
-                <Icon name="hugeicons:account-setting-01" size="18"/>
+                <Icon name="tdesign:location-setting" size="18"/>
               </button>
             </UDropdown>
           </td>
@@ -232,33 +232,34 @@ onMounted(fetchLocation);
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="showEditModal = false">
           <Icon name="material-symbols:close"/>
         </button>
-
-        <!-- عنوان فرم -->
-        <h2 class="text-lg font-bold mb-6 text-center mt-4">ویرایش مکان - {{ selectedLocations.location_name }}</h2>
-
         <!-- فرم ویرایش -->
         <form @submit.prevent="updateLocations" class="space-y-6">
-          <!-- نام مکان -->
-          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+          <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+            <legend class="fieldset-legend">
+              ویرایش مکان - {{ selectedLocations.location_name }}
+              <Icon name="ic:outline-place" size="18"></Icon>
+            </legend>
+            <!-- نام مکان -->
+            <label class="floating-label input input-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
           <Icon name="material-symbols:my-location" size="18" class="ml-2"/>
           نام مکان
         </span>
-            <input v-model="selectedLocations.location_name" type="text" class="grow" placeholder="نام مکان"/>
-          </label>
+              <input v-model="selectedLocations.location_name" type="text" class="grow" placeholder="نام مکان"/>
+            </label>
 
-          <!-- توضیحات -->
-          <label class="floating-label textarea textarea-bordered flex items-center gap-4 w-full">
+            <!-- توضیحات -->
+            <label class="floating-label textarea textarea-bordered flex items-center gap-4 w-full mt-3">
         <span class="flex items-center">
           <Icon name="fluent:text-description-20-regular" size="18" class="ml-2"/>
           توضیحات
         </span>
-            <textarea v-model="selectedLocations.description" class="textarea textarea-bordered w-full"
-                      placeholder="توضیحات"></textarea>
-          </label>
+              <textarea v-model="selectedLocations.description" class="textarea textarea-bordered w-full"
+                        placeholder="توضیحات"></textarea>
+            </label>
 
-          <!-- دکمه ارسال -->
-          <button type="submit" class="btn btn-primary w-full mt-6">ویرایش مکان</button>
+            <button type="submit" class="btn btn-primary w-full mt-6">ویرایش مکان</button>
+          </fieldset>
         </form>
       </div>
     </div>
@@ -267,35 +268,37 @@ onMounted(fetchLocation);
     <div v-if="showCreateModal" class="modal modal-open">
       <div class="modal-box relative">
         <!-- دکمه بستن -->
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="showCreateModal = false">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn"
+                @click="showCreateModal = false">
           <Icon name="material-symbols:close"/>
         </button>
-
-        <!-- عنوان فرم -->
-        <h2 class="text-lg font-bold mb-6 text-center mt-4">مکان جدید</h2>
-
-        <!-- فرم ایجاد مکان -->
         <form @submit.prevent="createLocations" class="space-y-6">
-          <!-- نام مکان -->
-          <label class="floating-label input input-bordered flex items-center gap-4 w-full">
+          <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+            <legend class="fieldset-legend">
+              مکان جدید
+              <Icon name="ic:outline-place" size="18"></Icon>
+            </legend>
+            <!-- نام مکان -->
+            <label class="floating-label input input-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
           <Icon name="material-symbols:my-location" size="18" class="ml-2"/>
           نام مکان
         </span>
-            <input v-model="newLocations.location_name" type="text" class="grow" placeholder="نام مکان"/>
-          </label>
+              <input v-model="newLocations.location_name" type="text" class="grow" placeholder="نام مکان"/>
+            </label>
 
-          <!-- توضیحات -->
-          <label class="floating-label textarea textarea-bordered flex items-center gap-4 w-full">
+            <!-- توضیحات -->
+            <label class="floating-label textarea textarea-bordered flex items-center gap-4 w-full mt-3">
         <span class="flex items-center">
           <Icon name="fluent:text-description-20-regular" size="18" class="ml-2"/>
           توضیحات
         </span>
-            <textarea v-model="newLocations.description" class="textarea textarea-bordered w-full" placeholder="توضیحات"></textarea>
-          </label>
+              <textarea v-model="newLocations.description" class="textarea textarea-bordered w-full"
+                        placeholder="توضیحات"></textarea>
+            </label>
 
-          <!-- دکمه ارسال -->
-          <button type="submit" class="btn btn-primary w-full mt-6">ایجاد مکان</button>
+            <button type="submit" class="btn btn-primary w-full mt-6">ایجاد مکان</button>
+          </fieldset>
         </form>
       </div>
     </div>

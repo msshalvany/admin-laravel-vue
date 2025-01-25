@@ -12,72 +12,61 @@
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu bg-base-100 text-base-content min-h-full w-64 p-2.5">
           <li>
-            <details>
+            <details class="mt-2">
               <summary>
-                <Icon name="ph:users-three" size="26"/>
+                <Icon name="ph:users-three" size="26" />
                 کاربران
               </summary>
               <ul>
                 <li>
-                  <NuxtLink to="/user" @click="closeDrawer">
-                    <Icon name="hugeicons:user-list" size="26"/>
+                  <NuxtLink to="/user" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+                    <Icon name="hugeicons:user-list" size="24" />
                     لیست کاربران
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/user/permisition" @click="closeDrawer">
-                    <Icon name="hugeicons:lock-key" size="26"/>
+                  <NuxtLink to="/user/permisition" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+                    <Icon name="hugeicons:lock-key" size="24" />
                     سطوح دسترسی
                   </NuxtLink>
                 </li>
               </ul>
             </details>
-          </li>
-          <li>
-            <details>
+            <details class="mt-2">
               <summary>
-                <Icon name="ph:truck-trailer-light" size="26"/>
+                <Icon name="ph:truck-trailer-light" size="24" />
                 تردد
               </summary>
               <ul>
                 <li>
-                  <NuxtLink to="/LoadingRecord/drivers/" @click="closeDrawer">
-                    <Icon name="healthicons:truck-driver" size="26"/>
-                    رانندگان
-                  </NuxtLink>
-                </li>
-                <li>
-                  <NuxtLink to="/LoadingRecord/truck/" @click="closeDrawer">
-                    <Icon name="ph:truck-duotone" size="26"/>
-                    ماشین ها
-                  </NuxtLink>
-                </li>
-                <li>
-                  <NuxtLink to="/LoadingRecord" @click="closeDrawer">
-                    <Icon name="mdi:truck-fast-outline" size="26"/>
+                  <NuxtLink to="/LoadingRecord" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+                    <Icon name="mdi:truck-fast-outline" size="24" />
                     ثبت تردد
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/LoadingRecord/history" @click="closeDrawer">
-                    <Icon name="streamline:shipping-transfer-truck-time-truck-shipping-delivery-time-waiting-delay"
-                          size="26"/>
+                  <NuxtLink to="/LoadingRecord/history" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+                    <Icon name="streamline:shipping-transfer-truck-time-truck-shipping-delivery-time-waiting-delay" size="26" />
                     تاریخچه
                   </NuxtLink>
                 </li>
               </ul>
             </details>
-            <NuxtLink to="/company" @click="closeDrawer">
-              <a>
-                <Icon name="octicon:organization-16" size="24"></Icon>
-                کمپانی ها
-              </a>
+            <NuxtLink class="mt-2" to="/company" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+              <Icon name="octicon:organization-16" size="20"></Icon>
+              کمپانی ها
             </NuxtLink>
-            <NuxtLink to="/location" @click="closeDrawer">
-              <a>
-                <Icon name="ic:outline-place" size="24"></Icon>
-                مکان ها
-              </a>
+            <NuxtLink class="mt-2" to="/LoadingRecord/drivers/" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+              <Icon name="healthicons:truck-driver" size="26" />
+              رانندگان
+            </NuxtLink>
+            <NuxtLink class="mt-2" to="/LoadingRecord/truck/" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+              <Icon name="ph:truck-duotone" size="26" />
+              ماشین ها
+            </NuxtLink>
+            <NuxtLink class="mt-2" to="/location" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+              <Icon name="ic:outline-place" size="24"></Icon>
+              مکان ها
             </NuxtLink>
           </li>
         </ul>
@@ -128,7 +117,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import {ref} from 'vue';
+
 const isDrawerOpen = ref(false);
 
 function closeDrawer() {

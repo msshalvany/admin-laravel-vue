@@ -191,7 +191,7 @@ onMounted(fetchTrucks);
 <template>
   <div>
     <div class="p-4">
-      <div class="card shadow-md px-5 py-1 rounded-lg">
+      <div class="card shadow-md px-5 rounded-lg">
         <div class="flex justify-between items-center mb-4">
           <div class="breadcrumbs text-sm">
             <ul class="flex items-center">
@@ -254,7 +254,7 @@ onMounted(fetchTrucks);
             <UDropdown :items="items(row)">
               <button class="btn btn-sm btn-primary">
                 عملیات
-                <Icon name="hugeicons:account-setting-01" size="18"/>
+                <Icon name="mingcute:settings-7-line" size="18"/>
               </button>
             </UDropdown>
           </template>

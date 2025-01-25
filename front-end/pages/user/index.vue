@@ -203,7 +203,7 @@ onMounted(fetchUsers);
 </script>
 <template>
   <div class="p-4">
-    <div class="card shadow-md px-5 py-1 rounded-lg">
+    <div class="card shadow-md px-5 rounded-lg">
       <div class="flex justify-between items-center mb-4">
         <div class="breadcrumbs text-sm">
           <ul class="flex items-center">

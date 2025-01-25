@@ -45,7 +45,7 @@ const submitForm = async () => {
 
 <template>
   <div class="p-4">
-    <div class="card shadow-md px-5 py-1 rounded-lg">
+    <div class="card shadow-md px-5 rounded-lg">
       <div class="flex justify-between items-center mb-4">
         <div class="breadcrumbs text-sm">
           <ul class="flex items-center">
@@ -81,35 +81,41 @@ const submitForm = async () => {
     </div>
     <div class="p-8 m-auto flex justify-center items-center w-10/12 shadow-xl rounded-lg">
       <form @submit.prevent="submitForm" class="form-control w-full space-y-6">
-        <!-- نام و نام خانوادگی -->
-        <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
+        <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+          <legend class="fieldset-legend">
+            رانندگان
+            <Icon name="healthicons:truck-driver" class="ml-1" size="18"/>
+          </legend>
+          <!-- نام و نام خانوادگی -->
+          <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
       <span class="flex items-center">
-        <Icon name="mdi:user" size="18" class="ml-2" />
+        <Icon name="mdi:user" size="18" class="ml-2"/>
         نام و نام خانوادگی
       </span>
-          <input v-model="name" type="text" class="grow" placeholder="نام و نام خانوادگی" />
-        </label>
+            <input v-model="name" type="text" class="grow" placeholder="نام و نام خانوادگی"/>
+          </label>
 
-        <!-- آدرس -->
-        <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
+          <!-- آدرس -->
+          <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
       <span class="flex items-center">
-        <Icon name="mdi:map-marker-account" size="18" class="ml-2" />
+        <Icon name="mdi:map-marker-account" size="18" class="ml-2"/>
         آدرس
       </span>
-          <input v-model="address" type="text" class="grow" placeholder="آدرس" />
-        </label>
+            <input v-model="address" type="text" class="grow" placeholder="آدرس"/>
+          </label>
 
-        <!-- شماره گواهی نامه -->
-        <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
+          <!-- شماره گواهی نامه -->
+          <label class="floating-label input input-bordered flex items-center gap-4 mt-4 w-full">
       <span class="flex items-center">
-        <Icon name="fa6-solid:address-card" size="18" class="ml-2" />
+        <Icon name="fa6-solid:address-card" size="18" class="ml-2"/>
         شماره گواهی نامه
       </span>
-          <input v-model="license_number" type="text" class="grow" placeholder="شماره گواهی نامه" />
-        </label>
+            <input v-model="license_number" type="text" class="grow" placeholder="شماره گواهی نامه"/>
+          </label>
 
-        <!-- دکمه ثبت -->
-        <button type="submit" class="btn btn-primary w-full mt-6">ثبت</button>
+          <!-- دکمه ثبت -->
+          <button type="submit" class="btn btn-primary w-full mt-6">ثبت</button>
+        </fieldset>
       </form>
     </div>
   </div>

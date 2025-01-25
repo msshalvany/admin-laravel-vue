@@ -75,7 +75,7 @@ const expand = ref({
 <template>
   <div>
     <div class="p-4">
-      <div class="card shadow-md px-5 py-1 rounded-lg">
+      <div class="card shadow-md px-5 rounded-lg">
         <div class="flex justify-between items-center mb-4">
           <div class="breadcrumbs text-sm">
             <ul class="flex items-center">
@@ -131,9 +131,10 @@ const expand = ref({
             </pre>
           </template>
           <template #expand-action="{ row, isExpanded, toggle }">
-            <UButton @click="toggle">
+            <button class="btn btn-primary" @click="toggle">
               مشاهده جزعیات
-            </UButton>
+              <Icon name="ic:outline-remove-red-eye" size="18"></Icon>
+            </button>
           </template>
         </UTable>
         <UPagination
