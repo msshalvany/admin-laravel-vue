@@ -12,7 +12,7 @@
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu bg-base-100 text-base-content min-h-full w-64 p-2.5">
           <li>
-            <details class="mt-2">
+            <details v-if="hasPermission('UserManegment')" class="mt-2">
               <summary>
                 <Icon name="ph:users-three" size="26" />
                 کاربران
@@ -116,7 +116,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import {ref} from 'vue';
 
 const isDrawerOpen = ref(false);
@@ -130,4 +130,11 @@ definePageMeta({
     name: 'rotate',
   },
 });
+
+const permissions = useCookie('permissions').value || []; // دسترسی‌ها را از کوکی‌ها می‌گیریم
+
+// تابع برای چک کردن دسترسی خاص در آرایه دسترسی‌ها
+const hasPermission = (item) => {
+  return permissions.includes(item); // بررسی اینکه آیا دسترسی مورد نظر در آرایه هست یا نه
+};
 </script>

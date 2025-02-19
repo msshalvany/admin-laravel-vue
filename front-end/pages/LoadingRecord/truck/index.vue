@@ -259,7 +259,7 @@ onMounted(fetchTrucks);
             </UDropdown>
           </template>
           <template #actionsColor-data="{ row }">
-            <input type="color" v-model="row.color" disabled>
+            <div class="status  animate-bounce" :style="`background-color:${row.color};width:20px;height: 20px`" a></div>
           </template>
         </UTable>
         <div class="flex px-3 py-3.5 border-t border-gray-200">
@@ -300,7 +300,7 @@ onMounted(fetchTrucks);
           <!-- رنگ کامیون -->
           <label class="input input-bordered flex items-center gap-2 mt-4 w-6/12">
             <Icon name="material-symbols:colors" size="18" class="ml-2"/>
-            <span>رنگ</span>
+            <span> رنگ</span>
             <input v-model="newTruckData.color" type="color" class="grow" placeholder="رنگ"/>
           </label>
 

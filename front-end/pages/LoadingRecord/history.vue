@@ -1,31 +1,27 @@
 <script setup>
-import {ref, onMounted, watch} from "vue";
-import {useCookie} from "nuxt/app";
-import {AlertSuccess, loaderfun} from "~/composables/statFunc.js";
+import { ref, onMounted, watch } from "vue";
+import { useCookie } from "nuxt/app";
 
 const columns = [
-  {key: "id", label: "#", sortable: true},
-  {key: "entry_date", label: "تاریخ تردد", sortable: true},
-  {key: "entry_time", label: "ساعت ورود", sortable: true},
-  {key: "exit_time", label: "ساعت ورود", sortable: true},
+  { key: "entry_date", label: "تاریخ تردد", sortable: true },
+  { key: "entry_time", label: "ساعت ورود", sortable: true },
+  { key: "exit_time", label: "ساعت خروج", sortable: true },
 ];
-
 
 const page = ref(1);
 const pageCount = ref(0);
 const total = ref(0);
-const sort = ref({column: "created_at", direction: "asc"});
+const sort = ref({ column: "created_at", direction: "asc" });
 const q = ref('');
 const status = ref(false);
-const pageCountList = [10, 15, 20, 25, 30]
-const pageCountListSelected = ref(pageCountList[0])
+const pageCountList = [10, 15, 20, 25, 30];
+const pageCountListSelected = ref(pageCountList[0]);
 
-const LoadingRecord = ref([])
-
+const LoadingRecord = ref([]);
 
 const fetchLoadingRecord = async () => {
   status.value = true;
-  LoadingRecord.value = []
+  LoadingRecord.value = [];
   try {
     const response = await fetch(
         `${basUrl().value}/loading_records?page=${page.value}&sort=${sort.value.column}&order=${sort.value.direction}&q=${q.value}&countPage=${pageCountListSelected.value}`,
@@ -52,26 +48,33 @@ const fetchLoadingRecord = async () => {
   }
 };
 
-
-const closeModal = () => {
-  selectedDriver.value = null;
-  newDriverData.value = {
-    name: "",
-    address: "",
-    license_number: "",
-  };
-};
-
 watch(page, fetchLoadingRecord);
 watch(pageCountListSelected, fetchLoadingRecord);
 watch(sort, fetchLoadingRecord);
 watch(q, fetchLoadingRecord);
 onMounted(fetchLoadingRecord);
+
 const expand = ref({
-  openedRows: [LoadingRecord],
+  openedRows: [],
   row: {}
-})
+});
+
+// متغیر برای باز و بسته کردن مودال
+const showModal = ref(false);
+const selectedRow = ref({});
+
+// تابعی برای باز کردن مودال و ذخیره کردن ردیف انتخاب شده
+const openModal = (row) => {
+  selectedRow.value = row;
+  showModal.value = true;
+};
+
+// تابع برای بستن مودال
+const closeModal = () => {
+  showModal.value = false;
+};
 </script>
+
 <template>
   <div>
     <div class="p-4">
@@ -117,7 +120,7 @@ const expand = ref({
           </USelectMenu>
         </div>
         <UTable
-            :rows="LoadingRecord "
+            :rows="LoadingRecord"
             :columns="columns"
             v-model:sort="sort"
             :loading="status"
@@ -126,17 +129,54 @@ const expand = ref({
             v-model:expand="expand"
         >
           <template #expand="{ row }">
-            <pre class="p-4">
-              {{ row }}
-            </pre>
+            <div class="card shadow-lg p-4 mb-4">
+              <!-- نمایش اطلاعات کلی تردد -->
+              <h3 class="text-xl font-semibold mb-2">جزئیات تردد</h3>
+              <p><strong>تاریخ ورود:</strong> {{ row.entry_date }}</p>
+              <p><strong>ساعت ورود:</strong> {{ row.entry_time }}</p>
+              <p><strong>ساعت خروج:</strong> {{ row.exit_time }}</p>
+              <p><strong>وضعیت:</strong> {{ row.status }}</p>
+              <p><strong>وزن خالی:</strong> {{ row.empty_weight }} kg</p>
+              <p><strong>وزن بار:</strong> {{ row.loaded_weight }} kg</p>
+              <br>
+              <p><strong> مشاهده اطلاعات راننده و کامیون:</strong><br><button class="btn btn-xs rounded-box btn-primary mt-4" @click="openModal(row)"><Icon name="ic:outline-remove-red-eye" size="18"/></button></p>
+
+            </div>
           </template>
+
           <template #expand-action="{ row, isExpanded, toggle }">
             <button class="btn btn-primary" @click="toggle">
-              مشاهده جزعیات
+              مشاهده جزئیات
               <Icon name="ic:outline-remove-red-eye" size="18"></Icon>
             </button>
           </template>
         </UTable>
+        <!-- مودال نمایش اطلاعات راننده و کامیون -->
+        <div v-if="showModal" class="modal modal-open" :key="selectedRow.id">
+          <div class="modal-box">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+              <Icon name="material-symbols:close"/>
+            </button>
+            <br>
+            <h2 class="text-xl font-bold mb-4">اطلاعات راننده و کامیون</h2>
+            <!-- اطلاعات راننده -->
+            <div class="mb-4">
+              <h3 class="font-semibold">اطلاعات راننده:</h3>
+              <p><strong>نام راننده:</strong> {{ selectedRow.driver.name }}</p>
+              <p><strong>شماره گواهینامه:</strong> {{ selectedRow.driver.license_number }}</p>
+              <p><strong>آدرس راننده:</strong> {{ selectedRow.driver.address }}</p>
+            </div>
+
+            <!-- اطلاعات کامیون -->
+            <div class="mb-4">
+              <h3 class="font-semibold">اطلاعات کامیون:</h3>
+              <p><strong>پلاک کامیون:</strong> {{ selectedRow.truck.plate_number }}</p>
+              <p><strong>نوع کامیون:</strong> {{ selectedRow.truck.type }}</p>
+              <p><strong>رنگ کامیون:</strong> {{ selectedRow.truck.color }}</p>
+            </div>
+
+          </div>
+        </div>
         <UPagination
             v-model="page"
             :page-count="pageCount"
@@ -152,7 +192,3 @@ const expand = ref({
     </div>
   </div>
 </template>
-
-<style scoped>
-
-</style>

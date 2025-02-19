@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -47,15 +48,24 @@ class AuthController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
+//        User::create([
+//            'username'=> 'ali',
+//            'password' => Hash::make('123'),
+//            'mobile' => '09922490804'
+//        ]);
         $credentials = $request->only('username', 'password');
 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['error' => 'نام کاربری یا رمز عبور اشتباه است'], 401);
         }
+        $user = Auth::user();
+        $permissions = $user->getAllPermissions()->pluck('name'); // دسترسی‌ها
 
         return response()->json([
             'message' => 'ورود با موفقیت انجام شد',
             'token' => $token,
+            'user' => $user,
+            'permissions' => $permissions
         ], 200);
     }
 

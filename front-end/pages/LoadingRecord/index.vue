@@ -344,7 +344,7 @@ const TabItems = [{
         </template>
         <template #item="{ item }">
           <div v-if="item.key === 'pending'" class="space-y-3">
-            <form class="form-control w-full space-y-6">
+            <div class="form-control w-full space-y-6">
               <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
                 <div class="mt-2">
                   <div>
@@ -449,7 +449,7 @@ const TabItems = [{
                   <button class="w-full btn btn-primary" @click="LoadingRecords">ثبت موقت ورود</button>
                 </div>
               </fieldset>
-            </form>
+            </div>
           </div>
           <div v-else-if="item.key === 'final'" class="space-y-3">
             <div v-if="pendingAll==0">
@@ -505,7 +505,7 @@ const TabItems = [{
           <Icon name="material-symbols:close"/>
         </button>
         <br>
-        <form class="form-control w-full space-y-6">
+        <div class="form-control w-full space-y-6">
           <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
             <legend class="fieldset-legend">
               ثبت نهایی
@@ -572,7 +572,7 @@ const TabItems = [{
               <button class="btn btn-primary w-full" @click="finalSubmit">ثبت نهایی تردد</button>
             </div>
           </fieldset>
-        </form>
+        </div>
       </div>
     </div>
   </div>
