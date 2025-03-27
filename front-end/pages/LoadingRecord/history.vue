@@ -4,8 +4,9 @@ import { useCookie } from "nuxt/app";
 
 const columns = [
   { key: "entry_date", label: "تاریخ تردد", sortable: true },
-  { key: "entry_time", label: "ساعت ورود", sortable: true },
-  { key: "exit_time", label: "ساعت خروج", sortable: true },
+  { key: "entry_time", label: "ساعت ورود" },
+  { key: "exit_time", label: "ساعت خروج" },
+  { key: "locations", label: "مکان ها" },
 ];
 
 const page = ref(1);
@@ -16,6 +17,62 @@ const q = ref('');
 const status = ref(false);
 const pageCountList = [10, 15, 20, 25, 30];
 const pageCountListSelected = ref(pageCountList[0]);
+const report = ref(null)
+
+
+
+
+const downloadExcelReport = async () => {
+  status.value = true;
+  try {
+    const baseUrl = basUrl().value;
+    const token = useCookie("jwt").value;
+
+    if (!token) {
+      console.error("Token not found");
+      status.value = false;
+      return;
+    }
+
+    // ایجاد URL با پارامتر `date`
+    const url = new URL(`${baseUrl}/loading_records/report`);
+    url.searchParams.append("date", report.value);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching report: ${response.status}`);
+    }
+
+    // دریافت داده به‌صورت Blob
+    const blob = await response.blob();
+
+    // ایجاد URL برای فایل Blob
+    const fileUrl = window.URL.createObjectURL(blob);
+
+    // ایجاد یک لینک برای دانلود فایل
+    const a = document.createElement("a");
+    a.href = fileUrl;
+    a.download = `Report_${report.value}.xlsx`; // نام فایل اکسل
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // آزاد کردن URL Blob از حافظه
+    window.URL.revokeObjectURL(fileUrl);
+  } catch (error) {
+    console.error("Error:", error.message || error);
+  } finally {
+    status.value = false;
+  }
+};
+
+
 
 const LoadingRecord = ref([]);
 
@@ -53,6 +110,8 @@ watch(pageCountListSelected, fetchLoadingRecord);
 watch(sort, fetchLoadingRecord);
 watch(q, fetchLoadingRecord);
 onMounted(fetchLoadingRecord);
+watch(report, downloadExcelReport);
+
 
 const expand = ref({
   openedRows: [],
@@ -118,6 +177,19 @@ const closeModal = () => {
               <Icon name="material-symbols-light:format-list-bulleted" size="18"/>
             </template>
           </USelectMenu>
+          <button class="btn btn-sm btn-primary custom-input" >
+            گزارش گیری
+            <Icon name="tabler:report-analytics"
+                  size="18"/>
+          </button>
+          <date-picker
+              v-model="report"
+              range
+              clearable
+              format="YYYY-MM-DD"
+              display-format="jMMMM jD"
+              custom-input=".custom-input"
+          />
         </div>
         <UTable
             :rows="LoadingRecord"
@@ -128,6 +200,12 @@ const closeModal = () => {
             :progress="{ color: 'primary', animation: 'carousel' }"
             v-model:expand="expand"
         >
+          <template #locations-data="{ row }">
+            <span v-for="item in row.locations">
+              {{ item.location_name }} ,
+            </span>
+
+          </template>
           <template #expand="{ row }">
             <div class="card shadow-lg p-4 mb-4">
               <!-- نمایش اطلاعات کلی تردد -->
@@ -135,7 +213,6 @@ const closeModal = () => {
               <p><strong>تاریخ ورود:</strong> {{ row.entry_date }}</p>
               <p><strong>ساعت ورود:</strong> {{ row.entry_time }}</p>
               <p><strong>ساعت خروج:</strong> {{ row.exit_time }}</p>
-              <p><strong>وضعیت:</strong> {{ row.status }}</p>
               <p><strong>وزن خالی:</strong> {{ row.empty_weight }} kg</p>
               <p><strong>وزن بار:</strong> {{ row.loaded_weight }} kg</p>
               <br>

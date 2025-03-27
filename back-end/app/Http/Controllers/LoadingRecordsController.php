@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LoadingRecordExport;
 use App\Models\LoadingRecord;
 use Carbon\Carbon;
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LoadingRecordsController extends Controller
 {
@@ -143,4 +145,22 @@ class LoadingRecordsController extends Controller
             'message' => 'تردد با نهاییی شد',
         ]);
     }
+
+    public function report(Request $request)
+    {
+        // دریافت مقدار تاریخ و تبدیل آن به آرایه
+        $dateRange = explode(',', $request->input('date'));
+
+        // اطمینان از اینکه دو مقدار دریافت شده است
+        if (count($dateRange) !== 2) {
+            return response()->json(['error' => 'Invalid date format'], 400);
+        }
+
+        $from = trim($dateRange[0]);
+        $to = trim($dateRange[1]);
+
+        return Excel::download(new LoadingRecordExport($from, $to), 'users.xlsx');
+    }
+
+
 }

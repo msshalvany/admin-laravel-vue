@@ -79,4 +79,5 @@ Route::prefix('loading_records')->group(function () {
     Route::post('/finalStore', [LoadingRecordsController::class, 'finalStore']);
     Route::get('/pendingAll', [LoadingRecordsController::class, 'pendingAll']);
     Route::delete('/destroy/{id}', [LoadingRecordsController::class, 'destroy']);
+    Route::get('/report', [LoadingRecordsController::class, 'report']);
 });
