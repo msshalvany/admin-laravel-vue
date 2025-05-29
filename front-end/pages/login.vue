@@ -1,7 +1,5 @@
 <template>
   <loader></loader>
-  <AlertError></AlertError>
-  <AlertSuccess></AlertSuccess>
   <alert-error v-if="checkLogin" text="نام کاربری یا رمز عبور اشتباه است"></alert-error>
 
   <div class="min-h-screen bg-base-200 flex items-center">
@@ -41,7 +39,7 @@
         <div dir="rtl" class="py-24 px-10">
           <h2 class="text-3xl font-semibold text-center text-gray-700">
             <span class="m-3">ورود</span>
-            <Icon class="align-top" style="vertical-align:-10px" name="ic:outline-log-in"/>
+            <Icon class="align-top" style="vertical-align:-10px" name="ix:log-in"/>
           </h2>
           <form @submit.prevent="login">
             <!-- Username Input -->
@@ -87,6 +85,7 @@ const username = ref('');
 const password = ref('');
 const checkLogin = ref(false);
 const router = useRouter();
+const { $toast } = useNuxtApp();
 
 // ایجاد کوکی برای توکن
 const jwtCookie = useCookie('jwt');
@@ -118,10 +117,22 @@ const login = async () => {
     // بررسی موفقیت‌آمیز بودن درخواست
     if (!response.ok) {
       loaderfun()
-      AlertError('نام کاربری یا رمز عبور اشتباه است');
+      $toast('نام کاربری یا رمز عبور اشتباه است', {
+        "theme": "colored",
+        "type": "error",
+        "autoClose":"5000",
+        "rtl": true,
+        "dangerouslyHTMLString": true
+      })
     } else {
       loaderfun()
-      AlertSuccess('ورود موفقیت آمیز بود')
+      $toast('ورود موفقیت آمیز بود', {
+        "theme": "colored",
+        "type": "success",
+        "rtl": true,
+        "autoClose":"5000",
+        "dangerouslyHTMLString": true
+      })
       const data = await response.json();
       // ذخیره کردن توکن JWT در کوکی
       jwtCookie.value = data.token;

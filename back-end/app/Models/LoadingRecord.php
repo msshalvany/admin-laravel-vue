@@ -33,22 +33,22 @@ class LoadingRecord extends Model
     // روابط
     public function truck(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Truck::class);
+        return $this->belongsTo(Truck::class)->withTrashed();
     }
 
     public function locations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Location::class, 'loading_record_locations');
+        return $this->belongsToMany(Location::class, 'loading_record_locations')->withTrashed();
     }
 
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class)->withTrashed();
     }
 
     public function driver(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Driver::class);
+        return $this->belongsTo(Driver::class)->withTrashed();
     }
 
     // Accessors

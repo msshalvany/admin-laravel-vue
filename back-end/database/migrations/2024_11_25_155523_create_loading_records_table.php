@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('driver_id')->constrained('drivers'); // شناسه راننده
             $table->decimal('empty_weight', 8, 2); // وزن خالی کامیون
             $table->decimal('loaded_weight', 8, 2)->nullable(); // وزن بار کامیون
-            $table->string('status')->default('pending'); // وضعیت
+            $table->enum('status',['pending', 'ended'])->default('pending'); // وضعیت
             $table->date('entry_date'); // زمان ورود به کارخانه (تاریخ)
             $table->time('entry_time')->nullable(); // زمان ورود به کارخانه
             $table->time('exit_time')->nullable(); // زمان خروج از کارخانه

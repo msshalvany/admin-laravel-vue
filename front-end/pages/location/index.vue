@@ -1,8 +1,8 @@
 <script setup>
 import {ref, onMounted} from 'vue';
 import {useCookie} from 'nuxt/app';
-import {AlertSuccess, loaderfun} from "~/composables/statFunc.js";
 import {basUrl} from "~/composables/states.js";
+const { $toast } = useNuxtApp();
 
 const locations = ref([]);
 
@@ -14,18 +14,11 @@ const showCreateModal = ref(false); // متغیر برای کنترل نمایش
 
 const showDeleteConfirmation = ref(false);
 
-const showModal = ref(false);
 // برای ذخیره داده‌های فرم ایجاد مکان
 const newLocations = ref({
   location_name: '',
   description: '',
 });
-const closeModal = () => {
-  showModal.value = false;
-  showEditModal.value = false;
-  showDeleteConfirmation.value = false;
-  selectedLocations.value = null;
-};
 // دریافت لیست مکان‌ها
 const fetchLocation = async () => {
   try {
@@ -72,16 +65,34 @@ const updateLocations = async () => {
     });
 
     if (response.ok) {
-      AlertSuccess('مکان با موفقیت ویرایش شد');
+      $toast('مکان با موفقیت ویرایش شد', {
+        "theme": "colored",
+        "type": "success",
+        "rtl": true,
+        "autoClose":"5000",
+        "dangerouslyHTMLString": true
+      })
       showEditModal.value = false;
       fetchLocation(); // بارگذاری مجدد لیست مکان‌ها
     } else {
       console.error('Error updating location:', response.status);
-      AlertError('مشکلی در ویرایش مکان رخ داده است');
+      $toast('مشکلی در ویرایش مکان رخ داده است', {
+        "theme": "colored",
+        "type": "success",
+        "autoClose":"5000",
+        "rtl": true,
+        "dangerouslyHTMLString": true
+      })
     }
   } catch (error) {
     console.error('Error:', error);
-    AlertError('مشکلی رخ داده است');
+    $toast('مشکلی رخ داده است', {
+      "theme": "colored",
+      "type": "error",
+      "autoClose":"5000",
+      "rtl": true,
+      "dangerouslyHTMLString": true
+    })
   }
 
   loaderfun(); // مخفی کردن لودر
@@ -102,7 +113,13 @@ const confirmDelete = async () => {
     );
 
     if (response.ok) {
-      AlertSuccess("مکان با موفقیت حذف شد");
+      $toast("مکان با موفقیت حذف شد", {
+        "theme": "colored",
+        "type": "success",
+        "autoClose":"5000",
+        "rtl": true,
+        "dangerouslyHTMLString": true
+      })
       fetchLocation();
       showDeleteConfirmation.value = false;
       selectedLocations.value = null;
@@ -129,16 +146,33 @@ const createLocations = async () => {
     });
 
     if (response.ok) {
-      AlertSuccess('مکان با موفقیت ایجاد شد');
+      $toast('مکان با موفقیت ایجاد شد', {
+        "theme": "colored",
+        "type": "success",
+        "autoClose":"5000",
+        "rtl": true,
+        "dangerouslyHTMLString": true
+      })
       showCreateModal.value = false;
       fetchLocation(); // بارگذاری مجدد لیست مکان‌ها
     } else {
       console.error('Error creating company:', response.status);
-      AlertError('مشکلی در ایجاد مکان رخ داده است');
+      $toast('مشکلی در ویرایش مکان رخ داده است', {
+        "theme": "colored",
+        "type": "error",
+        "autoClose":"5000",
+        "dangerouslyHTMLString": true
+      })
     }
   } catch (error) {
     console.error('Error:', error);
-    AlertError('مشکلی رخ داده است');
+    $toast('مشکلی رخ داده است', {
+      "theme": "colored",
+      "type": "error",
+      "rtl": true,
+      "autoClose":"5000",
+      "dangerouslyHTMLString": true
+    })
   }
 
   loaderfun(); // مخفی کردن لودر
@@ -148,23 +182,7 @@ const DeleteLocation = (item) => {
   selectedLocations.value = item
   showDeleteConfirmation.value = true; // نمایش مودال تایید حذف
 };
-const items = (row) => [
-  [
-    {
-      label: "ویرایش",
-      icon: "i-heroicons-pencil-square-20-solid",
-      click: () => editLocation(row)
-      ,
-    },
-  ],
-  [
-    {
-      label: "حذف",
-      icon: "i-heroicons-trash-20-solid",
-      click: () => DeleteLocation(row)
-    },
-  ],
-];
+
 onMounted(fetchLocation);
 </script>
 
@@ -189,56 +207,62 @@ onMounted(fetchLocation);
           </ul>
         </div>
         <div class="text-left">
-          <button class="btn btn-success" @click="showCreateModal = true">
+          <button class="btn btn-success" onclick="createLocations_modal.showModal()">
             مکان جدید
-            <Icon name="material-symbols:add-circle" size="18"/>
+            <Icon name="material-symbols:add-location-alt-outline-rounded" size="18"/>
           </button>
         </div>
       </div>
     </div>
     <!-- جدول مکان‌ها -->
-    <div class="overflow-x-auto mt-4 shadow-lg p-1 rounded-xl">
+    <div class="mt-4 shadow-lg p-1 rounded-xl">
       <table class="table">
-        <thead>
-        <tr class="text-center">
+        <thead class="bg-base-content/20">
+        <tr class="text-center ">
           <th>id</th>
           <th>نام</th>
           <th>توضیحات</th>
-          <th>مدیریت</th>
+          <th>عملیات</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="location in locations" :key="location.id" class="hover text-center">
+        <tr v-for="location in locations" :key="location.id" class="hover:bg-base-300 transition delay- text-center">
           <th>{{ location.id }}</th>
           <td>{{ location.location_name }}</td>
           <td>{{ location.description }}</td>
-          <td>
-            <UDropdown :items="items(location)">
-              <button class="btn btn-sm btn-primary flex items-center">
-                <span>عملیات</span>
-                <Icon name="tdesign:location-setting" size="18"/>
+          <td class="">
+            <div @click="DeleteLocation(location)" onclick="confirmDelete_modal.showModal()" class="tooltip"
+                 data-tip="حذف">
+              <button class="btn btn-xs btn-error">
+                <Icon name="i-heroicons-trash-20-solid" size="18"/>
               </button>
-            </UDropdown>
+            </div>
+            <div @click="editLocation(location)" onclick="editLocation_modal.showModal()" class="tooltip"
+                 data-tip="ویرایش">
+              <button class="btn btn-xs btn-info">
+                <Icon name="i-heroicons-pencil-square-20-solid" size="18"/>
+              </button>
+            </div>
           </td>
         </tr>
         </tbody>
       </table>
+      <div v-if="locations.length===0" class="w-full text-center my-4">
+        <span class="loading loading-ring w-1/12"></span>
+      </div>
     </div>
 
     <!-- مودال ویرایش مکان -->
-    <div v-if="showEditModal" class="modal modal-open">
+    <dialog id="editLocation_modal" class="modal">
       <div class="modal-box relative">
-        <!-- دکمه بستن -->
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="showEditModal = false">
-          <Icon name="material-symbols:close"/>
-        </button>
-        <!-- فرم ویرایش -->
-        <form @submit.prevent="updateLocations" class="space-y-6">
-          <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
-            <legend class="fieldset-legend">
+        <div v-if="selectedLocations!=null">
+          <!-- فیلدست کل محتوا -->
+          <fieldset class="fieldset w-full bg-base-200 border border-base-300 p-4 rounded-box space-y-6">
+            <legend class="fieldset-legend text-lg font-bold flex items-center gap-2">
               ویرایش مکان - {{ selectedLocations.location_name }}
-              <Icon name="ic:outline-place" size="18"></Icon>
+              <Icon name="ic:outline-place" size="18"/>
             </legend>
+
             <!-- نام مکان -->
             <label class="floating-label input input-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
@@ -249,7 +273,7 @@ onMounted(fetchLocation);
             </label>
 
             <!-- توضیحات -->
-            <label class="floating-label textarea textarea-bordered flex items-center gap-4 w-full mt-3">
+            <label class="floating-label textarea textarea-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
           <Icon name="fluent:text-description-20-regular" size="18" class="ml-2"/>
           توضیحات
@@ -258,61 +282,70 @@ onMounted(fetchLocation);
                         placeholder="توضیحات"></textarea>
             </label>
 
-            <button type="submit" class="btn btn-primary w-full mt-6">ویرایش مکان</button>
+            <!-- دکمه ارسال -->
+            <form method="dialog">
+              <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn">
+                <Icon name="material-symbols:close"/>
+              </button>
+              <button type="submit" @click="updateLocations" class="btn btn-primary w-full mt-6">ویرایش مکان</button>
+            </form>
           </fieldset>
-        </form>
+        </div>
       </div>
-    </div>
+    </dialog>
+
 
     <!-- مودال ایجاد مکان -->
-    <div v-if="showCreateModal" class="modal modal-open">
-      <div class="modal-box relative">
+    <dialog id="createLocations_modal" class="modal">
+      <div class="modal-box">
         <!-- دکمه بستن -->
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn"
-                @click="showCreateModal = false">
-          <Icon name="material-symbols:close"/>
-        </button>
-        <form @submit.prevent="createLocations" class="space-y-6">
-          <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
-            <legend class="fieldset-legend">
+        <form class="space-y-6">
+          <fieldset class="fieldset w-full bg-base-200 border border-base-300 p-4 rounded-box space-y-6">
+            <legend class="fieldset-legend text-lg font-bold flex items-center gap-2">
               مکان جدید
-              <Icon name="ic:outline-place" size="18"></Icon>
+              <Icon name="material-symbols:add-location-alt-outline-rounded" size="18"/>
             </legend>
             <!-- نام مکان -->
             <label class="floating-label input input-bordered flex items-center gap-4 w-full">
-        <span class="flex items-center">
-          <Icon name="material-symbols:my-location" size="18" class="ml-2"/>
-          نام مکان
-        </span>
+            <span class="flex items-center">
+              <Icon name="material-symbols:my-location" size="18" class="ml-2"/>
+              نام مکان
+            </span>
               <input v-model="newLocations.location_name" type="text" class="grow" placeholder="نام مکان"/>
             </label>
 
             <!-- توضیحات -->
             <label class="floating-label textarea textarea-bordered flex items-center gap-4 w-full mt-3">
-        <span class="flex items-center">
-          <Icon name="fluent:text-description-20-regular" size="18" class="ml-2"/>
-          توضیحات
-        </span>
+            <span class="flex items-center">
+              <Icon name="fluent:text-description-20-regular" size="18" class="ml-2"/>
+              توضیحات
+            </span>
               <textarea v-model="newLocations.description" class="textarea textarea-bordered w-full"
                         placeholder="توضیحات"></textarea>
             </label>
-
-            <button type="submit" class="btn btn-primary w-full mt-6">ایجاد مکان</button>
+            <form method="dialog">
+              <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn">
+                <Icon name="material-symbols:close"/>
+              </button>
+              <button @click="createLocations" type="submit" class="btn btn-primary w-full mt-6">ایجاد مکان</button>
+            </form>
           </fieldset>
         </form>
       </div>
-    </div>
-    <div v-if="showDeleteConfirmation" class="modal modal-open">
+    </dialog>
+    <dialog id="confirmDelete_modal" class="modal">
       <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
-          <Icon name="material-symbols:close"/>
-        </button>
         <br>
         <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این مکان را حذف کنید؟</h2>
         <div class="modal-action" dir="ltr">
-          <button class="btn btn-error" @click="confirmDelete">بله، حذف کن</button>
+          <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn">
+              <Icon name="material-symbols:close"/>
+            </button>
+            <button class="btn btn-error" @click="confirmDelete">بله، حذف کن</button>
+          </form>
         </div>
       </div>
-    </div>
+    </dialog>
   </div>
 </template>

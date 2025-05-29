@@ -1,8 +1,18 @@
 <script setup>
 import {ref, onMounted} from 'vue';
 import {useCookie} from 'nuxt/app';
-import {AlertSuccess, loaderfun} from "~/composables/statFunc.js";
+import {loaderfun} from "~/composables/statFunc.js";
 import {basUrl} from "~/composables/states.js";
+const { $toast } = useNuxtApp();
+
+let userToDelete = ref(null)
+
+let loading = ref(false)
+
+function loadingTootle() {
+  let val = loading.value
+  loading.value = !val
+}
 
 // لیست کاربران
 const users = ref([]);
@@ -12,10 +22,6 @@ const userPermissions = ref([]);
 const selectedUser = ref(null);
 // کنترل نمایش مودال
 const showModal = ref(false);
-
-const showModalEdit = ref(false);
-
-const showDeleteConfirmation = ref(false);
 
 const nwePassword = ref(null)
 
@@ -45,7 +51,7 @@ const fetchUsers = async () => {
 
 // نمایش دسترسی‌های کاربر در مودال
 const fetchUserPermissions = async (user) => {
-  loaderfun()
+  loadingTootle()
   selectedUser.value = user;
   showModal.value = true;
   try {
@@ -59,18 +65,18 @@ const fetchUserPermissions = async (user) => {
 
     if (response.ok) {
       userPermissions.value = await response.json();
-      loaderfun()
     } else {
       console.error('Error fetching permissions:', response.status);
     }
   } catch (error) {
     console.error('Error:', error);
   }
+  loadingTootle()
 };
 
 // تغییر وضعیت دسترسی کاربر
 const togglePermission = async (permission) => {
-  loaderfun()
+  loadingTootle()
   try {
     await fetch(`${basUrl().value}/users/${selectedUser.value.id}/permissions/${permission.id}`, {
       method: 'PATCH',
@@ -83,7 +89,7 @@ const togglePermission = async (permission) => {
 
     // به‌روز‌رسانی وضعیت محلی
     permission.hasPermission = !permission.hasPermission;
-    loaderfun()
+    loadingTootle()
   } catch (error) {
     console.error('Error toggling permission:', error);
   }
@@ -91,8 +97,6 @@ const togglePermission = async (permission) => {
 
 const updateUser = async (user) => {
   selectedUser.value = {...user}
-  showModalEdit.value = true
-  console.log(user)
 };
 
 const submitFormEditUser = async () => {
@@ -112,34 +116,44 @@ const submitFormEditUser = async () => {
     });
 
     if (response.ok) {
-      AlertSuccess('کاربر با موفقیت ویرایش شد');
+      $toast('کاربر با موفقیت ویرایش شد', {
+        "theme": "colored",
+        "type": "success",
+        "autoClose":"5000",
+        "rtl": true,
+        "dangerouslyHTMLString": true
+      })
       fetchUsers(); // بارگذاری مجدد لیست کمپانی‌ها
-      closeModal()
     } else {
       console.error('Error updating company:', response.status);
-      AlertError('مشکلی در ویرایش کاربر رخ داده است');
+      $toast('مشکلی در ویرایش کاربر رخ داده است', {
+        "theme": "colored",
+        "type": "error",
+        "autoClose":"5000",
+        "rtl": true,
+        "dangerouslyHTMLString": true
+      })
     }
-    closeModal()
   } catch (error) {
     console.error('Error:', error);
-    AlertError('مشکلی رخ داده است');
+    $toast('مشکلی رخ داده است', {
+      "theme": "colored",
+      "type": "error",
+      "autoClose":"5000",
+      "rtl": true,
+      "dangerouslyHTMLString": true
+    })
   }
 
   loaderfun(); // مخفی کردن لودر
 };
 
 
-// تابع برای شروع فرآیند حذف راننده
-const DeleteUser = (user) => {
-  selectedUser.value = user
-  showDeleteConfirmation.value = true; // نمایش مودال تایید حذف
-};
-
 const confirmDelete = async () => {
   loaderfun();
   try {
     const response = await fetch(
-        `${basUrl().value}/users/${selectedUser.value.id}`,
+        `${basUrl().value}/users/${userToDelete.value}`,
         {
           method: "delete",
           headers: {
@@ -150,9 +164,14 @@ const confirmDelete = async () => {
     );
 
     if (response.ok) {
-      AlertSuccess("کاربر با موفقیت حذف شد");
+      $toast('کاربر با موفقیت حذف شد', {
+        "theme": "colored",
+        "type": "success",
+        "autoClose":"5000",
+        "rtl": true,
+        "dangerouslyHTMLString": true
+      })
       fetchUsers();
-      showDeleteConfirmation.value = false;
       selectedUser.value = null;
     } else {
       console.error("Error deleting driver:", response.status);
@@ -162,43 +181,6 @@ const confirmDelete = async () => {
   }
   loaderfun();
 };
-
-// بستن مودال
-const closeModal = () => {
-  showModal.value = false;
-  showModalEdit.value = false;
-  showDeleteConfirmation.value = false;
-  selectedUser.value = null;
-  nwePassword.value = null
-};
-
-const items = (row) => [
-  [
-    {
-      label: "سطح دسترسی",
-      icon: "i-heroicons-pencil-square-20-solid",
-      click: () => fetchUserPermissions(row)
-      ,
-    },
-  ],
-  [
-    {
-      label: "ویرایش",
-      icon: "i-heroicons-pencil-square-20-solid",
-      click: () => updateUser(row)
-      ,
-    },
-  ],
-  [
-    {
-      label: "حذف",
-      icon: "i-heroicons-trash-20-solid",
-      click: () => DeleteUser(row)
-    },
-  ],
-];
-
-
 onMounted(fetchUsers);
 </script>
 <template>
@@ -219,13 +201,19 @@ onMounted(fetchUsers);
                 کاربران
               </a>
             </li>
+            <li>
+              <a class="flex items-center">
+                <Icon name="hugeicons:user-list" size="18" />
+                لیست کاربران
+              </a>
+            </li>
           </ul>
         </div>
         <div>
           <NuxtLink to="/user/create">
             <button class="btn btn-success flex items-center">
               <span> کاربر جدید</span>
-              <Icon name="material-symbols-add-circle" size="18"/>
+              <Icon name="streamline:interface-user-add-actions-add-close-geometric-human-person-plus-single-up-user" size="18"/>
             </button>
           </NuxtLink>
         </div>
@@ -237,7 +225,7 @@ onMounted(fetchUsers);
     <div class="card shadow-lg p-4 rounded-lg">
       <div class="overflow-x-auto">
         <table class="table">
-          <thead>
+          <thead class="bg-base-content/20">
           <tr class="text-center">
             <th>نام</th>
             <th>موبایل</th>
@@ -245,67 +233,93 @@ onMounted(fetchUsers);
           </tr>
           </thead>
           <tbody>
-          <tr v-for="user in users" :key="user.id" class="hover text-center">
+          <tr v-for="user in users" :key="user.id" class="hover:bg-base-300 transition delay- text-center">
+
             <td>{{ user.username }}</td>
             <td>{{ user.mobile }}</td>
-            <td>
-              <UDropdown :items="items(user)">
-                <button class="btn btn-sm btn-primary flex items-center">
-                  <span>عملیات</span>
-                  <Icon name="hugeicons:account-setting-01" size="18"/>
-                </button>
-              </UDropdown>
+            <td class="">
+              <div>
+                <div @click="userToDelete = user.id " onclick="confirmDelete_modal.showModal()" class="tooltip"
+                     data-tip="حذف">
+                  <button class="btn btn-xs btn-error">
+                    <Icon name="i-heroicons-trash-20-solid" size="18"/>
+                  </button>
+                </div>
+                <div @click="updateUser(user)" onclick="editUser_modal.showModal()" class="tooltip" data-tip="ویرایش">
+                  <button class="btn btn-xs btn-info">
+                    <Icon name="i-heroicons-pencil-square-20-solid" size="18"/>
+                  </button>
+                </div>
+                <div @click="fetchUserPermissions(user)" onclick="userPermissions.showModal()" class="tooltip"
+                     data-tip="ویرایش مجوز">
+                  <button class="btn btn-xs btn-warning">
+                    <Icon name="material-symbols:lock-person-rounded" size="18"/>
+                  </button>
+                </div>
+              </div>
             </td>
           </tr>
           </tbody>
         </table>
+        <div v-if="users.length===0" class="w-full text-center my-4">
+          <span class="loading loading-ring w-1/12"></span>
+        </div>
       </div>
     </div>
 
     <!-- مودال‌ها -->
-    <div v-if="showModal" class="modal modal-open">
-      <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
-          <Icon name="material-symbols:close"/>
-        </button>
-        <h2 class="text-lg font-bold mb-6 text-center">
-          مدیریت دسترسی‌ها - {{ selectedUser?.username }}
-        </h2>
-        <table class="table w-full">
-          <thead>
-          <tr>
-            <th>#</th>
-            <th>نام دسترسی</th>
-            <th>وضعیت</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(permission, index) in userPermissions" :key="permission.id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ permission.name }}</td>
-            <td>
-              <input
-                  type="checkbox"
-                  class="toggle toggle-primary"
-                  :checked="permission.hasPermission"
-                  @change="togglePermission(permission)"
-              />
-            </td>
-          </tr>
-          </tbody>
-        </table>
+    <dialog id="userPermissions" class="modal">
+      <div class="modal-box relative" v-if="selectedUser">
+
+        <!-- لایه لودینگ وسط مودال -->
+        <div
+            v-if="loading"
+            class="absolute inset-0 bg-base-100 bg-opacity-80 z-50 flex justify-center items-center opacity-60 pointer-events-none"
+        >
+          <span class="loading loading-ring w-1/4"></span>
+        </div>
+
+        <!-- محتوای اصلی -->
+        <div>
+          <h2 class="text-lg font-bold mb-6 text-center">
+            مدیریت دسترسی‌ها - {{ selectedUser?.username }}
+          </h2>
+          <table class="table w-full">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>نام دسترسی</th>
+              <th>وضعیت</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(permission, index) in userPermissions" :key="permission.id">
+              <td>{{ index + 1 }}</td>
+              <td>{{ permission.name }}</td>
+              <td>
+                <input
+                    type="checkbox"
+                    class="toggle toggle-primary"
+                    :checked="permission.hasPermission"
+                    @change="togglePermission(permission)"
+                />
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+              <Icon name="material-symbols:close"/>
+            </button>
+          </form>
+        </div>
+
       </div>
-    </div>
+    </dialog>
 
-    <div v-if="showModalEdit" class="modal modal-open">
-      <div class="modal-box relative">
-        <!-- دکمه بستن -->
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
-          <Icon name="material-symbols:close"/>
-        </button>
-
-        <!-- فرم -->
-        <form @submit.prevent="submitFormEditUser" class="form-control space-y-6">
+    <dialog id="editUser_modal" class="modal">
+      <div class="modal-box relative" v-if="selectedUser">
+        <div class="form-control space-y-6">
           <!-- عنوان فرم -->
           <h2 class="text-lg font-bold mb-6 text-center">
             {{ selectedUser?.username }} - ویرایش کاربر
@@ -339,23 +353,28 @@ onMounted(fetchUsers);
           </label>
 
           <!-- دکمه ارسال -->
-          <button type="submit" class="btn btn-primary w-full mt-6">ویرایش کاربر</button>
-        </form>
-      </div>
-    </div>
-
-    <div v-if="showDeleteConfirmation" class="modal modal-open">
-      <div class="modal-box">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
-          <Icon name="material-symbols:close"/>
-        </button>
-        <br>
-        <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟</h2>
-        <div class="modal-action" dir="ltr">
-          <button class="btn btn-error" @click="confirmDelete">بله، حذف کن</button>
+          <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn">
+              <Icon name="material-symbols:close"/>
+            </button>
+            <button type="submit" @click="submitFormEditUser" class="btn btn-primary w-full mt-6">ویرایش کاربر</button>
+          </form>
         </div>
       </div>
-    </div>
+    </dialog>
+
+    <dialog id="confirmDelete_modal" class="modal">
+      <div class="modal-box">
+        <br>
+        <h2 class="text-lg font-bold mb-4">آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟</h2>
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 close-btn" @click="closeModal">
+            <Icon name="material-symbols:close"/>
+          </button>
+          <button class="btn btn-error" @click="confirmDelete">بله، حذف کن</button>
+        </form>
+      </div>
+    </dialog>
   </div>
 </template>
 

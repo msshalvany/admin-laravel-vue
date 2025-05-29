@@ -7,11 +7,43 @@
         <b class="badge badge-xs badge-primary indicator-item">12</b>
       </div>
     </div>
-    <div tabindex="0" class="card card-compact dropdown-content bg-base-100 mt-3 w-52 shadow">
+    <div tabindex="0" class="card card-compact dropdown-content bg-base-100 mt-3 w-100 shadow">
       <div class="card-body">
-        <span class="text-lg font-bold">8 Items</span>
-        <span class="text-info">Subtotal: $999</span>
+        <ul class="list bg-base-100 rounded-box shadow-md">
+          <li class="list-row hover:bg-base-300">
+            <div class="list-col-grow">
+              <div>Dio Lupa</div>
+              <div class="text-xs uppercase font-semibold opacity-60">Remaining Reason</div>
+            </div>
+          </li>
+          <li class="list-row hover:bg-base-300">
+            <div class="list-col-grow">
+              <div>Dio Lupa</div>
+              <div class="text-xs uppercase font-semibold opacity-60">Remaining Reason</div>
+            </div>
+          </li>
+          <li class="list-row hover:bg-base-300">
+            <div class="list-col-grow">
+              <div>Dio Lupa</div>
+              <div class="text-xs uppercase font-semibold opacity-60">Remaining Reason</div>
+            </div>
+          </li>
+          <li class="list-row hover:bg-base-300">
+            <div class="list-col-grow">
+              <div>Dio Lupa</div>
+              <div class="text-xs uppercase font-semibold opacity-60">Remaining Reason</div>
+            </div>
+          </li>
+          <li class="list-row hover:bg-base-300">
+            <div class="list-col-grow">
+              <div>Dio Lupa</div>
+              <div class="text-xs uppercase font-semibold opacity-60">Remaining Reason</div>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </template>
+<script setup lang="ts">
+</script>

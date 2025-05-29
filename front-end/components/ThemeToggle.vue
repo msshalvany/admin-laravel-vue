@@ -11,14 +11,11 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
-import { useColorMode } from '@vueuse/core'; // یا هر کتابخانه‌ای که استفاده می‌کنید
 
 const isDarkTheme = ref(false);
-const colorMode = useColorMode(); // دریافت رنگ پوسته
 
 function updateTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme); // تغییر data-theme
-  colorMode.value = theme; // تغییر مقدار colorMode
   localStorage.setItem('theme', theme); // ذخیره تم در localStorage
 }
 

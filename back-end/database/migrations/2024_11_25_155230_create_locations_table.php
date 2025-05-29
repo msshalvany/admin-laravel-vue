@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('locations', function (Blueprint $table) {
-            $table->id(); // شناسه مکان
-            $table->string('location_name'); // نام مکان
-            $table->text('description')->nullable(); // توضیحات مکان
-            $table->softDeletes(); // حذف امن (soft delete)
-            $table->timestamps(); // زمان‌های ثبت و بروزرسانی
-        });
+            Schema::create('locations', function (Blueprint $table) {
+                $table->id(); // شناسه مکان
+                $table->string('location_name'); // نام مکان
+                $table->text('description')->nullable(); // توضیحات مکان
+                $table->softDeletes(); // حذف امن (soft delete)
+                $table->timestamps(); // زمان‌های ثبت و بروزرسانی
+            });
     }
 
     /**

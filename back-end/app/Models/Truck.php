@@ -10,7 +10,16 @@ class Truck extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'driver_id', 'company_id', 'plate_number', 'color', 'type', 'weight'
+        'driver_id',
+        'company_id',
+        'plate_right',
+        'plate_char',
+        'plate_left',
+        'plate_city',
+        'plate_full',
+        'color',
+        'type',
+        'weight'
     ];
 
     public function driver(): \Illuminate\Database\Eloquent\Relations\BelongsTo

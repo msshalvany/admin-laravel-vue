@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
@@ -14,7 +13,7 @@ use App\Http\Controllers\LoadingRecordsController;
 
 
 Route::get('/', function () {
-    return response()->json('hello world', 200);
+    return response()->json('hello world');
 });
 
 Route::controller(AuthController::class)->group(function () {
@@ -70,7 +69,7 @@ Route::prefix('location')->group(function () {
     Route::post('/', [LocationController::class, 'store']); // ایجاد کمپانی
     Route::put('/{id}', [LocationController::class, 'update']); // ویرایش کمپانی
     Route::delete('/{id}', [LocationController::class, 'destroy']); // حذف کمپانی
-});
+})->middleware('can:LocationMain');
 
 Route::prefix('loading_records')->group(function () {
     Route::get('/', [LoadingRecordsController::class, 'index']);
@@ -80,4 +79,5 @@ Route::prefix('loading_records')->group(function () {
     Route::get('/pendingAll', [LoadingRecordsController::class, 'pendingAll']);
     Route::delete('/destroy/{id}', [LoadingRecordsController::class, 'destroy']);
     Route::get('/report', [LoadingRecordsController::class, 'report']);
+    Route::get('/monthly-count', [LoadingRecordsController::class, 'countPerMonth']);
 });

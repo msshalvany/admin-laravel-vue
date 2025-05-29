@@ -1,11 +1,8 @@
 <?php
 
-// app/Http/Controllers/CompanyController.php
-
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use App\Models\Truck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

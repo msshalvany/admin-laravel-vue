@@ -20,7 +20,20 @@ class LoadingRecordsController extends Controller
         $sortOrder = $request->query('order', 'asc');
         $countPage = $request->query('countPage', 10);
 
-        $LoadingRecord = LoadingRecord::with('truck', 'locations', 'company', 'driver')->where('status', 'ended')->where('id', 'like', "%{$search}%")
+        $LoadingRecord = LoadingRecord::with([
+            'truck' => function ($query) {
+                $query->withTrashed();
+            },
+            'locations', // اگر locations هم soft delete دارد، همینجا اضافه کن
+            'company' => function ($query) {
+                $query->withTrashed();
+            },
+            'driver' => function ($query) {
+                $query->withTrashed();
+            },
+        ])
+            ->where('status', 'ended')
+            ->where('id', 'like', "%{$search}%")
             ->orderBy($sortColumn, $sortOrder)
             ->paginate($countPage);
 
@@ -34,17 +47,40 @@ class LoadingRecordsController extends Controller
         ]);
     }
 
+
+    public function countPerMonth()
+    {
+        $fourMonthsAgo = Carbon::now()->subMonths(4)->startOfMonth();
+
+        $records = LoadingRecord::where('status', 'ended')
+            ->whereDate('entry_date', '>=', $fourMonthsAgo)
+            ->get()
+            ->groupBy(function ($record) {
+                return Carbon::parse($record->entry_date)->format('Y-m'); // گروه‌بندی بر اساس ماه
+            })
+            ->map(function ($group, $month) {
+                return [
+                    'month' => $month,
+                    'entries' => $group->count(),
+                ];
+            })
+            ->values(); // پاک‌سازی کلیدهای آرایه
+
+        return response()->json($records);
+
+    }
+
     public function store(Request $request)
     {
         $messages = [
-            'truck_id.required' => 'شناسه کامیون الزامی است.',
-            'truck_id.exists' => 'شناسه کامیون معتبر نیست.',
-            'location_ids.required' => 'شناسه مکان‌ها الزامی است.',
+            'truck_id.required' => 'انتخاب کامیون الزامی است.',
+            'truck_id.exists' => 'انتخاب کامیون معتبر نیست.',
+            'location_ids.required' => 'انتخاب مکان‌ها الزامی است.',
             'location_ids.array' => 'شناسه مکان‌ها باید یک آرایه باشد.',
             'location_ids.*.exists' => 'یکی از شناسه‌های مکان معتبر نیست.',
-            'company_id.required' => 'شناسه شرکت الزامی است.',
+            'company_id.required' => 'انتخاب شرکت الزامی است.',
             'company_id.exists' => 'شناسه شرکت معتبر نیست.',
-            'driver_id.required' => 'شناسه راننده الزامی است.',
+            'driver_id.required' => 'انتخاب راننده الزامی است.',
             'driver_id.exists' => 'شناسه راننده معتبر نیست.',
             'empty_weight.required' => 'وزن خالی الزامی است.',
             'empty_weight.numeric' => 'وزن خالی باید عدد باشد.',

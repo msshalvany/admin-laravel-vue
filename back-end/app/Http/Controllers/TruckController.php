@@ -38,30 +38,42 @@ class TruckController extends Controller
 
     public function store(Request $request)
     {
-        // پیام‌های اعتبارسنجی به زبان فارسی
         $messages = [
             'driver_id.required' => 'شناسه راننده الزامی است.',
             'driver_id.exists' => 'راننده با این شناسه یافت نشد.',
             'company_id.required' => 'شناسه شرکت الزامی است.',
             'company_id.exists' => 'شرکت با این شناسه یافت نشد.',
-            'plate_number.required' => 'شماره پلاک الزامی است.',
-            'plate_number.string' => 'شماره پلاک باید به صورت متن باشد.',
-            'plate_number.max' => 'شماره پلاک نباید بیشتر از ۲۵۵ کاراکتر باشد.',
+
+            'plate_right.required' => 'بخش راست پلاک الزامی است.',
+            'plate_right.digits' => 'بخش راست پلاک باید دو رقمی باشد.',
+            'plate_char.required' => 'حرف پلاک الزامی است.',
+            'plate_char.size' => 'حرف پلاک باید یک کاراکتر باشد.',
+            'plate_left.required' => 'بخش چپ پلاک الزامی است.',
+            'plate_left.digits_between' => 'بخش چپ پلاک باید بین 1 تا 3 رقم باشد.',
+            'plate_city.required' => 'کد استان الزامی است.',
+            'plate_city.digits' => 'کد استان باید دو رقمی باشد.',
+
             'color.required' => 'رنگ کامیون الزامی است.',
             'color.string' => 'رنگ کامیون باید به صورت متن باشد.',
             'color.max' => 'رنگ کامیون نباید بیشتر از ۲۵۵ کاراکتر باشد.',
+
             'type.string' => 'نوع کامیون باید به صورت متن باشد.',
             'type.in' => 'نوع کامیون باید یکی از مقادیر: "غیره", "کامیون", "تریلی", "کامیونت", "خاور", "وانت" باشد.',
+
             'weight.required' => 'وزن کامیون الزامی است.',
             'weight.numeric' => 'وزن کامیون باید به صورت عدد باشد.',
             'weight.min' => 'وزن کامیون نمی‌تواند منفی باشد.',
         ];
 
-        // اعتبارسنجی داده‌ها
         $validator = Validator::make($request->all(), [
             'driver_id' => 'required|exists:drivers,id',
             'company_id' => 'required|exists:companies,id',
-            'plate_number' => 'required|string|max:255',
+
+            'plate_right' => 'required|digits:2',
+            'plate_char' => 'required|size:1',
+            'plate_left' => 'required|digits_between:1,3',
+            'plate_city' => 'required|digits:2',
+
             'color' => 'required|string|max:255',
             'type' => 'nullable|string|in:غیره,کامیون,تریلی,کامیونت,خاور,وانت',
             'weight' => 'required|numeric|min:0',
@@ -75,8 +87,22 @@ class TruckController extends Controller
             ], 422);
         }
 
-        // ذخیره کامیون جدید
-        $truck = Truck::create($request->all());
+        // ساخت پلاک کامل
+        // ذخیره در دیتابیس
+        $truck = Truck::create([
+            'driver_id'    => $request->driver_id,
+            'company_id'   => $request->company_id,
+            'plate_right'  => $request->plate_right,
+            'plate_char'   => $request->plate_char,
+            'plate_left'   => $request->plate_left,
+            'plate_city'   => $request->plate_city,
+            'plate_full'   => $request->plate_right . $request->plate_char . $request->plate_left . '-' . $request->plate_city,
+            'color'        => $request->color,
+            'type'         => $request->type,
+            'weight'       => $request->weight,
+        ]);
+
+
         return response()->json([
             'status' => true,
             'message' => 'کامیون با موفقیت ایجاد شد.',
@@ -92,8 +118,6 @@ class TruckController extends Controller
             'driver_id.exists' => 'راننده با این شناسه یافت نشد.',
             'company_id.required' => 'شناسه شرکت الزامی است.',
             'company_id.exists' => 'شرکت با این شناسه یافت نشد.',
-            'plate_number.required' => 'شماره پلاک الزامی است.',
-            'plate_number.string' => 'شماره پلاک باید به صورت متن باشد.',
             'plate_number.max' => 'شماره پلاک نباید بیشتر از ۲۵۵ کاراکتر باشد.',
             'color.required' => 'رنگ کامیون الزامی است.',
             'color.string' => 'رنگ کامیون باید به صورت متن باشد.',
@@ -109,7 +133,6 @@ class TruckController extends Controller
         $validator = Validator::make($request->all(), [
             'driver_id' => 'required|exists:drivers,id',
             'company_id' => 'required|exists:companies,id',
-            'plate_number' => 'required|string|max:255',
             'color' => 'required|string|max:255',
             'type' => 'nullable|string|in:غیره,کامیون,تریلی,کامیونت,خاور,وانت',
             'weight' => 'required|numeric|min:0',

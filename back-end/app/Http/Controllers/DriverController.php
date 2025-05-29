@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Driver;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Permission;
 
 class DriverController extends Controller
 {

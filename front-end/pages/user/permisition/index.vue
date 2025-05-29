@@ -89,7 +89,7 @@
 
 <script setup>
 import {ref, onMounted} from 'vue';
-import {AlertError, AlertSuccess, loaderfun} from "~/composables/statFunc.js";
+import {loaderfun} from "~/composables/statFunc.js";
 import {basUrl} from "~/composables/states.js";
 
 const permissions = ref([]); // لیست دسترسی‌ها
@@ -97,6 +97,7 @@ const newPermission = ref(''); // مقدار ورودی دسترسی جدید
 const selectedPermission = ref(null); // دسترسی انتخاب شده برای نمایش کاربران
 const users = ref([]); // لیست کاربران مرتبط با دسترسی
 const searchUser = ref('');
+const { $toast } = useNuxtApp();
 
 // دریافت لیست دسترسی‌ها
 const fetchPermissions = async () => {
@@ -116,7 +117,13 @@ const createPermission = async () => {
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({name: newPermission.value}),
   });
-  AlertSuccess('سطح دسترسی با موفقیت ایجاد شد')
+  $toast('سطح دسترسی با موفقیت ایجاد شد', {
+    "theme": "colored",
+    "type": "success",
+    "rtl": true,
+    "autoClose":"5000",
+    "dangerouslyHTMLString": true
+  })
   newPermission.value = '';
   fetchPermissions(); // به‌روز‌رسانی لیست دسترسی‌ها
   loaderfun()

@@ -1,7 +1,9 @@
 <script setup>
 // تعریف متغیرها با استفاده از ref
-import {AlertError, AlertSuccess, loaderfun} from "~/composables/statFunc.js";
+import {loaderfun} from "~/composables/statFunc.js";
 import {basUrl} from "~/composables/states.js";
+
+const {$toast} = useNuxtApp();
 
 const username = ref('');
 const password = ref('');
@@ -9,10 +11,18 @@ const passwordConfirmation = ref('');
 const mobile = ref('');
 const jwtCookie = useCookie('jwt');
 
+let errors = ref([])
+
 // متد ارسال فرم
 const submitForm = async () => {
   if (password.value !== passwordConfirmation.value) {
-    AlertError("رمز عبور مطابقت ندارد")
+    $toast('رمز عبور مطابقت ندارد', {
+      "theme": "colored",
+      "type": "error",
+      "autoClose": "5000",
+      "rtl": true,
+      "dangerouslyHTMLString": true
+    })
     return 0
   }
   loaderfun()
@@ -33,10 +43,23 @@ const submitForm = async () => {
 
     if (!response.ok) {
       const errorData = await response.json();
+      errors.value = errorData.errors
       console.error(errorData.errors);
-      AlertError("اطلاعات را صحیح وارد کنید");
+      $toast('اطلاعات را صحیح وارد کنید', {
+        "theme": "colored",
+        "type": "error",
+        "autoClose": "5000",
+        "rtl": true,
+        "dangerouslyHTMLString": true
+      })
     } else {
-      AlertSuccess("اطلاعات با موفقیت ثبت شد");
+      $toast('اطلاعات با موفقیت ثبت شد', {
+        "theme": "colored",
+        "type": "success",
+        "rtl": true,
+        "autoClose": "5000",
+        "dangerouslyHTMLString": true
+      })
 
       // پاک‌سازی فرم بعد از موفقیت
       username.value = '';
@@ -46,7 +69,13 @@ const submitForm = async () => {
     }
   } catch (error) {
     console.error('Error:', error);
-    AlertError("مشکلی رخ داده");
+    $toast('مشکلی رخ داده', {
+      "theme": "colored",
+      "type": "error",
+      "autoClose": "5000",
+      "rtl": true,
+      "dangerouslyHTMLString": true
+    })
   }
   loaderfun()
 };
@@ -66,14 +95,21 @@ const submitForm = async () => {
               </nuxt-link>
             </li>
             <li>
-              <nuxt-link to="/user">
+              <a class="flex items-center">
                 <Icon name="ph:users-three-light" size="18" class="ml-2"/>
+                کاربران
+              </a>
+            </li>
+            <li>
+              <nuxt-link to="/user" class="flex items-center">
+                <Icon name="hugeicons:user-list" size="18"/>
                 لیست کاربران
               </nuxt-link>
             </li>
             <li>
               <a>
-                <Icon name="hugeicons:user" size="18" class="ml-2"/>
+                <Icon name="streamline:interface-user-add-actions-add-close-geometric-human-person-plus-single-up-user"
+                      size="18" class="ml-2"/>
                 کاربر جدید
               </a>
             </li>
@@ -83,7 +119,7 @@ const submitForm = async () => {
     </div>
     <div class="p-8 m-auto flex justify-center content-center w-10/12 shadow-xl">
       <form @submit.prevent="submitForm" class="form-control w-full space-y-6">
-        <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+        <fieldset class="fieldset w-full bg-base-200 border border-base-300 p-4 rounded-box space-y-6">
           <legend class="fieldset-legend">
             کاربر جدید
             <Icon name="material-symbols:account-circle" size="18" class="ml-2"/>
@@ -124,10 +160,17 @@ const submitForm = async () => {
             <input v-model="mobile" name="mobile" type="number" class="grow" placeholder="شماره همراه"/>
           </label>
 
+
+          <div v-if="errors.length != 0" role="alert" class="alert alert-error alert-soft flex flex-col items-start">
+          <span v-for="item in errors">
+            {{ item[0] }}
+          </span>
+          </div>
           <!-- دکمه ارسال -->
           <button type="submit" class="btn btn-primary w-full mt-4">ثبت</button>
         </fieldset>
       </form>
+
     </div>
   </div>
 </template>

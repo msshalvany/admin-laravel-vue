@@ -1,14 +1,11 @@
 <template>
   <div>
     <loader></loader>
-    <AlertError></AlertError>
-    <AlertSuccess></AlertSuccess>
-    <AlertWarning></AlertWarning>
     <div class="drawer lg:drawer-open" dir="rtl">
       <input id="my-drawer-2" type="checkbox" class="drawer-toggle" v-model="isDrawerOpen"/>
 
       <!-- Sidebar (Drawer) -->
-      <div class="drawer-side shadow-2xl" style="z-index: 12">
+      <div class="drawer-side shadow-2xl">
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu bg-base-100 text-base-content min-h-full w-64 p-2.5">
           <li>
@@ -56,15 +53,15 @@
               <Icon name="octicon:organization-16" size="20"></Icon>
               کمپانی ها
             </NuxtLink>
-            <NuxtLink class="mt-2" to="/LoadingRecord/drivers/" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+            <NuxtLink class="mt-2" to="/drivers/" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
               <Icon name="healthicons:truck-driver" size="26" />
               رانندگان
             </NuxtLink>
-            <NuxtLink class="mt-2" to="/LoadingRecord/truck/" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+            <NuxtLink class="mt-2" to="/truck/" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
               <Icon name="ph:truck-duotone" size="26" />
               ماشین ها
             </NuxtLink>
-            <NuxtLink class="mt-2" to="/location" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+            <NuxtLink v-if="hasPermission('LocationMain')" class="mt-2" to="/location" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
               <Icon name="ic:outline-place" size="24"></Icon>
               مکان ها
             </NuxtLink>
@@ -137,4 +134,39 @@ const permissions = useCookie('permissions').value || []; // دسترسی‌ها
 const hasPermission = (item) => {
   return permissions.includes(item); // بررسی اینکه آیا دسترسی مورد نظر در آرایه هست یا نه
 };
+// onMounted(() => {
+//   const convertDigits = (text) => text.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[+d])
+//
+//   const convertAllTextNodes = (root = document.body) => {
+//     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+//     while (walker.nextNode()) {
+//       const node = walker.currentNode
+//       if (node.nodeValue) {
+//         node.nodeValue = convertDigits(node.nodeValue)
+//       }
+//     }
+//   }
+//
+//   // بار اول، کل صفحه رو تبدیل کن
+//   convertAllTextNodes()
+//
+//   // بعداً، هر بار DOM تغییر کرد، تبدیل کن
+//   const observer = new MutationObserver((mutations) => {
+//     for (const mutation of mutations) {
+//       for (const node of mutation.addedNodes) {
+//         if (node.nodeType === Node.TEXT_NODE) {
+//           node.nodeValue = convertDigits(node.nodeValue)
+//         } else if (node.nodeType === Node.ELEMENT_NODE) {
+//           convertAllTextNodes(node)
+//         }
+//       }
+//     }
+//   })
+//
+//   observer.observe(document.body, {
+//     childList: true,
+//     subtree: true
+//   })
+// })
+
 </script>
