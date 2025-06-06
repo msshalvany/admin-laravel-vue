@@ -8,7 +8,7 @@ const loader = useLoader() // فرض می‌کنیم composable یا state دا�
       <div
           v-show="loader"
           class="loader bg-base-100 w-screen h-screen fixed top-0 left-0 flex justify-center items-center"
-          style="z-index: 999999;"
+          style="z-index: 20;"
       >
         <span class="loading loading-spinner w-2/12"></span>
       </div>

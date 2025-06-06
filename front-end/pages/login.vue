@@ -68,7 +68,7 @@
 
             <!-- Login Button -->
             <div class="mt-4">
-              <button type="submit" class="btn-neutral btn btn-block">ورود</button>
+              <button type="submit" :disabled="disableBtn" class="btn-neutral btn btn-block">ورود</button>
             </div>
           </form>
         </div>
@@ -86,6 +86,7 @@ const password = ref('');
 const checkLogin = ref(false);
 const router = useRouter();
 const { $toast } = useNuxtApp();
+const disableBtn = ref(false)
 
 // ایجاد کوکی برای توکن
 const jwtCookie = useCookie('jwt');
@@ -116,7 +117,6 @@ const login = async () => {
 
     // بررسی موفقیت‌آمیز بودن درخواست
     if (!response.ok) {
-      loaderfun()
       $toast('نام کاربری یا رمز عبور اشتباه است', {
         "theme": "colored",
         "type": "error",
@@ -125,7 +125,7 @@ const login = async () => {
         "dangerouslyHTMLString": true
       })
     } else {
-      loaderfun()
+      disableBtn.value=true
       $toast('ورود موفقیت آمیز بود', {
         "theme": "colored",
         "type": "success",
@@ -137,9 +137,11 @@ const login = async () => {
       // ذخیره کردن توکن JWT در کوکی
       jwtCookie.value = data.token;
       permissions.value = data.permissions;
-
+      loaderfun()
       // هدایت به صفحه اصلی پس از ورود موفق
+      setTimeout(function (){
       router.push('/');
+      },2000)
     }
   } catch (error) {
     // نمایش پیام خطا
