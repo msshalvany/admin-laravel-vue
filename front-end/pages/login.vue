@@ -1,7 +1,5 @@
 <template>
   <loader></loader>
-  <alert-error v-if="checkLogin" text="نام کاربری یا رمز عبور اشتباه است"></alert-error>
-
   <div class="min-h-screen bg-base-200 flex items-center">
     <div class="card mx-auto w-full max-w-5xl shadow-xl">
       <!-- تنظیمات گرید برای نمایش درست -->
