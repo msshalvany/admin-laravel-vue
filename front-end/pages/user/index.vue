@@ -229,14 +229,15 @@ onMounted(fetchUsers);
           <tr class="text-center">
             <th>نام</th>
             <th>موبایل</th>
+            <th>مکان</th>
             <th>عملیات</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="user in users" :key="user.id" class="hover:bg-base-300 transition delay- text-center">
-
             <td>{{ user.username }}</td>
             <td>{{ user.mobile }}</td>
+            <td>{{ user?.location?.location_name }}</td>
             <td class="">
               <div>
                 <div @click="userToDelete = user.id " onclick="confirmDelete_modal.showModal()" class="tooltip"

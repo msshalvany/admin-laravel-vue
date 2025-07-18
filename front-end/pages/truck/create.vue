@@ -5,7 +5,29 @@ import {useCookie} from "nuxt/app";
 const { $toast } = useNuxtApp();
 
 // متغیرهای فرم
-const truckType = ['غیره', 'کامیون', 'تریلی', 'کامیونت', 'خاور', 'وانت']
+const truckType = [
+  { label: 'غیره', value: 0 },
+  { label: 'کامیون', value: 1 },
+  { label: 'تریلی', value: 2 },
+  { label: 'کامیونت', value: 3 },
+  { label: 'خاور', value: 4 },
+  { label: 'وانت', value: 5 },
+];
+const plateTypes = [
+  { label: 'شخصی', value: 1, color: 'bg-white text-black border border-gray-400' },
+  { label: 'عمومی', value: 2, color: 'bg-yellow-400 text-black' },
+  { label: 'دولتی', value: 3, color: 'bg-red-600 text-white' },
+  { label: 'نظامی', value: 4, color: 'bg-green-800 text-white' },
+  { label: 'دیپلماتیک', value: 5, color: 'bg-blue-900 text-white' },
+  { label: 'ارتش', value: 6, color: 'bg-yellow-800 text-black' }, // اختیاری
+];
+
+const currentPlateColor = computed(() => {
+  const match = plateTypes.find(p => p.value === plate_type.value)
+  return match ? match.color : 'bg-blue-700'  // اگر چیزی نبود آبی پیش‌فرض
+})
+
+const plate_type = ref('private')  // مقدار پیش‌فرض
 const type = ref(null);
 
 const plate_right = ref('');
@@ -96,6 +118,7 @@ const submitForm = async () => {
         plate_left: plate_left.value,
         plate_char: plate_char.value,
         plate_right: plate_right.value,
+        plate_type: plate_type.value,
         color: color.value,
         type: type.value,
         weight: weight.value,
@@ -219,9 +242,9 @@ watch(selectedDriver, () => {
                   type="radio"
                   v-model="type"
                   v-for="item of truckType"
-                  :key="item"
-                  :value="item"
-                  :aria-label="item"
+                  :key="item.value"
+                  :value="item.value"
+                  :aria-label="item.label"
               />
             </div>
           </div>
@@ -248,6 +271,26 @@ watch(selectedDriver, () => {
               <input v-model="weight" type="number" class="grow" placeholder="وزن کامیون"/>
             </label>
           </div>
+
+          <!-- نوع پلاک -->
+          <div class="mt-6">
+            <label class="block mb-2 text-sm font-medium">نوع پلاک:</label>
+            <div class="filter flex flex-wrap gap-2 items-center">
+              <input class="btn btn-error btn-square" type="reset" value="×" @click="plate_type = ''" />
+              <input
+                  v-for="item in plateTypes"
+                  :key="item.value"
+                  type="radio"
+                  class="btn"
+                  v-model="plate_type"
+                  :value="item.value"
+                  :aria-label="item.label"
+                  :class="{ 'btn-primary': plate_type === item.value, 'btn-outline': plate_type !== item.value }"
+              />
+            </div>
+          </div>
+
+
           <!-- پلاک کامیون با استایل خاص -->
           <div class="mt-6">
             <label class="block mb-2 text-sm font-medium">پلاک کامیون:</label>
@@ -255,7 +298,10 @@ watch(selectedDriver, () => {
                 class="flex items-center w-full max-w-md h-[70px]  border-4 border-black rounded-md shadow-md overflow-hidden text-center font-bold text-lg">
 
               <!-- نوار آبی سمت چپ -->
-              <div class="flex flex-col items-center justify-between w-12 h-full bg-blue-700 text-white p-1 text-xs">
+              <div
+                  class="flex flex-col items-center justify-between w-12 h-full bg-blue-700 text-white p-1 text-xs"
+                  :class="currentPlateColor"
+              >
                 <img
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flag_of_Iran.svg/20px-Flag_of_Iran.svg.png"
                     alt="پرچم ایران" class="w-full h-auto">

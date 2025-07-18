@@ -122,6 +122,8 @@ const login = async () => {
         "rtl": true,
         "dangerouslyHTMLString": true
       })
+      loaderfun()
+
     } else {
       disableBtn.value=true
       $toast('ورود موفقیت آمیز بود', {

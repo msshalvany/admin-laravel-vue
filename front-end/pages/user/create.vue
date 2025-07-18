@@ -2,6 +2,7 @@
 // تعریف متغیرها با استفاده از ref
 import {loaderfun} from "~/composables/statFunc.js";
 import {basUrl} from "~/composables/states.js";
+import {ref} from "vue";
 
 const {$toast} = useNuxtApp();
 
@@ -10,8 +11,9 @@ const password = ref('');
 const passwordConfirmation = ref('');
 const mobile = ref('');
 const jwtCookie = useCookie('jwt');
-
+const locations = ref([])
 let errors = ref([])
+const selectedLocation = ref([])
 
 // متد ارسال فرم
 const submitForm = async () => {
@@ -38,6 +40,7 @@ const submitForm = async () => {
         username: username.value,
         password: password.value,
         mobile: mobile.value,
+        location_id: selectedLocation.value,
       }),
     });
 
@@ -79,6 +82,34 @@ const submitForm = async () => {
   }
   loaderfun()
 };
+const fetchLocation = async () => {
+  try {
+    const response = await fetch(`${basUrl().value}/location`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${useCookie('jwt').value}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      locations.value = data.data.map(item => ({
+        text: item.location_name,  // نام راننده برای نمایش
+        id: item.id    // شناسه راننده برای ارسال
+      }));
+    } else {
+      console.error('Error fetching location:', response.status);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+onMounted(function () {
+  fetchLocation()
+})
+
 </script>
 
 
@@ -159,8 +190,20 @@ const submitForm = async () => {
     </span>
             <input v-model="mobile" name="mobile" type="number" class="grow" placeholder="شماره همراه"/>
           </label>
+          <label class="input-bordered flex items-center gap-4 w-full mt-4 w-full">
 
-
+          <SearchableSelect
+                v-model="selectedLocation"
+                :items="locations"
+                label="مکان"
+                placeholder="انتخاب مکان"
+            >"
+            >
+              <template #icon>
+                <Icon name="ic:outline-place" size="20" class="text-gray-500" />
+              </template>
+            </SearchableSelect>
+          </label>
           <div v-if="errors.length != 0" role="alert" class="alert alert-error alert-soft flex flex-col items-start">
           <span v-for="item in errors">
             {{ item[0] }}

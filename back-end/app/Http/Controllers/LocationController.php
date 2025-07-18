@@ -14,7 +14,7 @@ class LocationController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => ' با موفقیت دریافت شدند',
+            'message' => 'با موفقیت دریافت شدند',
             'data' => $locations,
         ], 200);
     }
@@ -31,15 +31,21 @@ class LocationController extends Controller
 
     public function store(Request $request)
     {
-        // اعتبارسنجی به زبان فارسی
         $validator = Validator::make($request->all(), [
             'location_name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'phone' => ['required', 'string', 'regex:/^(\+98|0)?9\d{9}$/'], // شماره موبایل ایران
+            'ip' => ['required','string']
         ], [
             'location_name.required' => 'نام مکان الزامی است.',
             'location_name.string' => 'نام مکان باید به صورت متن باشد.',
             'location_name.max' => 'نام مکان نباید بیشتر از ۲۵۵ کاراکتر باشد.',
             'description.string' => 'توضیحات باید به صورت متن باشد.',
+            'phone.required' => 'شماره موبایل الزامی است.',
+            'phone.string' => 'شماره موبایل باید به صورت متن باشد.',
+            'phone.regex' => 'شماره موبایل معتبر نیست.',
+            'ip.required' => 'آدرس آی‌پی همراه با پورت الزامی است.',
+            'ip.regex' => 'آدرس آی‌پی همراه با پورت معتبر نیست. فرمت باید مثلا 192.168.1.1:8080 باشد.',
         ]);
 
         if ($validator->fails()) {
@@ -60,15 +66,21 @@ class LocationController extends Controller
 
     public function update(Request $request, $id)
     {
-        // اعتبارسنجی به زبان فارسی
         $validator = Validator::make($request->all(), [
             'location_name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'phone' => ['required', 'string', 'regex:/^(\+98|0)?9\d{9}$/'],
+            'ip' => ['required','string']
         ], [
             'location_name.required' => 'نام مکان الزامی است.',
             'location_name.string' => 'نام مکان باید به صورت متن باشد.',
             'location_name.max' => 'نام مکان نباید بیشتر از ۲۵۵ کاراکتر باشد.',
             'description.string' => 'توضیحات باید به صورت متن باشد.',
+            'phone.required' => 'شماره موبایل الزامی است.',
+            'phone.string' => 'شماره موبایل باید به صورت متن باشد.',
+            'phone.regex' => 'شماره موبایل معتبر نیست.',
+            'ip.required' => 'آدرس آی‌پی همراه با پورت الزامی است.',
+            'ip.regex' => 'آدرس آی‌پی همراه با پورت معتبر نیست. فرمت باید مثلا 192.168.1.1:8080 باشد.',
         ]);
 
         if ($validator->fails()) {

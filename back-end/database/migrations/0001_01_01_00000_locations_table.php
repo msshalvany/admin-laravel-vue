@@ -15,6 +15,8 @@ return new class extends Migration
                 $table->id(); // شناسه مکان
                 $table->string('location_name'); // نام مکان
                 $table->text('description')->nullable(); // توضیحات مکان
+                $table->string('phone')->nullable(); //
+                $table->ipAddress('ip')->nullable(); //
                 $table->softDeletes(); // حذف امن (soft delete)
                 $table->timestamps(); // زمان‌های ثبت و بروزرسانی
             });

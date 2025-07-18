@@ -15,7 +15,7 @@ class UserController extends Controller
         $pageSize = $request->input('pageSize', 10);
         $search = $request->input('search', '');
 
-        $query = User::query();
+        $query = User::with('location');
 
         if ($search) {
             $query->where('username', 'like', '%' . $search . '%');

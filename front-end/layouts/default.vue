@@ -61,7 +61,7 @@
               <Icon name="ph:truck-duotone" size="26" />
               ماشین ها
             </NuxtLink>
-            <NuxtLink v-if="hasPermission('LocationMain')" class="mt-2" to="/location" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+            <NuxtLink v-if="hasPermission('Location')" class="mt-2" to="/location" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
               <Icon name="ic:outline-place" size="24"></Icon>
               مکان ها
             </NuxtLink>

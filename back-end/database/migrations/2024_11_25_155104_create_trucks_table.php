@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -23,7 +22,8 @@ return new class extends Migration
             // پلاک کامل برای راحتی در سرچ و نمایش;      // مثلاً ۱۲الف۳۴۵ - ۵۱
             $table->string('plate_full');
             $table->string('color'); // پلاک کامیون
-            $table->enum('type', ['غیره','کامیون', 'تریلی', 'کامیونت', 'خاور', 'وانت'])->nullable(); // نوع وسیله نقلیه
+            $table->unsignedTinyInteger('type');
+            $table->unsignedTinyInteger('plate_type');
             $table->decimal('weight', 8, 2); // وزن کامیون
             $table->softDeletes(); // حذف امن (soft delete)
             $table->timestamps(); // زمان‌های ثبت و بروزرسانی

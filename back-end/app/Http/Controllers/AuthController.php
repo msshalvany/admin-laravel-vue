@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -50,7 +51,8 @@ class AuthController extends Controller
 //        User::create([
 //            'username'=> 'ali',
 //            'password' => Hash::make('123'),
-//            'mobile' => '09922490804'
+//            'mobile' => '09922490804',
+//            'location_id' =>1
 //        ]);
         $credentials = $request->only('username', 'password');
 

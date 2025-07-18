@@ -184,6 +184,28 @@ watch(q, ()=>{
 });
 watch(() => pagination.value.pageIndex, fetchTrucks);
 onMounted(fetchTrucks);
+
+function getPlateColorClass(plateType) {
+  switch (plateType) {
+    case 1: // شخصی و گذر موقت
+      return 'bg-white text-black border border-gray-400';
+    case 2: // عمومی (تاکسی، اتوبوس، کامیون، کشاورزی)
+      return 'bg-yellow-400 text-black';
+    case 3: // دولتی و تشریفاتی
+      return 'bg-red-600 text-white';
+    case 4: // نظامی (سبز تیره برای سپاه و پلیس)
+      return 'bg-green-800 text-white';
+    case 5: // دیپلماتیک (آبی کم‌رنگ یا پررنگ)
+      return 'bg-blue-900 text-white';
+    case 6: // ارتش (پلاک خاکی)
+      return 'bg-yellow-800 text-black'; // فرضی: خاکی کم‌رنگ
+    default:
+      return 'bg-gray-500 text-white'; // ناشناس یا خطا
+  }
+}
+
+
+
 </script>
 
 <template>
@@ -365,10 +387,18 @@ onMounted(fetchTrucks);
                 <div dir="ltr" class="flex items-center w-[200px] h-[42px] border-4 border-black rounded-md shadow-md overflow-hidden font-bold">
 
                   <!-- نوار آبی سمت چپ -->
-                  <div class="flex flex-col items-center justify-between w-8 h-full bg-blue-700 text-white p-1 text-xs">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flag_of_Iran.svg/20px-Flag_of_Iran.svg.png" alt="Iran Flag" class="w-full h-auto">
+                  <div
+                      class="flex flex-col items-center justify-between w-8 h-full p-1 text-xs"
+                      :class="getPlateColorClass(truck.plate_type)"
+                  >
+                    <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flag_of_Iran.svg/20px-Flag_of_Iran.svg.png"
+                        alt="Iran Flag"
+                        class="w-full h-auto"
+                    />
                     <span>I.R.</span>
                   </div>
+
 
                   <!-- شماره پلاک -->
                   <div dir="rtl" class="flex-1 text-center text-xl tracking-wider">
@@ -389,7 +419,7 @@ onMounted(fetchTrucks);
                      :style="{ backgroundColor: truck.color }"
                 ></div>
               </td>
-              <td>{{ truck.type }}</td>
+              <td>{{ truck.type_label }}</td>
               <td>{{ truck.weight }}</td>
               <td>{{ truck.company.name }}</td>
 

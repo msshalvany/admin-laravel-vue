@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
@@ -17,7 +19,8 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'username',
         'password',
-        'mobile'
+        'mobile',
+        'location_id'
     ];
 
     protected $hidden = [
@@ -38,5 +41,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class,'location_id');
     }
 }

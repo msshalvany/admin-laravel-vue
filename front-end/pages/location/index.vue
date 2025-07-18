@@ -2,7 +2,8 @@
 import {ref, onMounted} from 'vue';
 import {useCookie} from 'nuxt/app';
 import {basUrl} from "~/composables/states.js";
-const { $toast } = useNuxtApp();
+
+const {$toast} = useNuxtApp();
 
 const locations = ref([]);
 
@@ -18,7 +19,10 @@ const showDeleteConfirmation = ref(false);
 const newLocations = ref({
   location_name: '',
   description: '',
+  phone: '',
+  ip: '',
 });
+
 // دریافت لیست مکان‌ها
 const fetchLocation = async () => {
   try {
@@ -61,6 +65,8 @@ const updateLocations = async () => {
       body: JSON.stringify({
         location_name: selectedLocations.value.location_name,
         description: selectedLocations.value.description,
+        ip: selectedLocations.value.ip,
+        phone: selectedLocations.value.phone,
       }),
     });
 
@@ -69,7 +75,7 @@ const updateLocations = async () => {
         "theme": "colored",
         "type": "success",
         "rtl": true,
-        "autoClose":"5000",
+        "autoClose": "5000",
         "dangerouslyHTMLString": true
       })
       showEditModal.value = false;
@@ -79,7 +85,7 @@ const updateLocations = async () => {
       $toast('مشکلی در ویرایش مکان رخ داده است', {
         "theme": "colored",
         "type": "success",
-        "autoClose":"5000",
+        "autoClose": "5000",
         "rtl": true,
         "dangerouslyHTMLString": true
       })
@@ -89,7 +95,7 @@ const updateLocations = async () => {
     $toast('مشکلی رخ داده است', {
       "theme": "colored",
       "type": "error",
-      "autoClose":"5000",
+      "autoClose": "5000",
       "rtl": true,
       "dangerouslyHTMLString": true
     })
@@ -116,7 +122,7 @@ const confirmDelete = async () => {
       $toast("مکان با موفقیت حذف شد", {
         "theme": "colored",
         "type": "success",
-        "autoClose":"5000",
+        "autoClose": "5000",
         "rtl": true,
         "dangerouslyHTMLString": true
       })
@@ -149,7 +155,7 @@ const createLocations = async () => {
       $toast('مکان با موفقیت ایجاد شد', {
         "theme": "colored",
         "type": "success",
-        "autoClose":"5000",
+        "autoClose": "5000",
         "rtl": true,
         "dangerouslyHTMLString": true
       })
@@ -160,7 +166,7 @@ const createLocations = async () => {
       $toast('مشکلی در ویرایش مکان رخ داده است', {
         "theme": "colored",
         "type": "error",
-        "autoClose":"5000",
+        "autoClose": "5000",
         "dangerouslyHTMLString": true
       })
     }
@@ -170,7 +176,7 @@ const createLocations = async () => {
       "theme": "colored",
       "type": "error",
       "rtl": true,
-      "autoClose":"5000",
+      "autoClose": "5000",
       "dangerouslyHTMLString": true
     })
   }
@@ -221,6 +227,8 @@ onMounted(fetchLocation);
         <tr class="text-center ">
           <th>id</th>
           <th>نام</th>
+          <th>شماره تماس</th>
+          <th>ip</th>
           <th>توضیحات</th>
           <th>عملیات</th>
         </tr>
@@ -229,6 +237,8 @@ onMounted(fetchLocation);
         <tr v-for="location in locations" :key="location.id" class="hover:bg-base-300 transition delay- text-center">
           <th>{{ location.id }}</th>
           <td>{{ location.location_name }}</td>
+          <td>{{ location.phone }}</td>
+          <td>{{ location.ip }}</td>
           <td>{{ location.description }}</td>
           <td class="">
             <div @click="DeleteLocation(location)" onclick="confirmDelete_modal.showModal()" class="tooltip"
@@ -272,6 +282,24 @@ onMounted(fetchLocation);
               <input v-model="selectedLocations.location_name" type="text" class="grow" placeholder="نام مکان"/>
             </label>
 
+            <!-- شماره موبایل -->
+            <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-3">
+  <span class="flex items-center">
+    <Icon name="material-symbols:phone-enabled" size="18" class="ml-2"/>
+    شماره موبایل
+  </span>
+              <input v-model="selectedLocations.phone" type="text" class="grow" placeholder="شماره موبایل"/>
+            </label>
+
+            <!-- آی‌پی -->
+            <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-3">
+  <span class="flex items-center">
+    <Icon name="mdi:ip" size="18" class="ml-2"/>
+    آی‌پی
+  </span>
+              <input v-model="selectedLocations.ip" type="text" class="grow" placeholder="آی‌پی"/>
+            </label>
+
             <!-- توضیحات -->
             <label class="floating-label textarea textarea-bordered flex items-center gap-4 w-full">
         <span class="flex items-center">
@@ -312,6 +340,24 @@ onMounted(fetchLocation);
               نام مکان
             </span>
               <input v-model="newLocations.location_name" type="text" class="grow" placeholder="نام مکان"/>
+            </label>
+
+            <!-- شماره موبایل -->
+            <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-3">
+            <span class="flex items-center">
+              <Icon name="material-symbols:phone-enabled" size="18" class="ml-2"/>
+              شماره موبایل
+            </span>
+              <input v-model="newLocations.phone" type="text" class="grow" placeholder="شماره موبایل"/>
+            </label>
+
+            <!-- آی‌پی -->
+            <label class="floating-label input input-bordered flex items-center gap-4 w-full mt-3">
+            <span class="flex items-center">
+              <Icon name="mdi:ip" size="18" class="ml-2"/>
+              آی‌پی
+            </span>
+              <input v-model="newLocations.ip" type="text" class="grow" placeholder="آی‌پی"/>
             </label>
 
             <!-- توضیحات -->
