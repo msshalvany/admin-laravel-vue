@@ -12,9 +12,9 @@ class Location extends Model
 
     protected $fillable = ['location_name', 'description' , 'phone' , 'ip'];
 
-    public function loadingRecords(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function loadingRecords(): \Illuminate\Database\Eloquent\Relations\hasMany
     {
-        return $this->belongsToMany(LoadingRecord::class, 'loading_record_locations');
+        return $this->hasMany(LoadingRecord::class);
     }
 
     public function Users(): \Illuminate\Database\Eloquent\Relations\hasMany

@@ -36,9 +36,9 @@ class LoadingRecord extends Model
         return $this->belongsTo(Truck::class)->withTrashed();
     }
 
-    public function locations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function location(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsToMany(Location::class, 'loading_record_locations')->withTrashed();
+        return $this->belongsTo(Location::class)->withTrashed();
     }
 
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -7,7 +7,7 @@
       <!-- Sidebar (Drawer) -->
       <div class="drawer-side shadow-2xl">
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
-        <ul class="menu bg-base-100 text-base-content min-h-full w-64 p-2.5">
+        <ul class="menu bg-base-300 text-base-content min-h-full w-64 p-2.5">
           <li>
             <details v-if="hasPermission('UserManegment')" class="mt-2">
               <summary>
@@ -35,16 +35,16 @@
                 تردد
               </summary>
               <ul>
+<!--                <li>-->
+<!--                  <NuxtLink to="/loading_record" active-class="bg-[#422AD5] text-white" @click="closeDrawer">-->
+<!--                    <Icon name="mdi:truck-fast-outline" size="24" />-->
+<!--                    لیست تردد-->
+<!--                  </NuxtLink>-->
+<!--                </li>-->
                 <li>
-                  <NuxtLink to="/LoadingRecord" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
-                    <Icon name="mdi:truck-fast-outline" size="24" />
-                    ثبت تردد
-                  </NuxtLink>
-                </li>
-                <li>
-                  <NuxtLink to="/LoadingRecord/history" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
+                  <NuxtLink to="/loading_record" active-class="bg-[#422AD5] text-white" @click="closeDrawer">
                     <Icon name="streamline:shipping-transfer-truck-time-truck-shipping-delivery-time-waiting-delay" size="26" />
-                    تاریخچه
+                    لیست تردد
                   </NuxtLink>
                 </li>
               </ul>

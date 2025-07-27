@@ -12,7 +12,6 @@ class Truck extends Model
     use SoftDeletes , HasFactory;
 
     protected $fillable = [
-        'driver_id',
         'company_id',
         'plate_right',
         'plate_char',
@@ -60,9 +59,9 @@ class Truck extends Model
     ];
 
 
-    public function driver(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function driver(): \Illuminate\Database\Eloquent\Relations\hasMany
     {
-        return $this->belongsTo(Driver::class);
+        return $this->hasMany(Driver::class);
     }
 
     protected $appends = ['type_label', 'plate_type_label'];

@@ -9,12 +9,12 @@ class Driver extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name', 'license_number','address'];
+    protected $fillable = ['name', 'license_number','address','truck_id'];
     protected $appends = ['average_star'];
 
-    public function trucks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function truck(): \Illuminate\Database\Eloquent\Relations\belongsTo
     {
-        return $this->hasMany(Truck::class);
+        return $this->belongsTo(Truck::class);
     }
     public function loadingRecords(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

@@ -325,7 +325,7 @@ watch(selectedTrucks, function () {
       <div class="tabs tabs-lift">
         <label class="tab">
           <input type="radio" name="my_tabs_4" checked="checked"/>
-                ثبت موقت
+          ثبت موقت
           <icon name="material-symbols:pending-actions" size="20" />
         </label>
         <div class="tab-content bg-base-100 border-base-300 p-6">

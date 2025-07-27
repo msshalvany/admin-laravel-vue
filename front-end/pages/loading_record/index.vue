@@ -171,10 +171,18 @@ const columns = [
                 <a class="flex items-center">
                   <Icon name="streamline:shipping-transfer-truck-time-truck-shipping-delivery-time-waiting-delay"
                         size="18"/>
-                  تاریخچه
+                  لیست تردد
                 </a>
               </li>
             </ul>
+          </div>
+          <div>
+            <NuxtLink to="/loading_record/create">
+              <button class="btn btn-success flex items-center">
+                <span>ثبت تردد</span>
+                <Icon name="mdi:truck-fast-outline" size="18"/>
+              </button>
+            </NuxtLink>
           </div>
         </div>
       </div>
